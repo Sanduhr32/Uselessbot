@@ -1,33 +1,33 @@
 public commands: //letter cases dont matter #IgnoreCase
-�Prefix: Lib.prefix //goto src/com/Sanduhr/main/Lib.java to modify the prefix, ?? is the default prefix
-�Status: "Returns on how many server the Bot is and how many Member are on those servers"
-       �Syntax ??status
-�Request: "Sends the Bot author a request for new commands" //Dont abuse it!
-       �Syntax ??request COMMANDNAME :What it should do, Commanddescription, etc..
-�Invite: "Sends the author an authorificate link, so the Bot can join other server"
-       �Syntax ??invite
-�GitHUb: "Sends the author the link to this GitHub post"
-       �Syntax ??github
+-Prefix: Lib.prefix //goto src/com/Sanduhr/main/Lib.java to modify the prefix, ?? is the default prefix
+-Status: "Returns on how many server the Bot is and how many Member are on those servers"
+       -Syntax ??status
+-Request: "Sends the Bot author a request for new commands" //Dont abuse it!
+       -Syntax ??request COMMANDNAME :What it should do, Commanddescription, etc..
+-Invite: "Sends the author an authorificate link, so the Bot can join other server"
+       -Syntax ??invite
+-GitHUb: "Sends the author the link to this GitHub post"
+       -Syntax ??github
 Bot owner only commands:
-�Game: "Set or returns the currect game"
-       �Syntax: ??game get //Returns current game
+-Game: "Set or returns the currect game"
+       -Syntax: ??game get //Returns current game
                 ??game set :TEXT //Set current game to the text
-�Message "Returns the message content"
-       �Syntax: ??message :TEXT
-�Shutdown "yup it'll shutdown the bot"
-       �Syntax shutdown
+-Message "Returns the message content"
+       -Syntax: ??message :TEXT
+-Shutdown "yup it'll shutdown the bot"
+       -Syntax shutdown
 Guild owner and Bot owner only commands:
-�Add
-       �Syntax ??add @USER @ROLE //Adds all mentioned user to the mentioned role!
-�Remove
-       �Syntax ??remove @USER @ROLE //Removes all mentioned user from the mentioned role!
-�Mute
-       �Syntax ??mute @USER //Mutes all mentioned user in the channel, where the message was sent
-�Unmute
-       �Syntax ??unmute @USER //Unmutes all mentioned user in the channel, where the message was sent
-�Kick
-       �Syntax ??kick @USER :REASON //Kicks all mentioned user from the server and send each one a message why he was kicked
-�Ban
-       �Syntax ??ban @USER :REASON //Swings the  banhammer for all mentioned user and send each one a message why he was banned
-�Clear
-       �Syntax ??clear 1-100 //Deletes the last x messages (Select a number between 1 and 100 or it wont work and it cant calculate
+-Add
+       -Syntax ??add @USER @ROLE //Adds all mentioned user to the mentioned role!
+-Remove
+       -Syntax ??remove @USER @ROLE //Removes all mentioned user from the mentioned role!
+-Mute
+       -Syntax ??mute @USER //Mutes all mentioned user in the channel, where the message was sent
+-Unmute
+       -Syntax ??unmute @USER //Unmutes all mentioned user in the channel, where the message was sent
+-Kick
+       -Syntax ??kick @USER :REASON //Kicks all mentioned user from the server and send each one a message why he was kicked
+-Ban
+       -Syntax ??ban @USER :REASON //Swings the  banhammer for all mentioned user and send each one a message why he was banned
+-Clear
+       -Syntax ??clear 1-100 //Deletes the last x messages (Select a number between 1 and 100 or it wont work and it cant calculate
