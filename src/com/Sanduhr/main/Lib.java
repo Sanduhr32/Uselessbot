@@ -3,7 +3,7 @@ package com.Sanduhr.main;
 import java.awt.*;
 
 /**
- * Created by Maurice on 21.01.2017.
+ * Created by Sanduhr on 21.01.2017.
  */
 public class Lib {
     public static String prefix ="??";
