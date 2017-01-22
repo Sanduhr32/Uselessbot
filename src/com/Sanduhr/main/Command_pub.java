@@ -46,6 +46,9 @@ public class Command_pub extends ListenerAdapter{
             e.getAuthor().openPrivateChannel().complete().sendMessage("Add Uselessbot to your server and get useless Commands like kick,ban,mute,clear,game,unmute,add,remove and more (soon)").complete();
             e.getAuthor().openPrivateChannel().complete().sendMessage("https://discordapp.com/oauth2/authorize?client_id=" + Bot_main.getJDA().getSelfUser().getId() + "&scope=bot&permissions=8").complete();
         }
+        if (content.equalsIgnoreCase(Lib.prefix + "github")) {
+            e.getAuthor().openPrivateChannel().complete().sendMessage("https://github.com/Sanduhr32/Uselessbot").complete();
+        }
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
         String content = e.getMessage().getContent();
@@ -77,6 +80,9 @@ public class Command_pub extends ListenerAdapter{
         if (syntax[0].equalsIgnoreCase(Lib.prefix + "invite")) {
             e.getAuthor().openPrivateChannel().complete().sendMessage("Add Uselessbot to your server and get useless Commands like kick,ban,mute,clear,game,unmute,add,remove and more (soon)").complete();
             e.getAuthor().openPrivateChannel().complete().sendMessage("https://discordapp.com/oauth2/authorize?client_id=" + Bot_main.getJDA().getSelfUser().getId() + "&scope=bot&permissions=8").complete();
+        }
+        if (content.equalsIgnoreCase(Lib.prefix + "github")) {
+            e.getAuthor().openPrivateChannel().complete().sendMessage("https://github.com/Sanduhr32/Uselessbot").complete();
         }
     }
 }
