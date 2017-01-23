@@ -27,76 +27,109 @@ public class Command_appowner extends ListenerAdapter {
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "add")) {
                 List<User> u = e.getMessage().getMentionedUsers();
                 List<Role> r = e.getMessage().getMentionedRoles();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
-                });
+                if (e.getChannelType().equals(0)) {
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "remove")) {
                 List<User> u = e.getMessage().getMentionedUsers();
                 List<Role> r = e.getMessage().getMentionedRoles();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
-                });
+                if (e.getChannelType().equals(0)) {
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
             }
             //Part of Permissionmanager
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "mute")) {
                 List<User> u = e.getMessage().getMentionedUsers();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
-                        e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().deny(Permission.MESSAGE_WRITE).complete();
-                    }
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
-                        e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().deny(Permission.MESSAGE_WRITE).queue();
-                    }
-                });
+                if (e.getChannelType().equals(0)) {
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
+                            e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().deny(Permission.MESSAGE_WRITE).complete();
+                        }
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
+                            e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().deny(Permission.MESSAGE_WRITE).queue();
+                        }
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "unmute")) {
                 List<User> u = e.getMessage().getMentionedUsers();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
-                        e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(Permission.MESSAGE_WRITE).complete();
-                    }
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
-                        e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().grant(Permission.MESSAGE_WRITE).queue();
-                    }
-                });
+                if (e.getChannelType().equals(0)) {
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
+                            e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(Permission.MESSAGE_WRITE).complete();
+                        }
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
+                            e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().grant(Permission.MESSAGE_WRITE).queue();
+                        }
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
             }
             //Write a msg as your Bot
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "message")) {
                 if (syntaxx[1] == null) {
-                    e.getMessage().deleteMessage().queue();
+                    if (e.getChannelType().equals(0)) {
+                        e.getMessage().deleteMessage().queue();
+                    }
+                    e.getChannel().sendMessage("Syntax error").queue();
                 }
                 if (syntaxx[1] != null) {
-                    e.getMessage().deleteMessage().queue();
+                    if (e.getChannelType().equals(0)) {
+                        e.getMessage().deleteMessage().queue();
+                    }
                     e.getChannel().sendMessage(syntaxx[1]).queue();
                 }
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "clear")) {
                 int i = Integer.parseInt(syntax[1]);
-                List<Message> msg = e.getTextChannel().getHistory().retrievePast(i).complete();
-                msg.forEach(message -> {
-                    message.deleteMessage().queue();
-                });
+                if (e.getChannelType().equals(0)) {
+                    List<Message> msg = e.getTextChannel().getHistory().retrievePast(i).complete();
+                    msg.forEach(message -> {
+                        message.deleteMessage().queue();
+                    });
+                } else {
+                    e.getChannel().sendMessage("Not possible").queue();
+                }
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "kick")) {
                 List<User> u = e.getMessage().getMentionedUsers();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You was kicked for " + syntaxx[1]).complete();
-                    e.getGuild().getController().kick(user.getId()).queue();
-                });
+                if (e.getChannelType().equals(0)) {
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You was kicked for " + syntaxx[1]).complete();
+                        e.getGuild().getController().kick(user.getId()).queue();
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "ban")) {
                 List<User> u = e.getMessage().getMentionedUsers();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You was banned for " + syntaxx[1]).complete();
-                    e.getGuild().getController().ban(user, 1).complete();
-                });
+                if (e.getChannelType().equals(0)) {
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You was banned for " + syntaxx[1]).complete();
+                        e.getGuild().getController().ban(user, 1).complete();
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
             }
             if (content.equalsIgnoreCase("shutdown")) {
                 Bot_main.getJDA().shutdown();
@@ -105,7 +138,9 @@ public class Command_appowner extends ListenerAdapter {
                 String GAME = String.valueOf(e.getJDA().getPresence().getGame().getName());
                 EmbedBuilder eb = new EmbedBuilder();
                 MessageBuilder mb = new MessageBuilder();
-                e.getMessage().deleteMessage().queue();
+                if (e.getChannelType().equals(0)) {
+                    e.getMessage().deleteMessage().queue();
+                }
                 if (syntax[1].equalsIgnoreCase("set")) {
                     e.getJDA().getPresence().setGame(Game.of(syntaxx[1]));
                     eb.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
@@ -136,76 +171,109 @@ public class Command_appowner extends ListenerAdapter {
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "add")) {
                 List<User> u = e.getMessage().getMentionedUsers();
                 List<Role> r = e.getMessage().getMentionedRoles();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
-                });
+                if (e.getChannelType().equals(0)) {
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "remove")) {
                 List<User> u = e.getMessage().getMentionedUsers();
                 List<Role> r = e.getMessage().getMentionedRoles();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
-                });
+                if (e.getChannelType().equals(0)) {
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
             }
             //Part of Permissionmanager
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "mute")) {
                 List<User> u = e.getMessage().getMentionedUsers();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
-                        e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().deny(Permission.MESSAGE_WRITE).complete();
-                    }
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
-                        e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().deny(Permission.MESSAGE_WRITE).queue();
-                    }
-                });
+                if (e.getChannelType().equals(0)) {
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
+                            e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().deny(Permission.MESSAGE_WRITE).complete();
+                        }
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
+                            e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().deny(Permission.MESSAGE_WRITE).queue();
+                        }
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "unmute")) {
                 List<User> u = e.getMessage().getMentionedUsers();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
-                        e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(Permission.MESSAGE_WRITE).complete();
-                    }
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
-                        e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().grant(Permission.MESSAGE_WRITE).queue();
-                    }
-                });
+                if (e.getChannelType().equals(0)) {
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
+                            e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(Permission.MESSAGE_WRITE).complete();
+                        }
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
+                            e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().grant(Permission.MESSAGE_WRITE).queue();
+                        }
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
             }
             //Write a msg as your Bot
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "message")) {
                 if (syntaxx[1] == null) {
-                    e.getMessage().deleteMessage().queue();
+                    if (e.getChannelType().equals(0)) {
+                        e.getMessage().deleteMessage().queue();
+                    }
+                    e.getChannel().sendMessage("Syntax error").queue();
                 }
                 if (syntaxx[1] != null) {
-                    e.getMessage().deleteMessage().queue();
+                    if (e.getChannelType().equals(0)) {
+                        e.getMessage().deleteMessage().queue();
+                    }
                     e.getChannel().sendMessage(syntaxx[1]).queue();
                 }
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "clear")) {
                 int i = Integer.parseInt(syntax[1]);
-                List<Message> msg = e.getTextChannel().getHistory().retrievePast(i).complete();
-                msg.forEach(message -> {
-                    message.deleteMessage().queue();
-                });
+                if (e.getChannelType().equals(0)) {
+                    List<Message> msg = e.getTextChannel().getHistory().retrievePast(i).complete();
+                    msg.forEach(message -> {
+                        message.deleteMessage().queue();
+                    });
+                } else {
+                    e.getChannel().sendMessage("Not possible").queue();
+                }
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "kick")) {
                 List<User> u = e.getMessage().getMentionedUsers();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You was kicked for " + syntaxx[1]).complete();
-                    e.getGuild().getController().kick(user.getId()).queue();
-                });
+                if (e.getChannelType().equals(0)) {
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You was kicked for " + syntaxx[1]).complete();
+                        e.getGuild().getController().kick(user.getId()).queue();
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "ban")) {
                 List<User> u = e.getMessage().getMentionedUsers();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You was banned for " + syntaxx[1]).complete();
-                    e.getGuild().getController().ban(user, 1).complete();
-                });
+                if (e.getChannelType().equals(0)) {
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You was banned for " + syntaxx[1]).complete();
+                        e.getGuild().getController().ban(user, 1).complete();
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
             }
             if (content.equalsIgnoreCase("shutdown")) {
                 Bot_main.getJDA().shutdown();
@@ -214,7 +282,9 @@ public class Command_appowner extends ListenerAdapter {
                 String GAME = String.valueOf(e.getJDA().getPresence().getGame().getName());
                 EmbedBuilder eb = new EmbedBuilder();
                 MessageBuilder mb = new MessageBuilder();
-                e.getMessage().deleteMessage().queue();
+                if (e.getChannelType().equals(0)) {
+                    e.getMessage().deleteMessage().queue();
+                }
                 if (syntax[1].equalsIgnoreCase("set")) {
                     e.getJDA().getPresence().setGame(Game.of(syntaxx[1]));
                     eb.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
