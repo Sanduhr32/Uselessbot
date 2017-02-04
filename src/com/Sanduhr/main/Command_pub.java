@@ -48,7 +48,7 @@ public class Command_pub extends ListenerAdapter{
             e.getAuthor().openPrivateChannel().complete().sendMessage("https://discordapp.com/oauth2/authorize?client_id=" + Bot_main.getJDA().getSelfUser().getId() + "&scope=bot&permissions=8").complete();
         }
         if (content.equalsIgnoreCase(Lib.prefix + "github")) {
-            e.getAuthor().openPrivateChannel().complete().sendMessage("https://github.com/Sanduhr32/Uselessbot").complete();
+            e.getAuthor().openPrivateChannel().complete().sendMessage("https://github.com/gerd2002/Uselessbot").complete();
         }
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
@@ -93,7 +93,7 @@ public class Command_pub extends ListenerAdapter{
             if (e.getChannelType().equals(0)) {
                 e.getMessage().deleteMessage().queue();
             }
-            e.getAuthor().openPrivateChannel().complete().sendMessage("https://github.com/Sanduhr32/Uselessbot").complete();
+            e.getAuthor().openPrivateChannel().complete().sendMessage("https://github.com/gerd2002/Uselessbot").complete();
         }
         if (syntax[0].equalsIgnoreCase(Lib.prefix + "game")) {
             String GAME = String.valueOf(e.getJDA().getPresence().getGame().getName());
