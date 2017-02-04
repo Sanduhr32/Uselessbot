@@ -46,6 +46,7 @@ public class Bot_main {
         j.addListener(new Command_guildowner());
         j.addListener(new Command_appowner());
         j.addListener(new Guildevent());
+        j.addListener(new Command_priv());
         JDA jda = j.buildBlocking();
         JDA = jda;
         System.out.println(jda.getAccountType());
