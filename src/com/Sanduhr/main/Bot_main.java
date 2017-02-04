@@ -6,7 +6,6 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -44,7 +43,7 @@ public class Bot_main {
         j.setStatus(OnlineStatus.ONLINE);
         j.addListener(new Command_pub());
         j.addListener(new Command_guildowner());
-        j.addListener(new Command_appowner());
+        j.addListener(new Command_whitelisted());
         j.addListener(new Guildevent());
         j.addListener(new Command_priv());
         JDA jda = j.buildBlocking();
@@ -55,17 +54,7 @@ public class Bot_main {
         if (g.isEmpty()) {
             System.out.println("No Guilds");
         }
-        if (g.size()>=1) {
-            g.forEach(guild -> {
-                List<Member> m = guild.getMembers();
-                System.out.println(guild.getName());
-                System.out.println(guild.getId());
-                System.out.println("Name: " + guild.getOwner().getUser().getName() + " ID: " + guild.getOwner().getUser().getId());
-                m.forEach(member -> { //Remove to reduce output
-                    System.out.println("Name: " + member.getEffectiveName()+ " ID: " + member.getUser().getId()); //Remove for reduce output
-                }); //Remove for reduce output
-            });
-        }
+        Lib.main();
     }
     public static JDA getJDA() {
         return JDA;
