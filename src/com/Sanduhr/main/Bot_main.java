@@ -6,14 +6,13 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
 
 import java.util.List;
 
 public class Bot_main {
     private static JDA JDA;
-    public static final String BOT_TOKEN = ""; //Insert your Application Token
-    public static final String BOT_GAME = "powered by Sanduhr.exe"; //DONT CHANGE THE DEFAULT GAME ORE GIVE ME CREDIT SOMEWHERE ELSE
+    public static final String BOT_TOKEN = "MjcyMzE5NTA2OTUxNzAwNDgw.C3e9uA.NLggQfyY26Wr3S2pt0iTSBisYcs"; //Insert your Application Token
+    public static final String BOT_GAME = "powered by Sanduhr.exe"; //DONT CHANGE THE DEFAULT GAME OR GIVE ME CREDIT SOMEWHERE ELSE
     public static void main(String[] args)throws Exception {
 
         JDABuilder j = new JDABuilder(AccountType.BOT);
@@ -22,7 +21,7 @@ public class Bot_main {
         j.setStatus(OnlineStatus.ONLINE);
         j.addListener(new Command_pub());
         j.addListener(new Command_guildowner());
-        j.addListener(new Command_appowner());
+        j.addListener(new Command_whitelisted());
         j.addListener(new Guildevent());
         JDA jda = j.buildBlocking();
         JDA = jda;
@@ -32,17 +31,7 @@ public class Bot_main {
         if (g.isEmpty()) {
             System.out.println("No Guilds");
         }
-        if (g.size()>=1) {
-            g.forEach(guild -> {
-                List<Member> m = guild.getMembers();
-                System.out.println(guild.getName());
-                System.out.println(guild.getId());
-                System.out.println("Name: " + guild.getOwner().getUser().getName() + " ID: " + guild.getOwner().getUser().getId());
-                m.forEach(member -> { //Remove to reduce output
-                    System.out.println("Name: " + member.getEffectiveName()+ " ID: " + member.getUser().getId()); //Remove for reduce output
-                }); //Remove for reduce output
-            });
-        }
+        Lib.main();
     }
     public static JDA getJDA() {
         return JDA;
