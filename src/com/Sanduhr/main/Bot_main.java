@@ -17,7 +17,7 @@ import java.io.*;
 public class Bot_main {
     private static JDA JDA;
     public static String t; //Insert your Application Token
-    public static final String BOT_GAME = "powered by Sanduhr.exe"; //DONT CHANGE THE DEFAULT GAME ORE GIVE ME CREDIT SOMEWHERE ELSE
+    public static final String BOT_GAME = "created by Sanduhr.exe"; //DONT CHANGE THE DEFAULT GAME ORE GIVE ME CREDIT SOMEWHERE ELSE
     public static void main(String[] args)throws Exception {
 
         t = "INVALIDTOKEN";
