@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Bot_main {
     private static JDA JDA;
-    public static final String BOT_TOKEN = "MjcyMzE5NTA2OTUxNzAwNDgw.C3e9uA.NLggQfyY26Wr3S2pt0iTSBisYcs"; //Insert your Application Token
+    public static final String BOT_TOKEN = ""; //Insert your Application Token
     public static final String BOT_GAME = "powered by Sanduhr.exe"; //DONT CHANGE THE DEFAULT GAME OR GIVE ME CREDIT SOMEWHERE ELSE
     public static void main(String[] args)throws Exception {
 
