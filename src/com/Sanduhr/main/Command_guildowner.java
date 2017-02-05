@@ -28,7 +28,7 @@ public class Command_guildowner extends ListenerAdapter {
                 List<Role> r = e.getMessage().getMentionedRoles();
                 e.getMessage().deleteMessage().queue();
                 u.forEach(user -> {
-                    e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
+                    e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
                 });
                 Lib.executedcmd++;
             }
@@ -38,7 +38,7 @@ public class Command_guildowner extends ListenerAdapter {
                 List<Role> r = e.getMessage().getMentionedRoles();
                 e.getMessage().deleteMessage().queue();
                 u.forEach(user -> {
-                    e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
+                    e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), r).queue();
                 });
                 Lib.executedcmd++;
             }
@@ -137,7 +137,7 @@ public class Command_guildowner extends ListenerAdapter {
                 List<Role> r = e.getMessage().getMentionedRoles();
                 e.getMessage().deleteMessage().queue();
                 u.forEach(user -> {
-                    e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
+                    e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
                 });
                 Lib.executedcmd++;
             }
@@ -147,7 +147,7 @@ public class Command_guildowner extends ListenerAdapter {
                 List<Role> r = e.getMessage().getMentionedRoles();
                 e.getMessage().deleteMessage().queue();
                 u.forEach(user -> {
-                    e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
+                    e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), r).queue();
                 });
                 Lib.executedcmd++;
             }
