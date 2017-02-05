@@ -22,6 +22,5 @@ public class Lib {
     public static int cleared = 0;
     public static void main() {
         whitelist.add(YOUR_ID);
-        whitelist.add(FRIEND_ID);
     }
 }
