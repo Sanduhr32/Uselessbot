@@ -85,6 +85,8 @@ public class Command_whitelisted extends ListenerAdapter {
                 }
                 //Write a msg as your Bot
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "message")) {
+                    if (e.getAuthor().getId().equals(Lib.YOUR_ID))
+                        return;
                     if (syntaxx[1] == null) {
                         if (e.getChannelType().equals(ChannelType.TEXT)) {
                             e.getMessage().deleteMessage().queue();
@@ -140,6 +142,8 @@ public class Command_whitelisted extends ListenerAdapter {
                     Lib.executedcmd++;
                 }
                 if (content.equalsIgnoreCase("shutdown")) {
+                    if (e.getAuthor().getId().equals(Lib.YOUR_ID))
+                        return;
                     Bot_main.getJDA().shutdown();
                 }
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "game")) {
@@ -176,7 +180,7 @@ public class Command_whitelisted extends ListenerAdapter {
                             eb.addField("UserID:", text, false);
                         });
                         mb.setEmbed(eb.build());
-                        e.getGuild().getOwner().getUser().openPrivateChannel().complete().sendMessage(mb.build()).complete();
+                        e.getGuild().getAuthor().openPrivateChannel().complete().sendMessage(mb.build()).complete();
                     }
                 }
             }
@@ -252,6 +256,8 @@ public class Command_whitelisted extends ListenerAdapter {
                 }
                 //Write a msg as your Bot
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "message")) {
+                    if (e.getAuthor().getId().equals(Lib.YOUR_ID))
+                        return;
                     if (syntaxx[1] == null) {
                         if (e.getChannelType().equals(ChannelType.TEXT)) {
                             e.getMessage().deleteMessage().queue();
@@ -307,6 +313,8 @@ public class Command_whitelisted extends ListenerAdapter {
                     Lib.executedcmd++;
                 }
                 if (content.equalsIgnoreCase("shutdown")) {
+                    if (e.getAuthor().getId().equals(Lib.YOUR_ID))
+                        return;
                     Bot_main.getJDA().shutdown();
                 }
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "game")) {
@@ -343,7 +351,7 @@ public class Command_whitelisted extends ListenerAdapter {
                             eb.addField("UserID:", text, false);
                         });
                         mb.setEmbed(eb.build());
-                        e.getGuild().getOwner().getUser().openPrivateChannel().complete().sendMessage(mb.build()).complete();
+                        e.getGuild().getAuthor().openPrivateChannel().complete().sendMessage(mb.build()).complete();
                     }
                 }
             }
