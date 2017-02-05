@@ -28,7 +28,7 @@ public class Command_whitelisted extends ListenerAdapter {
                     if (e.getChannelType().equals(ChannelType.TEXT)) {
                         e.getMessage().deleteMessage().queue();
                         u.forEach(user -> {
-                            e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
+                            e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
                         });
                     } else {
                         e.getChannel().sendMessage(Lib.Error_guild).queue();
@@ -41,7 +41,7 @@ public class Command_whitelisted extends ListenerAdapter {
                     if (e.getChannelType().equals(ChannelType.TEXT)) {
                         e.getMessage().deleteMessage().queue();
                         u.forEach(user -> {
-                            e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
+                            e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), r).queue();
                         });
                     } else {
                         e.getChannel().sendMessage(Lib.Error_guild).queue();
@@ -195,7 +195,7 @@ public class Command_whitelisted extends ListenerAdapter {
                     if (e.getChannelType().equals(ChannelType.TEXT)) {
                         e.getMessage().deleteMessage().queue();
                         u.forEach(user -> {
-                            e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
+                            e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
                         });
                     } else {
                         e.getChannel().sendMessage(Lib.Error_guild).queue();
@@ -208,7 +208,7 @@ public class Command_whitelisted extends ListenerAdapter {
                     if (e.getChannelType().equals(ChannelType.TEXT)) {
                         e.getMessage().deleteMessage().queue();
                         u.forEach(user -> {
-                            e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), e.getGuild().getRoleById(r.get(0).getId())).queue();
+                            e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), r).queue();
                         });
                     } else {
                         e.getChannel().sendMessage(Lib.Error_guild).queue();
