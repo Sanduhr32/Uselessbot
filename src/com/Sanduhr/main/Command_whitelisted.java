@@ -84,18 +84,19 @@ public class Command_whitelisted extends ListenerAdapter {
                     Lib.executedcmd++;
                 }
                 //Write a msg as your Bot
-                if (syntax[0].equalsIgnoreCase(Lib.prefix + "message")) {
+                if (syntaxx[0].equalsIgnoreCase(Lib.prefix + "message")) {
                     if (!e.getAuthor().getId().equals(Lib.YOUR_ID))
                         return;
+                    if (e.getChannelType().equals(ChannelType.TEXT)) {
+                        e.getMessage().deleteMessage().queue();
+                    }
                     if (syntaxx[1] == null) {
                         if (e.getChannelType().equals(ChannelType.TEXT)) {
-                            e.getMessage().deleteMessage().queue();
                         }
                         e.getChannel().sendMessage("Syntax error").queue();
                     }
                     if (syntaxx[1] != null) {
                         if (e.getChannelType().equals(ChannelType.TEXT)) {
-                            e.getMessage().deleteMessage().queue();
                         }
                         e.getChannel().sendMessage(syntaxx[1]).queue();
                     }
@@ -255,18 +256,19 @@ public class Command_whitelisted extends ListenerAdapter {
                     Lib.executedcmd++;
                 }
                 //Write a msg as your Bot
-                if (syntax[0].equalsIgnoreCase(Lib.prefix + "message")) {
+                if (syntaxx[0].equalsIgnoreCase(Lib.prefix + "message")) {
                     if (!e.getAuthor().getId().equals(Lib.YOUR_ID))
                         return;
+                    if (e.getChannelType().equals(ChannelType.TEXT)) {
+                        e.getMessage().deleteMessage().queue();
+                    }
                     if (syntaxx[1] == null) {
                         if (e.getChannelType().equals(ChannelType.TEXT)) {
-                            e.getMessage().deleteMessage().queue();
                         }
                         e.getChannel().sendMessage("Syntax error").queue();
                     }
                     if (syntaxx[1] != null) {
                         if (e.getChannelType().equals(ChannelType.TEXT)) {
-                            e.getMessage().deleteMessage().queue();
                         }
                         e.getChannel().sendMessage(syntaxx[1]).queue();
                     }
