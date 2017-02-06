@@ -86,6 +86,34 @@ public class Command_pub extends ListenerAdapter{
             Lib.sent++;
             Lib.executedcmd++;
         }
+        if (syntax[0].equalsIgnoreCase(Lib.prefix + "syntax")) {
+            EmbedBuilder eb = new EmbedBuilder();
+            MessageBuilder mb = new MessageBuilder();
+            if (syntax[1].equals("")) {
+                eb.setAuthor(e.getAuthor().getName(),null,e.getAuthor().getAvatarUrl());
+                eb.addField("`"+Lib.prefix+"github`", "Sends you the github link via dm",false);
+                eb.addField("`"+Lib.prefix+"request <name> :<Action>`", "Requests Sanduhr to fix it",false);
+                eb.addField("`"+Lib.prefix+"status`", "Returns some infos",false);
+                eb.addField("`"+Lib.prefix+"invite`", "Sends you a auth link via dm",false);
+                eb.addField("`"+Lib.prefix+"game <get|set :NAME>`", "Sends you the current game or sets the current game if you have permissions",false);
+                eb.addField("`"+Lib.prefix+"syntax`", "Sends you this message again",false);
+                Lib.whitelist.forEach(id -> {
+                    if (e.getAuthor().getId().equals(id)||e.getAuthor().equals(e.getGuild().getOwner())) {
+                        eb.addField("`"+Lib.prefix+"add @USER @ROLE`", "Adds unlimited roles to unlimited user",false);
+                        eb.addField("`"+Lib.prefix+"remove @USER @ROLE`", "Removes unlimited roles to unlimited user",false);
+                        eb.addField("`"+Lib.prefix+"kick @USER :REASON`", "Kicks unlimited user and sends them a dm with the reason",false);
+                        eb.addField("`"+Lib.prefix+"ban @USER :REASON`", "Swings the banhammer for unlimited user and sends them a dm with the reason",false);
+                        eb.addField("`"+Lib.prefix+"mute @USER`", "Mutes unlimited user",false);
+                        eb.addField("`"+Lib.prefix+"ummute @USER`", "Unmutes unlimited user",false);
+                        eb.addField("`"+Lib.prefix+"clear <1-100>`", "Deletes the last <1-100> messages but takes a while | RestActiom",false);
+                        eb.addField("`"+Lib.prefix+"whitelist <add|remove @USER>|<print>`", "Adds|Removes mentioned user at the whitelist or prints the whitelist",false);
+                    }
+                });
+                e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+            } else {
+                e.getChannel().sendMessage("´"+Lib.prefix+"syntax` has no syntax like that\nSo write ??syntax or let it be").queue();
+            }
+        }
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
         String content = e.getMessage().getContent();
@@ -156,6 +184,34 @@ public class Command_pub extends ListenerAdapter{
             }
             Lib.sent++;
             Lib.executedcmd++;
+        }
+        if (syntax[0].equalsIgnoreCase(Lib.prefix + "syntax")) {
+            EmbedBuilder eb = new EmbedBuilder();
+            MessageBuilder mb = new MessageBuilder();
+            if (syntax[1].equals("")) {
+                eb.setAuthor(e.getAuthor().getName(),null,e.getAuthor().getAvatarUrl());
+                eb.addField("`"+Lib.prefix+"github`", "Sends you the github link via dm",false);
+                eb.addField("`"+Lib.prefix+"request <name> :<Action>`", "Requests Sanduhr to fix it",false);
+                eb.addField("`"+Lib.prefix+"status`", "Returns some infos",false);
+                eb.addField("`"+Lib.prefix+"invite`", "Sends you a auth link via dm",false);
+                eb.addField("`"+Lib.prefix+"game <get|set :NAME>`", "Sends you the current game or sets the current game if you have permissions",false);
+                eb.addField("`"+Lib.prefix+"syntax`", "Sends you this message again",false);
+                Lib.whitelist.forEach(id -> {
+                    if (e.getAuthor().getId().equals(id)||e.getAuthor().equals(e.getGuild().getOwner())) {
+                        eb.addField("`"+Lib.prefix+"add @USER @ROLE`", "Adds unlimited roles to unlimited user",false);
+                        eb.addField("`"+Lib.prefix+"remove @USER @ROLE`", "Removes unlimited roles to unlimited user",false);
+                        eb.addField("`"+Lib.prefix+"kick @USER :REASON`", "Kicks unlimited user and sends them a dm with the reason",false);
+                        eb.addField("`"+Lib.prefix+"ban @USER :REASON`", "Swings the banhammer for unlimited user and sends them a dm with the reason",false);
+                        eb.addField("`"+Lib.prefix+"mute @USER`", "Mutes unlimited user",false);
+                        eb.addField("`"+Lib.prefix+"ummute @USER`", "Unmutes unlimited user",false);
+                        eb.addField("`"+Lib.prefix+"clear <1-100>`", "Deletes the last <1-100> messages but takes a while | RestActiom",false);
+                        eb.addField("`"+Lib.prefix+"whitelist <add|remove @USER>|<print>`", "Adds|Removes mentioned user at the whitelist or prints the whitelist",false);
+                    }
+                });
+                e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+            } else {
+                e.getChannel().sendMessage("´"+Lib.prefix+"syntax` has no syntax like that\nSo write ??syntax or let it be").queue();
+            }
         }
     }
 }
