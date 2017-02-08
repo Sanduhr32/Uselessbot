@@ -9,10 +9,11 @@ import net.dv8tion.jda.core.entities.Guild;
 
 import java.util.List;
 
+import static com.Sanduhr.main.config.BOT_TOKEN;
+import static com.Sanduhr.main.config.BOT_GAME;
+
 public class Bot_main {
     private static JDA JDA;
-    public static final String BOT_TOKEN = Config.BOT_TOKEN;
-    public static final String BOT_GAME = "empowered by Sanduhr.exe"; //DONT CHANGE THE DEFAULT GAME OR GIVE ME CREDIT SOMEWHERE ELSE
     public static void main(String[] args)throws Exception {
 
         JDABuilder j = new JDABuilder(AccountType.BOT);

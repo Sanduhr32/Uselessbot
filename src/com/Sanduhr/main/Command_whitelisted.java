@@ -91,13 +91,9 @@ public class Command_whitelisted extends ListenerAdapter {
                         e.getMessage().deleteMessage().queue();
                     }
                     if (syntaxx[1] == null) {
-                        if (e.getChannelType().equals(ChannelType.TEXT)) {
-                        }
                         e.getChannel().sendMessage("Syntax error").queue();
                     }
                     if (syntaxx[1] != null) {
-                        if (e.getChannelType().equals(ChannelType.TEXT)) {
-                        }
                         e.getChannel().sendMessage(syntaxx[1]).queue();
                     }
                     Lib.sent++;
@@ -112,7 +108,7 @@ public class Command_whitelisted extends ListenerAdapter {
                             Lib.cleared++;
                         });
                     } else {
-                        e.getChannel().sendMessage("Not possible").queue();
+                        e.getChannel().sendMessage(Lib.Error_guild).queue();
                     }
                     Lib.executedcmd++;
                 }
@@ -174,14 +170,31 @@ public class Command_whitelisted extends ListenerAdapter {
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "whitelist")) {
                     EmbedBuilder eb = new EmbedBuilder();
                     MessageBuilder mb = new MessageBuilder();
-                    List<User> u = e.getMessage().getMentionedUsers();
-                    if (syntax[1].equalsIgnoreCase("print")) {
-                        eb.setColor(Lib.Blue);
-                        Lib.whitelist.forEach(text -> {
-                            eb.addField("UserID:", text, false);
-                        });
-                        mb.setEmbed(eb.build());
-                        e.getGuild().getAuthor().openPrivateChannel().complete().sendMessage(mb.build()).complete();
+                    EmbedBuilder eb1 = new EmbedBuilder();
+                    MessageBuilder mb1 = new MessageBuilder();
+                    if (e.getChannelType().equals(ChannelType.TEXT)) {
+                        if (syntax[1].equalsIgnoreCase("print")) {
+                            eb.setColor(Lib.Blue);
+                            eb.setTitle("ID:");
+                            Lib.whitelist.forEach(id -> {
+                                eb.addField("User:", id, false);
+                            });
+                            eb1.setColor(Lib.Blue);
+                            eb1.setTitle("Name:");
+                            Lib.whitelistt.forEach(name -> {
+                                eb1.addField("User:", name, false);
+                            });
+                            mb.setEmbed(eb.build());
+                            mb1.setEmbed(eb1.build());
+                            e.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> {
+                                privateChannel.sendMessage("Namen und ID stimmen in der Reihenfolge überein.").queue();
+                                privateChannel.sendMessage(mb1.build()).queue();
+                                privateChannel.sendMessage(mb.build()).queue();
+                            });
+                            Lib.sent++;
+                        }
+                    } else {
+                        e.getChannel().sendMessage(Lib.Error_guild).queue();
                     }
                 }
             }
@@ -263,13 +276,9 @@ public class Command_whitelisted extends ListenerAdapter {
                         e.getMessage().deleteMessage().queue();
                     }
                     if (syntaxx[1] == null) {
-                        if (e.getChannelType().equals(ChannelType.TEXT)) {
-                        }
                         e.getChannel().sendMessage("Syntax error").queue();
                     }
                     if (syntaxx[1] != null) {
-                        if (e.getChannelType().equals(ChannelType.TEXT)) {
-                        }
                         e.getChannel().sendMessage(syntaxx[1]).queue();
                     }
                     Lib.sent++;
@@ -284,7 +293,7 @@ public class Command_whitelisted extends ListenerAdapter {
                             Lib.cleared++;
                         });
                     } else {
-                        e.getChannel().sendMessage("Not possible").queue();
+                        e.getChannel().sendMessage(Lib.Error_guild).queue();
                     }
                     Lib.executedcmd++;
                 }
@@ -346,14 +355,31 @@ public class Command_whitelisted extends ListenerAdapter {
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "whitelist")) {
                     EmbedBuilder eb = new EmbedBuilder();
                     MessageBuilder mb = new MessageBuilder();
-                    List<User> u = e.getMessage().getMentionedUsers();
-                    if (syntax[1].equalsIgnoreCase("print")) {
-                        eb.setColor(Lib.Blue);
-                        Lib.whitelist.forEach(text -> {
-                            eb.addField("UserID:", text, false);
-                        });
-                        mb.setEmbed(eb.build());
-                        e.getGuild().getAuthor().openPrivateChannel().complete().sendMessage(mb.build()).complete();
+                    EmbedBuilder eb1 = new EmbedBuilder();
+                    MessageBuilder mb1 = new MessageBuilder();
+                    if (e.getChannelType().equals(ChannelType.TEXT)) {
+                        if (syntax[1].equalsIgnoreCase("print")) {
+                            eb.setColor(Lib.Blue);
+                            eb.setTitle("ID:");
+                            Lib.whitelist.forEach(id -> {
+                                eb.addField("User:", id, false);
+                            });
+                            eb1.setColor(Lib.Blue);
+                            eb1.setTitle("Name:");
+                            Lib.whitelistt.forEach(name -> {
+                                eb1.addField("User:", name, false);
+                            });
+                            mb.setEmbed(eb.build());
+                            mb1.setEmbed(eb1.build());
+                            e.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> {
+                                privateChannel.sendMessage("Namen und ID stimmen in der Reihenfolge überein.").queue();
+                                privateChannel.sendMessage(mb1.build()).queue();
+                                privateChannel.sendMessage(mb.build()).queue();
+                            });
+                            Lib.sent++;
+                        }
+                    } else {
+                        e.getChannel().sendMessage(Lib.Error_guild).queue();
                     }
                 }
             }

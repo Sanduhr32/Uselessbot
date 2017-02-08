@@ -2,11 +2,13 @@ package com.Sanduhr.main;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberLeaveEvent;
+import net.dv8tion.jda.core.events.user.UserTypingEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 /**
@@ -16,10 +18,12 @@ public class Guildevent extends ListenerAdapter {
     @Override
     public void onGuildJoin(GuildJoinEvent e) {
         System.out.println("Joined " + e.getGuild().getName());
-        e.getGuild().getPublicChannel().sendMessage("Hello, " + e.getGuild().getOwner().getAsMention()).queue();
+        e.getGuild().getPublicChannel().sendMessage("Hello, " + e.getGuild().getOwner().getUser().getName()).queue();
+        e.getJDA().getPresence().setGame(Game.of(e.getGuild().getName()));
     }
     public void onGuildLeave(GuildLeaveEvent e) {
         e.getGuild().getOwner().getUser().openPrivateChannel().complete().sendMessage("Bye").complete();
+        System.out.println("Left " + e.getGuild().getName());
     }
     public void onGuildMemberJoin(GuildMemberJoinEvent e) {
         EmbedBuilder eb = new EmbedBuilder();
