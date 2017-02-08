@@ -41,4 +41,9 @@ public class Guildevent extends ListenerAdapter {
         Message m  = mb.build();
         e.getGuild().getPublicChannel().sendMessage(m).queue();
     }
+    public void onUserTyping(UserTypingEvent e) {
+        if (e.getMember().getUser().getId().equals(Lib.YOUR_ID)) {
+            e.getChannel().sendTyping().queue();
+        }
+    }
 }
