@@ -15,7 +15,9 @@ import static com.Sanduhr.main.config.BOT_GAME;
 public class Bot_main {
     private static JDA JDA;
     public static void main(String[] args)throws Exception {
-
+        start();
+    }
+    public static void start() throws Exception {
         JDABuilder j = new JDABuilder(AccountType.BOT);
         j.setToken(BOT_TOKEN);
         j.setGame(Game.of(BOT_GAME));

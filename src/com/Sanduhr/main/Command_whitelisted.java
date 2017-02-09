@@ -20,7 +20,7 @@ public class Command_whitelisted extends ListenerAdapter {
         String[] syntax = e.getMessage().getContent().split(" ");
         String[] syntaxx = e.getMessage().getContent().split(":");
         Lib.whitelist.forEach(string -> {
-            if (!e.getChannelType().equals(ChannelType.TEXT)) {
+            if (!e.isFromType(ChannelType.TEXT)) {
                 if (e.getAuthor().isBot())
                     return;
                 e.getChannel().sendMessage(Lib.Error_guild).queue();
@@ -30,7 +30,7 @@ public class Command_whitelisted extends ListenerAdapter {
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "add")) {
                     List<User> u = e.getMessage().getMentionedUsers();
                     List<Role> r = e.getMessage().getMentionedRoles();
-                        e.getMessage().deleteMessage().queue();
+                        e.getMessage().delete().queue();
                         u.forEach(user -> {
                             e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
                         });
@@ -39,7 +39,7 @@ public class Command_whitelisted extends ListenerAdapter {
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "remove")) {
                     List<User> u = e.getMessage().getMentionedUsers();
                     List<Role> r = e.getMessage().getMentionedRoles();
-                    e.getMessage().deleteMessage().queue();
+                    e.getMessage().delete().queue();
                     u.forEach(user -> {
                         e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), r).queue();
                     });
@@ -48,7 +48,7 @@ public class Command_whitelisted extends ListenerAdapter {
                 //Part of Permissionmanager
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "mute")) {
                     List<User> u = e.getMessage().getMentionedUsers();
-                    e.getMessage().deleteMessage().queue();
+                    e.getMessage().delete().queue();
                     u.forEach(user -> {
                         if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
                             e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().deny(Permission.MESSAGE_WRITE).complete();
@@ -61,7 +61,7 @@ public class Command_whitelisted extends ListenerAdapter {
                 }
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "unmute")) {
                     List<User> u = e.getMessage().getMentionedUsers();
-                    e.getMessage().deleteMessage().queue();
+                    e.getMessage().delete().queue();
                     u.forEach(user -> {
                         if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
                             e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(Permission.MESSAGE_WRITE).complete();
@@ -77,7 +77,7 @@ public class Command_whitelisted extends ListenerAdapter {
                     if (!e.getAuthor().getId().equals(Lib.YOUR_ID))
                         return;
                     if (e.getChannelType().equals(ChannelType.TEXT)) {
-                        e.getMessage().deleteMessage().queue();
+                        e.getMessage().delete().queue();
                     }
                     if (syntaxx[1] == null) {
                         e.getChannel().sendMessage("Syntax error").queue();
@@ -92,14 +92,14 @@ public class Command_whitelisted extends ListenerAdapter {
                     int i = Integer.parseInt(syntax[1]);
                     List<Message> msg = e.getTextChannel().getHistory().retrievePast(i).complete();
                     msg.forEach(message -> {
-                        message.deleteMessage().queue();
+                        message.delete().queue();
                         Lib.cleared++;
                     });
                     Lib.executedcmd++;
                 }
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "kick")) {
                     List<User> u = e.getMessage().getMentionedUsers();
-                    e.getMessage().deleteMessage().queue();
+                    e.getMessage().delete().queue();
                     u.forEach(user -> {
                         e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You was kicked for " + syntaxx[1]).complete();
                         e.getGuild().getController().kick(user.getId()).queue();
@@ -108,7 +108,7 @@ public class Command_whitelisted extends ListenerAdapter {
                 }
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "ban")) {
                     List<User> u = e.getMessage().getMentionedUsers();
-                    e.getMessage().deleteMessage().queue();
+                    e.getMessage().delete().queue();
                     u.forEach(user -> {
                         e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You was banned for " + syntaxx[1]).complete();
                         e.getGuild().getController().ban(user, 1).complete();
@@ -120,12 +120,22 @@ public class Command_whitelisted extends ListenerAdapter {
                         return;
                     Bot_main.getJDA().shutdown();
                 }
+                if (content.equalsIgnoreCase("relog")) {
+                    if (!e.getAuthor().getId().equals(Lib.YOUR_ID))
+                        return;
+                    Bot_main.getJDA().shutdown(false);
+                    try {
+                        Bot_main.start();
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                }
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "game")) {
                     String GAME = e.getJDA().getPresence().getGame().getName();
                     EmbedBuilder eb = new EmbedBuilder();
                     MessageBuilder mb = new MessageBuilder();
                     if (e.getChannelType().equals(ChannelType.TEXT)) {
-                        e.getMessage().deleteMessage().queue();
+                        e.getMessage().delete().queue();
                     }
                     if (syntax[1].equalsIgnoreCase("set")) {
                         if (e.getAuthor().getId().equals(Lib.YOUR_ID)) {
@@ -147,27 +157,15 @@ public class Command_whitelisted extends ListenerAdapter {
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "whitelist")) {
                     EmbedBuilder eb = new EmbedBuilder();
                     MessageBuilder mb = new MessageBuilder();
-                    EmbedBuilder eb1 = new EmbedBuilder();
-                    MessageBuilder mb1 = new MessageBuilder();
                     if (syntax[1].equalsIgnoreCase("print")) {
                         eb.setColor(Lib.Blue);
-                        eb.setTitle("ID:");
                         Lib.whitelist.forEach(id -> {
-                            eb.addField("User:", id, false);
-                        });
-                        eb1.setColor(Lib.Blue);
-                        eb1.setTitle("Name:");
-                        Lib.whitelistt.forEach(name -> {
-                            eb1.addField("User:", name, false);
+                            eb.addField("UserID:","**Name:** "+e.getJDA().getUserById(id).getName()+"\n**ID:** "+ id, false);
                         });
                         mb.setEmbed(eb.build());
-                        mb1.setEmbed(eb1.build());
                         e.getAuthor().openPrivateChannel().queue(privateChannel -> {
-                            privateChannel.sendMessage("Namen und ID stimmen in der Reihenfolge überein.").queue();
-                            privateChannel.sendMessage(mb1.build()).queue();
                             privateChannel.sendMessage(mb.build()).queue();
                         });
-                        Lib.sent++;
                     }
                 }
             }
@@ -178,7 +176,7 @@ public class Command_whitelisted extends ListenerAdapter {
         String[] syntax = e.getMessage().getContent().split(" ");
         String[] syntaxx = e.getMessage().getContent().split(":");
         Lib.whitelist.forEach(string -> {
-            if (!e.getChannelType().equals(ChannelType.TEXT)) {
+            if (!e.isFromType(ChannelType.TEXT)) {
                 if (e.getAuthor().isBot())
                     return;
                 e.getChannel().sendMessage(Lib.Error_guild).queue();
@@ -188,7 +186,7 @@ public class Command_whitelisted extends ListenerAdapter {
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "add")) {
                     List<User> u = e.getMessage().getMentionedUsers();
                     List<Role> r = e.getMessage().getMentionedRoles();
-                    e.getMessage().deleteMessage().queue();
+                    e.getMessage().delete().queue();
                     u.forEach(user -> {
                         e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
                     });
@@ -197,7 +195,7 @@ public class Command_whitelisted extends ListenerAdapter {
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "remove")) {
                     List<User> u = e.getMessage().getMentionedUsers();
                     List<Role> r = e.getMessage().getMentionedRoles();
-                    e.getMessage().deleteMessage().queue();
+                    e.getMessage().delete().queue();
                     u.forEach(user -> {
                         e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), r).queue();
                     });
@@ -206,7 +204,7 @@ public class Command_whitelisted extends ListenerAdapter {
                 //Part of Permissionmanager
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "mute")) {
                     List<User> u = e.getMessage().getMentionedUsers();
-                    e.getMessage().deleteMessage().queue();
+                    e.getMessage().delete().queue();
                     u.forEach(user -> {
                         if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
                             e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().deny(Permission.MESSAGE_WRITE).complete();
@@ -219,7 +217,7 @@ public class Command_whitelisted extends ListenerAdapter {
                 }
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "unmute")) {
                     List<User> u = e.getMessage().getMentionedUsers();
-                    e.getMessage().deleteMessage().queue();
+                    e.getMessage().delete().queue();
                     u.forEach(user -> {
                         if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
                             e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(Permission.MESSAGE_WRITE).complete();
@@ -235,7 +233,7 @@ public class Command_whitelisted extends ListenerAdapter {
                     if (!e.getAuthor().getId().equals(Lib.YOUR_ID))
                         return;
                     if (e.getChannelType().equals(ChannelType.TEXT)) {
-                        e.getMessage().deleteMessage().queue();
+                        e.getMessage().delete().queue();
                     }
                     if (syntaxx[1] == null) {
                         e.getChannel().sendMessage("Syntax error").queue();
@@ -250,14 +248,14 @@ public class Command_whitelisted extends ListenerAdapter {
                     int i = Integer.parseInt(syntax[1]);
                     List<Message> msg = e.getTextChannel().getHistory().retrievePast(i).complete();
                     msg.forEach(message -> {
-                        message.deleteMessage().queue();
+                        message.delete().queue();
                         Lib.cleared++;
                     });
                     Lib.executedcmd++;
                 }
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "kick")) {
                     List<User> u = e.getMessage().getMentionedUsers();
-                    e.getMessage().deleteMessage().queue();
+                    e.getMessage().delete().queue();
                     u.forEach(user -> {
                         e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You was kicked for " + syntaxx[1]).complete();
                         e.getGuild().getController().kick(user.getId()).queue();
@@ -266,7 +264,7 @@ public class Command_whitelisted extends ListenerAdapter {
                 }
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "ban")) {
                     List<User> u = e.getMessage().getMentionedUsers();
-                    e.getMessage().deleteMessage().queue();
+                    e.getMessage().delete().queue();
                     u.forEach(user -> {
                         e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You was banned for " + syntaxx[1]).complete();
                         e.getGuild().getController().ban(user, 1).complete();
@@ -278,12 +276,22 @@ public class Command_whitelisted extends ListenerAdapter {
                         return;
                     Bot_main.getJDA().shutdown();
                 }
+                if (content.equalsIgnoreCase("relog")) {
+                    if (!e.getAuthor().getId().equals(Lib.YOUR_ID))
+                        return;
+                    Bot_main.getJDA().shutdown(false);
+                    try {
+                        Bot_main.start();
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                }
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "game")) {
                     String GAME = e.getJDA().getPresence().getGame().getName();
                     EmbedBuilder eb = new EmbedBuilder();
                     MessageBuilder mb = new MessageBuilder();
                     if (e.getChannelType().equals(ChannelType.TEXT)) {
-                        e.getMessage().deleteMessage().queue();
+                        e.getMessage().delete().queue();
                     }
                     if (syntax[1].equalsIgnoreCase("set")) {
                         if (e.getAuthor().getId().equals(Lib.YOUR_ID)) {
@@ -305,27 +313,15 @@ public class Command_whitelisted extends ListenerAdapter {
                 if (syntax[0].equalsIgnoreCase(Lib.prefix + "whitelist")) {
                     EmbedBuilder eb = new EmbedBuilder();
                     MessageBuilder mb = new MessageBuilder();
-                    EmbedBuilder eb1 = new EmbedBuilder();
-                    MessageBuilder mb1 = new MessageBuilder();
                     if (syntax[1].equalsIgnoreCase("print")) {
                         eb.setColor(Lib.Blue);
-                        eb.setTitle("ID:");
                         Lib.whitelist.forEach(id -> {
-                            eb.addField("User:", id, false);
-                        });
-                        eb1.setColor(Lib.Blue);
-                        eb1.setTitle("Name:");
-                        Lib.whitelistt.forEach(name -> {
-                            eb1.addField("User:", name, false);
+                            eb.addField("UserID:","**Name:** "+e.getJDA().getUserById(id).getName()+"\n**ID:** "+ id, false);
                         });
                         mb.setEmbed(eb.build());
-                        mb1.setEmbed(eb1.build());
                         e.getAuthor().openPrivateChannel().queue(privateChannel -> {
-                            privateChannel.sendMessage("Namen und ID stimmen in der Reihenfolge überein.").queue();
-                            privateChannel.sendMessage(mb1.build()).queue();
                             privateChannel.sendMessage(mb.build()).queue();
                         });
-                        Lib.sent++;
                     }
                 }
             }

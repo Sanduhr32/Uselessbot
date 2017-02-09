@@ -26,7 +26,7 @@ public class Command_pub extends ListenerAdapter{
         String[] syntax = e.getMessage().getContent().split(" ");
         String[] syntaxx = e.getMessage().getContent().split(":");
         if (syntax[0].equalsIgnoreCase(Lib.prefix + "request")) {
-            e.getMessage().deleteMessage().complete();
+            e.getMessage().delete().complete();
             e.getAuthor().openPrivateChannel().complete().sendMessage("Thanks for requestting a new command").complete();
             Bot_main.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage(e.getAuthor().getName() + " requested:").complete();
             Bot_main.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage(syntax[1] + ", " + syntaxx[1]).complete();
@@ -45,7 +45,7 @@ public class Command_pub extends ListenerAdapter{
             });
             EmbedBuilder eb = new EmbedBuilder();
             MessageBuilder mb = new MessageBuilder();
-            e.getMessage().deleteMessage().queue();
+            e.getMessage().delete().queue();
             eb.setAuthor(e.getJDA().getSelfUser().getName(), null, e.getJDA().getSelfUser().getAvatarUrl());
             eb.addField("Guilds:", String.valueOf(e.getJDA().getGuilds().size()), false);
             eb.addField("Member:", String.valueOf(Lib.member), false);
@@ -99,11 +99,11 @@ public class Command_pub extends ListenerAdapter{
             Lib.executedcmd++;
         }
         if (syntax[0].equalsIgnoreCase(Lib.prefix + "game")) {
-            String GAME = e.getJDA().getPresence().getGame().getName().toString();
+            String GAME = e.getJDA().getPresence().getGame().getName();
             EmbedBuilder eb = new EmbedBuilder();
             MessageBuilder mb = new MessageBuilder();
             if (e.getChannelType().equals(ChannelType.TEXT)) {
-                e.getMessage().deleteMessage().queue();
+                e.getMessage().delete().queue();
             }
             if (syntax[1].equalsIgnoreCase("get")) {
                 Lib.receivedcmd++;
@@ -150,7 +150,7 @@ public class Command_pub extends ListenerAdapter{
         String[] syntax = e.getMessage().getContent().split(" ");
         String[] syntaxx = e.getMessage().getContent().split(":");
         if (syntax[0].equalsIgnoreCase(Lib.prefix + "request")) {
-            e.getMessage().deleteMessage().complete();
+            e.getMessage().delete().complete();
             e.getAuthor().openPrivateChannel().complete().sendMessage("Thanks for requestting a new command").complete();
             Bot_main.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage(e.getAuthor().getName() + " requested:").complete();
             Bot_main.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage(syntax[1] + ", " + syntaxx[1]).complete();
@@ -169,7 +169,7 @@ public class Command_pub extends ListenerAdapter{
             });
             EmbedBuilder eb = new EmbedBuilder();
             MessageBuilder mb = new MessageBuilder();
-            e.getMessage().deleteMessage().queue();
+            e.getMessage().delete().queue();
             eb.setAuthor(e.getJDA().getSelfUser().getName(), null, e.getJDA().getSelfUser().getAvatarUrl());
             eb.addField("Guilds:", String.valueOf(e.getJDA().getGuilds().size()), false);
             eb.addField("Member:", String.valueOf(Lib.member), false);
@@ -226,7 +226,7 @@ public class Command_pub extends ListenerAdapter{
             EmbedBuilder eb = new EmbedBuilder();
             MessageBuilder mb = new MessageBuilder();
             if (e.getChannelType().equals(ChannelType.TEXT)) {
-                e.getMessage().deleteMessage().queue();
+                e.getMessage().delete().queue();
             }
             if (syntax[1].equalsIgnoreCase("get")) {
                 Lib.receivedcmd++;

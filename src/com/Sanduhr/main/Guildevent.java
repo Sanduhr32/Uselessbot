@@ -4,12 +4,17 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.events.ReconnectedEvent;
+import net.dv8tion.jda.core.events.ResumedEvent;
+import net.dv8tion.jda.core.events.ShutdownEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberLeaveEvent;
 import net.dv8tion.jda.core.events.user.UserTypingEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+
+import java.time.OffsetDateTime;
 
 /**
  * Created by Sanduhr on 22.01.2017.
@@ -28,7 +33,7 @@ public class Guildevent extends ListenerAdapter {
     public void onGuildMemberJoin(GuildMemberJoinEvent e) {
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
-        eb.setTitle("Welcome " + e.getMember().getUser().getName());
+        eb.setTitle("Welcome " + e.getMember().getUser().getName(), null);
         eb.setDescription("Introduce some infos about you :wink:");
         eb.setColor(Lib.Blue);
         mb.setEmbed(eb.build());
@@ -38,7 +43,7 @@ public class Guildevent extends ListenerAdapter {
     public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
-        eb.setTitle("Bye " + e.getMember().getUser().getName());
+        eb.setTitle("Bye " + e.getMember().getUser().getName(), null);
         eb.setDescription("See you soon :wink:");
         eb.setColor(Lib.Blue);
         mb.setEmbed(eb.build());
@@ -49,5 +54,20 @@ public class Guildevent extends ListenerAdapter {
         if (e.getMember().getUser().getId().equals(Lib.YOUR_ID)) {
             e.getChannel().sendTyping().queue();
         }
+    }
+    public void onResume(ResumedEvent e) {
+        OffsetDateTime now = OffsetDateTime.now();
+        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().queue(privateChannel -> {
+            privateChannel.sendMessage("Resumed " + now.format(Lib.dtf)).queue();
+        });
+    }
+    public void onReconnect(ReconnectedEvent e) {
+        OffsetDateTime now = OffsetDateTime.now();
+        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().queue(privateChannel -> {
+            privateChannel.sendMessage("Reconnected " + now.toString()).queue();
+        });
+    }
+    public void onShutdown(ShutdownEvent e) {
+        System.out.println(e.getShutdownTime().format(Lib.dtf));
     }
 }
