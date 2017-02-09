@@ -30,60 +30,80 @@ public class Command_guildowner extends ListenerAdapter {
         if (e.getAuthor().equals(e.getGuild().getOwner().getUser())) {
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "add")) {
                 Lib.receivedcmd++;
-                List<User> u = e.getMessage().getMentionedUsers();
-                List<Role> r = e.getMessage().getMentionedRoles();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
-                });
+                if (e.getChannelType().equals(ChannelType.TEXT)) {
+                    List<User> u = e.getMessage().getMentionedUsers();
+                    List<Role> r = e.getMessage().getMentionedRoles();
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
                 Lib.executedcmd++;
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "remove")) {
                 Lib.receivedcmd++;
-                List<User> u = e.getMessage().getMentionedUsers();
-                List<Role> r = e.getMessage().getMentionedRoles();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), r).queue();
-                });
+                if (e.getChannelType().equals(ChannelType.TEXT)) {
+                    List<User> u = e.getMessage().getMentionedUsers();
+                    List<Role> r = e.getMessage().getMentionedRoles();
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), r).queue();
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
                 Lib.executedcmd++;
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "mute")) {
                 Lib.receivedcmd++;
-                List<User> u = e.getMessage().getMentionedUsers();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
-                        e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().deny(Permission.MESSAGE_WRITE).complete();
-                    }
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
-                        e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().deny(Permission.MESSAGE_WRITE).queue();
-                    }
-                });
+                if (e.getChannelType().equals(ChannelType.TEXT)) {
+                    List<User> u = e.getMessage().getMentionedUsers();
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
+                            e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().deny(Permission.MESSAGE_WRITE).complete();
+                        }
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
+                            e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().deny(Permission.MESSAGE_WRITE).queue();
+                        }
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
                 Lib.executedcmd++;
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "unmute")) {
                 Lib.receivedcmd++;
-                List<User> u = e.getMessage().getMentionedUsers();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
-                        e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(Permission.MESSAGE_WRITE).complete();
-                    }
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
-                        e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().grant(Permission.MESSAGE_WRITE).queue();
-                    }
-                });
+                if (e.getChannelType().equals(ChannelType.TEXT)) {
+                    List<User> u = e.getMessage().getMentionedUsers();
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
+                            e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(Permission.MESSAGE_WRITE).complete();
+                        }
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
+                            e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().grant(Permission.MESSAGE_WRITE).queue();
+                        }
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
                 Lib.executedcmd++;
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "clear")) {
                 Lib.receivedcmd++;
                 int i = Integer.parseInt(syntax[1]);
-                List<Message> msg = e.getTextChannel().getHistory().retrievePast(i).complete();
-                msg.forEach(message -> {
-                    message.deleteMessage().queue();
-                    Lib.cleared++;
-                });
+                if (e.getChannelType().equals(ChannelType.TEXT)) {
+                    List<Message> msg = e.getTextChannel().getHistory().retrievePast(i).complete();
+                    msg.forEach(message -> {
+                        message.deleteMessage().queue();
+                        Lib.cleared++;
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
                 Lib.executedcmd++;
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "kick")) {
@@ -162,60 +182,80 @@ public class Command_guildowner extends ListenerAdapter {
         if (e.getAuthor().equals(e.getGuild().getOwner().getUser())) {
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "add")) {
                 Lib.receivedcmd++;
-                List<User> u = e.getMessage().getMentionedUsers();
-                List<Role> r = e.getMessage().getMentionedRoles();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
-                });
+                if (e.getChannelType().equals(ChannelType.TEXT)) {
+                    List<User> u = e.getMessage().getMentionedUsers();
+                    List<Role> r = e.getMessage().getMentionedRoles();
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
                 Lib.executedcmd++;
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "remove")) {
                 Lib.receivedcmd++;
-                List<User> u = e.getMessage().getMentionedUsers();
-                List<Role> r = e.getMessage().getMentionedRoles();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), r).queue();
-                });
+                if (e.getChannelType().equals(ChannelType.TEXT)) {
+                    List<User> u = e.getMessage().getMentionedUsers();
+                    List<Role> r = e.getMessage().getMentionedRoles();
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), r).queue();
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
                 Lib.executedcmd++;
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "mute")) {
                 Lib.receivedcmd++;
-                List<User> u = e.getMessage().getMentionedUsers();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
-                        e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().deny(Permission.MESSAGE_WRITE).complete();
-                    }
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
-                        e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().deny(Permission.MESSAGE_WRITE).queue();
-                    }
-                });
+                if (e.getChannelType().equals(ChannelType.TEXT)) {
+                    List<User> u = e.getMessage().getMentionedUsers();
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
+                            e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().deny(Permission.MESSAGE_WRITE).complete();
+                        }
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
+                            e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().deny(Permission.MESSAGE_WRITE).queue();
+                        }
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
                 Lib.executedcmd++;
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "unmute")) {
                 Lib.receivedcmd++;
-                List<User> u = e.getMessage().getMentionedUsers();
-                e.getMessage().deleteMessage().queue();
-                u.forEach(user -> {
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
-                        e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(Permission.MESSAGE_WRITE).complete();
-                    }
-                    if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
-                        e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().grant(Permission.MESSAGE_WRITE).queue();
-                    }
-                });
+                if (e.getChannelType().equals(ChannelType.TEXT)) {
+                    List<User> u = e.getMessage().getMentionedUsers();
+                    e.getMessage().deleteMessage().queue();
+                    u.forEach(user -> {
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
+                            e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(Permission.MESSAGE_WRITE).complete();
+                        }
+                        if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) != null) {
+                            e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().grant(Permission.MESSAGE_WRITE).queue();
+                        }
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
                 Lib.executedcmd++;
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "clear")) {
                 Lib.receivedcmd++;
                 int i = Integer.parseInt(syntax[1]);
-                List<Message> msg = e.getTextChannel().getHistory().retrievePast(i).complete();
-                msg.forEach(message -> {
-                    message.deleteMessage().queue();
-                    Lib.cleared++;
-                });
+                if (e.getChannelType().equals(ChannelType.TEXT)) {
+                    List<Message> msg = e.getTextChannel().getHistory().retrievePast(i).complete();
+                    msg.forEach(message -> {
+                        message.deleteMessage().queue();
+                        Lib.cleared++;
+                    });
+                } else {
+                    e.getChannel().sendMessage(Lib.Error_guild).queue();
+                }
                 Lib.executedcmd++;
             }
             if (syntax[0].equalsIgnoreCase(Lib.prefix + "kick")) {
