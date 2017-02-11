@@ -1,6 +1,6 @@
 package com.Sanduhr.main.cmds.o_w;
 
-import com.Sanduhr.main.Lib;
+import com.Sanduhr.main.lib;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.ReadyEvent;
@@ -10,7 +10,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
 
-public class Kick extends ListenerAdapter {
+public class kick extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
@@ -22,38 +22,37 @@ public class Kick extends ListenerAdapter {
         String[] syntaxx = e.getMessage().getContent().split(":");
 
         //Not the `kick` command
-        if (!syntax[0].equalsIgnoreCase(Lib.prefix + "kick")) {
+        if (!syntax[0].equalsIgnoreCase(lib.prefix + "kick")) {
             return;
         }
 
         //If `kick` command was received from a non-TextChannel, inform command is Guild-only
         if (!e.isFromType(ChannelType.TEXT)) {
-            e.getChannel().sendMessage(Lib.Error_guild).queue();
+            e.getChannel().sendMessage(lib.Error_guild).queue();
             return;
         }
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist().contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
-            e.getChannel().sendMessage(Lib.Error_perms).queue();
+        if (!lib.getWhitelist().contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+            e.getChannel().sendMessage(lib.Error_perms).queue();
             return;
         }
 
-        Lib.receivedcmd++;
+        lib.receivedcmd++;
         e.getMessage().delete().queue();
         List<User> u = e.getMessage().getMentionedUsers();
         if (!u.isEmpty() && !syntaxx[1].isEmpty()) {
             for ( User user : u ) {
                 e.getGuild().getController().kick(user.getId()).queue();
-                e.getJDA().getUserById(user.getId()).openPrivateChannel().queue(privateChannel ->
-                privateChannel.sendMessage("You were kicked for " + syntaxx[1] + "!"));
+                e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You were kicked for " + syntaxx[1] + "!").queue();
             }
         }
         else {
-            e.getChannel().sendMessage(Lib.Error_target).queue();
+            e.getChannel().sendMessage(lib.Error_target).queue();
         }
 
-        Lib.executedcmd++;
+        lib.executedcmd++;
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
@@ -62,10 +61,10 @@ public class Kick extends ListenerAdapter {
         initter();
     }
     public void initter() {
-        Lib.getCmdMap().put(getName(), getDescription());
+        lib.getCmdMap().put(getName(), getDescription());
     }
     public String getName() {
-        return Kick.class.getName();
+        return "Kick";
     }
     public String getDescription() {
         return "Kicks all mentioned user";

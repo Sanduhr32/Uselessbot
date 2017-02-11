@@ -7,14 +7,14 @@ import net.dv8tion.jda.core.entities.Guild;
 
 import java.util.List;
 
-public class Bot_main {
+public class bot_main {
     private static JDA JDA;
     private static JDABuilder j = new JDABuilder(AccountType.BOT);
     public static void main(String[] args)throws Exception {
         start();
     }
     static void start() throws Exception {
-        Lib.init();
+        lib.init();
         JDA jda = j.buildBlocking();
         JDA = jda;
         System.out.println(jda.getAccountType());

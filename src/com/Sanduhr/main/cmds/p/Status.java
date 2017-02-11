@@ -1,6 +1,6 @@
 package com.Sanduhr.main.cmds.p;
 
-import com.Sanduhr.main.Lib;
+import com.Sanduhr.main.lib;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -12,7 +12,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
 
-public class Status extends ListenerAdapter {
+public class status extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
@@ -23,23 +23,23 @@ public class Status extends ListenerAdapter {
             return;
 
         //Not the `status` command
-        if (!content.equalsIgnoreCase(Lib.prefix + "status")) {
+        if (!content.equalsIgnoreCase(lib.prefix + "status")) {
             return;
         }
 
         //If `status` command was received from a non-TextChannel, inform command is Guild-only
         if (!e.isFromType(ChannelType.TEXT)) {
-            e.getChannel().sendMessage(Lib.Error_guild).queue();
+            e.getChannel().sendMessage(lib.Error_guild).queue();
             return;
         }
 
-        Lib.receivedcmd++;
+        lib.receivedcmd++;
         e.getMessage().delete().queue();
         List<Guild> g = e.getJDA().getGuilds();
-        Lib.member = 0;
+        lib.member = 0;
         g.forEach(guild -> {
             guild.getMembers();
-            Lib.member = Lib.member + guild.getMembers().size() - 1;
+            lib.member = lib.member + guild.getMembers().size() - 1;
         });
 
         //Builder
@@ -49,16 +49,16 @@ public class Status extends ListenerAdapter {
         //Configuraing Builder
         eb.setAuthor(e.getJDA().getSelfUser().getName(), null, e.getJDA().getSelfUser().getAvatarUrl());
         eb.addField("Guilds:", String.valueOf(e.getJDA().getGuilds().size()), false);
-        eb.addField("Member:", String.valueOf(Lib.member), false);
-        eb.addField("Received messages:",String.valueOf(Lib.received), false);
-        eb.addField("Received commands:", String.valueOf(Lib.receivedcmd),false);
-        eb.addField("Sent messages:", String.valueOf(Lib.sent + 1), false);
-        eb.addField("Successful executed commands:", String.valueOf(Lib.executedcmd + 1), false);
-        eb.addField("Cleared messages:", String.valueOf(Lib.cleared), false);
+        eb.addField("Member:", String.valueOf(lib.member), false);
+        eb.addField("Received messages:",String.valueOf(lib.received), false);
+        eb.addField("Received commands:", String.valueOf(lib.receivedcmd),false);
+        eb.addField("Sent messages:", String.valueOf(lib.sent + 1), false);
+        eb.addField("Successful executed commands:", String.valueOf(lib.executedcmd + 1), false);
+        eb.addField("Cleared messages:", String.valueOf(lib.cleared), false);
 
         e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
 
-        Lib.executedcmd++;
+        lib.executedcmd++;
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
@@ -67,10 +67,10 @@ public class Status extends ListenerAdapter {
         initter();
     }
     public void initter() {
-        Lib.getCmdMap().put(getName(), getDescription());
+        lib.getCmdMap().put(getName(), getDescription());
     }
     public String getName() {
-        return Status.class.getName();
+        return "Status";
     }
     public String getDescription() {
         return "Sends some info's like received|send stuff etc";

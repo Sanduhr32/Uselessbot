@@ -11,23 +11,32 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
-import static com.Sanduhr.main.Bot_main.getJ;
+import static com.Sanduhr.main.bot_main.getJ;
 import static com.Sanduhr.main.config.BOT_GAME;
 import static com.Sanduhr.main.config.BOT_TOKEN;
 
-public class Lib {
+public class lib {
     public static String prefix ="??";
     public static String YOUR_ID = "198137282018934784";
+
     public static String Error_guild = "Only works at guilds";
     public static String Error_perms = "You don't have permissions to run this command! :no_entry_sign:";
     public static String Error_target = "You haven't mentioned a user";
+    public static String Error_wrong = "Wrong arguments";
+    public static String Error_empty = "Empty arguments";
+
     public static Color Green = new Color(40,255,40);
     public static Color Blue = new Color(50, 100,190);
     public static Color Orange = new Color(255, 100, 0);
+
     public static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm:ss");
+
     private static ArrayList<String> whitelist = new ArrayList<>();
+
     private static HashMap<String, Permission> permMap = new HashMap<>();
     private static HashMap<String, String> cmdMap = new HashMap<>();
+    private static HashMap<String, String> synMap = new HashMap<>();
+    private static HashMap<String, String> reqMap = new HashMap<>();
 
     public static int member = 0;
     public static int received = 0;
@@ -35,6 +44,7 @@ public class Lib {
     public static int sent = 0;
     public static int executedcmd = 0;
     public static int cleared = 0;
+
     static void initwhitelist() {
         whitelist.add(YOUR_ID);
     }
@@ -53,41 +63,55 @@ public class Lib {
         permMap.put("manage_webhooks", Permission.MANAGE_WEBHOOKS);
         permMap.put("manage_msgs",     Permission.MESSAGE_MANAGE);
     }
+    static void initreq() {
+        reqMap.put("fix",    "to fix");
+        reqMap.put("add",    "to add");
+        reqMap.put("remove", "to remove");
+    }
     static void init() {
         getJ().setToken(BOT_TOKEN);
         getJ().setGame(Game.of(BOT_GAME));
         getJ().setStatus(OnlineStatus.ONLINE);
         /* Owner and whitelisted */
-        getJ().addListener(new Add());
-        getJ().addListener(new Allow());
-        getJ().addListener(new Ban());
-        getJ().addListener(new Clear());
-        getJ().addListener(new Deny());
-        getJ().addListener(new Kick());
-        getJ().addListener(new Mute());
-        getJ().addListener(new Remove());
-        getJ().addListener(new Unmute());
-        getJ().addListener(new Whitelist());
+        getJ().addListener(new add());
+        getJ().addListener(new allow());
+        getJ().addListener(new ban());
+        getJ().addListener(new clear());
+        getJ().addListener(new deny());
+        getJ().addListener(new kick());
+        getJ().addListener(new mute());
+        getJ().addListener(new remove());
+        getJ().addListener(new unmute());
+        getJ().addListener(new whitelist());
         /* Public */
-        getJ().addListener(new com.Sanduhr.main.cmds.p.Game());
-        getJ().addListener(new Github());
-        getJ().addListener(new Help());
-        getJ().addListener(new Invite());
-        getJ().addListener(new Message());
-        getJ().addListener(new Request());
-        getJ().addListener(new Sanduhr());
-        getJ().addListener(new Status());
-        getJ().addListener(new Task());
+        getJ().addListener(new com.Sanduhr.main.cmds.p.game());
+        getJ().addListener(new github());
+        getJ().addListener(new help());
+        getJ().addListener(new invite());
+        getJ().addListener(new message());
+        getJ().addListener(new request());
+        getJ().addListener(new sanduhr());
+        getJ().addListener(new status());
+        getJ().addListener(new task());
         /* Other */
-        getJ().addListener(new Eventlist());
+        getJ().addListener(new eventlist());
+        /* Initting */
         initwhitelist();
         initperms();
+        initreq();
     }
+
     public static HashMap<String, Permission> getPermMap() {
         return permMap;
     }
     public static HashMap<String ,String> getCmdMap() {
         return cmdMap;
+    }
+    public static HashMap<String, String> getSynMap() {
+        return synMap;
+    }
+    public static HashMap<String, String> getReqMap() {
+        return reqMap;
     }
     public static ArrayList<String> getWhitelist() {
         return whitelist;

@@ -1,7 +1,7 @@
 package com.Sanduhr.main.cmds.o_w;
 
 
-import com.Sanduhr.main.Lib;
+import com.Sanduhr.main.lib;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
@@ -15,7 +15,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import java.awt.*;
 import java.util.List;
 
-public class Deny extends ListenerAdapter {
+public class deny extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
@@ -26,36 +26,36 @@ public class Deny extends ListenerAdapter {
             return;
 
         //Not the `deny` command
-        if (!syntax[0].equalsIgnoreCase(Lib.prefix + "deny")) {
+        if (!syntax[0].equalsIgnoreCase(lib.prefix + "deny")) {
             return;
         }
 
         //If `allow` command was received from a non-TextChannel, inform command is Guild-only
         if (!e.isFromType(ChannelType.TEXT)) {
-            e.getChannel().sendMessage(Lib.Error_guild).queue();
+            e.getChannel().sendMessage(lib.Error_guild).queue();
             return;
         }
 
         //If attempting to disallow write permissions, suggest using `mute` command.
         if (syntax[1].equalsIgnoreCase("write")) {
-            e.getChannel().sendMessage("Dont use `"+Lib.prefix+"deny " + syntax[1] + " @USER`, try `"+Lib.prefix+"mute @USER`").queue();
+            e.getChannel().sendMessage("Dont use `"+ lib.prefix+"deny " + syntax[1] + " @USER`, try `"+ lib.prefix+"mute @USER`").queue();
             return;
         }
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist().contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
-            e.getChannel().sendMessage(Lib.Error_perms).queue();
+        if (!lib.getWhitelist().contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+            e.getChannel().sendMessage(lib.Error_perms).queue();
             return;
         }
 
-        Lib.receivedcmd++;
+        lib.receivedcmd++;
         List<User> u = e.getMessage().getMentionedUsers();
         e.getMessage().delete().queue();
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
 
-        Permission perm = Lib.getPermMap().get(syntax[1]);
+        Permission perm = lib.getPermMap().get(syntax[1]);
         if (perm != null && u != null) {
             u.forEach(user -> {
                 if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
@@ -79,10 +79,10 @@ public class Deny extends ListenerAdapter {
         initter();
     }
     public void initter() {
-        Lib.getCmdMap().put(getName(), getDescription());
+        lib.getCmdMap().put(getName(), getDescription());
     }
     public String getName() {
-        return Deny.class.getName();
+        return "Deny";
     }
     public String getDescription() {
         return "Denies all mentioned user the permission";

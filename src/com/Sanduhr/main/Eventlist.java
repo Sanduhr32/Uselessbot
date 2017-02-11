@@ -16,7 +16,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.time.OffsetDateTime;
 
-public class Eventlist extends ListenerAdapter {
+public class eventlist extends ListenerAdapter {
     @Override
     public void onGuildJoin(GuildJoinEvent e) {
         System.out.println("Joined " + e.getGuild().getName());
@@ -32,7 +32,7 @@ public class Eventlist extends ListenerAdapter {
         MessageBuilder mb = new MessageBuilder();
         eb.setTitle("Welcome " + e.getMember().getUser().getName(), null);
         eb.setDescription("Introduce some infos about you :wink:");
-        eb.setColor(Lib.Blue);
+        eb.setColor(lib.Blue);
         mb.setEmbed(eb.build());
         Message m  = mb.build();
         e.getGuild().getPublicChannel().sendMessage(m).queue();
@@ -42,25 +42,25 @@ public class Eventlist extends ListenerAdapter {
         MessageBuilder mb = new MessageBuilder();
         eb.setTitle("Bye " + e.getMember().getUser().getName(), null);
         eb.setDescription("See you soon :wink:");
-        eb.setColor(Lib.Blue);
+        eb.setColor(lib.Blue);
         mb.setEmbed(eb.build());
         Message m  = mb.build();
         e.getGuild().getPublicChannel().sendMessage(m).queue();
     }
     public void onUserTyping(UserTypingEvent e) {
-        if (e.getMember().getUser().getId().equals(Lib.YOUR_ID)) {
+        if (e.getMember().getUser().getId().equals(lib.YOUR_ID)) {
             e.getChannel().sendTyping().queue();
         }
     }
     public void onResume(ResumedEvent e) {
         OffsetDateTime now = OffsetDateTime.now();
-        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage("Resumed " + now.format(Lib.dtf)).queue());
+        e.getJDA().getUserById(lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Resumed " + now.format(lib.dtf)).queue();
     }
     public void onReconnect(ReconnectedEvent e) {
         OffsetDateTime now = OffsetDateTime.now();
-        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().queue(privateChannel -> privateChannel.sendMessage("Reconnected " + now.toString()).queue());
+        e.getJDA().getUserById(lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Reconnected " + now.format(lib.dtf)).queue();
     }
     public void onShutdown(ShutdownEvent e) {
-        System.out.println(e.getShutdownTime().format(Lib.dtf));
+        System.out.println(e.getShutdownTime().format(lib.dtf));
     }
 }

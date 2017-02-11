@@ -1,6 +1,6 @@
 package com.Sanduhr.main.cmds.o_w;
 
-import com.Sanduhr.main.Lib;
+import com.Sanduhr.main.lib;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
@@ -14,7 +14,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import java.awt.*;
 import java.util.List;
 
-public class Allow extends ListenerAdapter {
+public class allow extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
@@ -25,37 +25,37 @@ public class Allow extends ListenerAdapter {
             return;
 
         //Not the `allow` command
-        if (!syntax[0].equalsIgnoreCase(Lib.prefix + "allow")) {
+        if (!syntax[0].equalsIgnoreCase(lib.prefix + "allow")) {
             return;
         }
 
         //If `allow` command was received from a non-TextChannel, inform command is Guild-only
         if (!e.isFromType(ChannelType.TEXT)) {
-            e.getChannel().sendMessage(Lib.Error_guild).queue();
+            e.getChannel().sendMessage(lib.Error_guild).queue();
             return;
         }
 
         //If attempting to disallow write permissions, suggest using `unmute` command.
         if (syntax[1].equalsIgnoreCase("write")) {
-            e.getChannel().sendMessage("Dont use `"+Lib.prefix+"allow " + syntax[1] + " @USER`, try `"+Lib.prefix+"unmute @USER`").queue();
+            e.getChannel().sendMessage("Dont use `"+ lib.prefix+"allow " + syntax[1] + " @USER`, try `"+ lib.prefix+"unmute @USER`").queue();
             return;
         }
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist().contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
-            e.getChannel().sendMessage(Lib.Error_perms).queue();
+        if (!lib.getWhitelist().contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+            e.getChannel().sendMessage(lib.Error_perms).queue();
             return;
         }
 
-        Lib.receivedcmd++;
+        lib.receivedcmd++;
         List<User> u = e.getMessage().getMentionedUsers();
         e.getMessage().delete().queue();
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
 
-        Permission perm = Lib.getPermMap().get(syntax[1]);
-        if (perm != null) {
+        Permission perm = lib.getPermMap().get(syntax[1]);
+        if (perm != null && !u.isEmpty()) {
             u.forEach(user -> {
                 if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
                     e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(perm).queue();
@@ -64,13 +64,13 @@ public class Allow extends ListenerAdapter {
                 }
             });
         }
-        else {
+        if (u.isEmpty()||perm == null) {
             eb.setColor(Color.red);
             eb.addField("Possible error:","**Unknown permission type provided! Your input:** " + syntax[1] +
-                    "\n\n**Unknown user mentioned!**",false);
+                    "\n**Unknown user mentioned!**",false);
             e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
         }
-        Lib.executedcmd++;
+        lib.executedcmd++;
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
@@ -79,10 +79,10 @@ public class Allow extends ListenerAdapter {
         initter();
     }
     public void initter() {
-        Lib.getCmdMap().put(getName(), getDescription());
+        lib.getCmdMap().put(getName(), getDescription());
     }
     public String getName() {
-        return Allow.class.getName();
+        return "Allow";
     }
     public String getDescription() {
         return "Allows the mentioned user the permission";

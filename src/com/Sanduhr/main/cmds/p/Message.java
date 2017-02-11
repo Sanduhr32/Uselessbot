@@ -1,13 +1,13 @@
 package com.Sanduhr.main.cmds.p;
 
-import com.Sanduhr.main.Lib;
+import com.Sanduhr.main.lib;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-public class Message extends ListenerAdapter {
+public class message extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
@@ -18,27 +18,27 @@ public class Message extends ListenerAdapter {
             return;
 
         //Not the `message` command
-        if (!syntaxx[0].equalsIgnoreCase(Lib.prefix + "message")) {
+        if (!syntaxx[0].equalsIgnoreCase(lib.prefix + "message")) {
             return;
         }
 
         //If `message` command was received from a non-TextChannel, inform command is Guild-only
         if (!e.isFromType(ChannelType.TEXT)) {
-            e.getChannel().sendMessage(Lib.Error_guild).queue();
+            e.getChannel().sendMessage(lib.Error_guild).queue();
             return;
         }
 
-        Lib.receivedcmd++;
+        lib.receivedcmd++;
         e.getMessage().delete().queue();
 
-        if (e.getAuthor().getId().equals(Lib.YOUR_ID)) {
+        if (e.getAuthor().getId().equals(lib.YOUR_ID)) {
             e.getChannel().sendMessage(syntaxx[1]).queue();
         }
         else {
-            e.getChannel().sendMessage(Lib.Error_perms).queue();
+            e.getChannel().sendMessage(lib.Error_perms).queue();
         }
 
-        Lib.executedcmd++;
+        lib.executedcmd++;
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
@@ -47,12 +47,16 @@ public class Message extends ListenerAdapter {
         initter();
     }
     public void initter() {
-        Lib.getCmdMap().put(getName(), getDescription());
+        lib.getCmdMap().put(getName(), getDescription());
+        lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
-        return Message.class.getName();
+        return message.class.getSimpleName();
     }
     public String getDescription() {
         return "Send a message as your Bot";
+    }
+    public String getSyntax() {
+        return "`" + lib.prefix + getName() + ":TEXT`";
     }
 }

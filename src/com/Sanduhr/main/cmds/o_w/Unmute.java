@@ -1,6 +1,6 @@
 package com.Sanduhr.main.cmds.o_w;
 
-import com.Sanduhr.main.Lib;
+import com.Sanduhr.main.lib;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.ReadyEvent;
@@ -10,7 +10,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
 
-public class Unmute extends ListenerAdapter {
+public class unmute extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
@@ -21,24 +21,24 @@ public class Unmute extends ListenerAdapter {
         String[] syntax = e.getMessage().getContent().split(" ");
 
         //Not the `unmute` command
-        if (!syntax[0].equalsIgnoreCase(Lib.prefix + "unmute")) {
+        if (!syntax[0].equalsIgnoreCase(lib.prefix + "unmute")) {
             return;
         }
 
         //If `unmute` command was received from a non-TextChannel, inform command is Guild-only
         if (!e.isFromType(ChannelType.TEXT)) {
-            e.getChannel().sendMessage(Lib.Error_guild).queue();
+            e.getChannel().sendMessage(lib.Error_guild).queue();
             return;
         }
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist().contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
-            e.getChannel().sendMessage(Lib.Error_perms).queue();
+        if (!lib.getWhitelist().contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+            e.getChannel().sendMessage(lib.Error_perms).queue();
             return;
         }
 
-        Lib.receivedcmd++;
+        lib.receivedcmd++;
         e.getMessage().delete().queue();
         List<User> u = e.getMessage().getMentionedUsers();
         List<Role> r = e.getMessage().getMentionedRoles();
@@ -86,7 +86,7 @@ public class Unmute extends ListenerAdapter {
         if (u.isEmpty() && r.isEmpty()) {
             e.getChannel().sendMessage("You mentioned an unknown object or didn't used the right syntax!").queue();
         }
-        Lib.executedcmd++;
+        lib.executedcmd++;
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
@@ -95,10 +95,10 @@ public class Unmute extends ListenerAdapter {
         initter();
     }
     public void initter() {
-        Lib.getCmdMap().put(getName(), getDescription());
+        lib.getCmdMap().put(getName(), getDescription());
     }
     public String getName() {
-        return Unmute.class.getName();
+        return "Unmute";
     }
     public String getDescription() {
         return "Unmutes all mentioned users";

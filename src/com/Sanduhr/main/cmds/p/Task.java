@@ -1,6 +1,6 @@
 package com.Sanduhr.main.cmds.p;
 
-import com.Sanduhr.main.Lib;
+import com.Sanduhr.main.lib;
 import com.sun.management.OperatingSystemMXBean;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -15,7 +15,7 @@ import java.lang.management.ManagementFactory;
 import java.sql.Time;
 import java.text.DecimalFormat;
 
-public class Task extends ListenerAdapter {
+public class task extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
@@ -26,17 +26,17 @@ public class Task extends ListenerAdapter {
             return;
 
         //Not the `task` command
-        if (!content.equalsIgnoreCase(Lib.prefix + "task")) {
+        if (!content.equalsIgnoreCase(lib.prefix + "task")) {
             return;
         }
 
         //If `task` command was received from a non-TextChannel, inform command is Guild-only
         if (!e.isFromType(ChannelType.TEXT)) {
-            e.getChannel().sendMessage(Lib.Error_guild).queue();
+            e.getChannel().sendMessage(lib.Error_guild).queue();
             return;
         }
 
-        Lib.receivedcmd++;
+        lib.receivedcmd++;
         e.getMessage().delete().queue();
 
         String cpu0 = new DecimalFormat("###.###%").format(ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class).getProcessCpuLoad());
@@ -59,7 +59,7 @@ public class Task extends ListenerAdapter {
 
         e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
 
-        Lib.executedcmd++;
+        lib.executedcmd++;
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
@@ -68,12 +68,16 @@ public class Task extends ListenerAdapter {
         initter();
     }
     public void initter() {
-        Lib.getCmdMap().put(getName(), getDescription());
+        lib.getCmdMap().put(getName(), getDescription());
+        lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
-        return Task.class.getName();
+        return "Task";
     }
     public String getDescription() {
         return "Sends you current infos of the JVM of this bot";
+    }
+    public String getSyntax() {
+        return lib.prefix + getName();
     }
 }
