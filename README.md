@@ -1,6 +1,7 @@
 # Uselessbot
 >Open Source JDA Discord Bot (Medium Quality)
->If you copy code tell me, but dont ask if you are allowed
+>
+>If you copy code tell me, but dont ask if you have permissions for 
 
 
 >### Tech
