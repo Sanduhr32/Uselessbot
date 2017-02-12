@@ -33,20 +33,38 @@ public class request extends ListenerAdapter {
             return;
         }
 
-        EmbedBuilder eb = new EmbedBuilder();
-        MessageBuilder mb = new MessageBuilder();
-
         lib.receivedcmd++;
         e.getMessage().delete().queue();
 
-        String val = lib.getReqMap().get(syntax[1]);
-        if (val != null && syntaxx[1].length() > 1 || syntaxx[2].length() > 1) {
-            e.getAuthor().openPrivateChannel().complete().sendMessage("Thanks for requesting " + val + " " + syntaxx[1] + "," + syntaxx[2]).queue();
+        EmbedBuilder eb = new EmbedBuilder();
+        MessageBuilder mb = new MessageBuilder();
+
+        if (syntax.length < 2) {
+            eb.setColor(Color.red);
+            eb.setAuthor("Possible error:",null,lib.Error_png);
+            eb.setDescription("\n-" + lib.Error_perms + "\n-" + lib.Error_wrong + "\n-" + lib.Error_empty);
+            e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+            return;
+        }
+
+        if (syntaxx.length < 2) {
+            eb.setColor(Color.red);
+            eb.setAuthor("Possible error:",null,lib.Error_png);
+            eb.setDescription("\n-" + lib.Error_perms + "\n-" + lib.Error_wrong + "\n-" + lib.Error_empty);
+            e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+            return;
+        }
+
+
+        String val = lib.getReqMap().get(syntax[1].toLowerCase());
+        if (val != null && !syntaxx[1].isEmpty() && !syntaxx[2].isEmpty()) {
+            e.getAuthor().openPrivateChannel().complete().sendMessage("Thanks for requesting " + val + " " + syntaxx[1] + ", " + syntaxx[2]).queue();
             e.getJDA().getUserById(lib.YOUR_ID).openPrivateChannel().complete().sendMessage(e.getAuthor().getName() + " requested " + val + " command " + syntaxx[1] + "\n" + syntaxx[2]).queue();
         }
         else {
             eb.setColor(Color.red);
-            eb.addField("Possible error:","-" + "\n-" + lib.Error_perms + "\n-" + lib.Error_wrong + "\n-" + lib.Error_empty ,false);
+            eb.setAuthor("Possible error:",null,lib.Error_png);
+            eb.setDescription("\n-" + lib.Error_perms + "\n-" + lib.Error_wrong + "\n-" + lib.Error_empty);
             e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
         }
 
@@ -60,12 +78,13 @@ public class request extends ListenerAdapter {
     }
     public void initter() {
         lib.getCmdMap().put(getName(), getDescription());
+        lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
         return request.class.getSimpleName();
     }
     public String getDescription() {
-        return "Requests sanduhr to fix|implement it!";
+        return "Requests sanduhr to fix|add|remove it!";
     }
     public String getSyntax() {
         return "`" + lib.prefix + getName() + " <args> :CMD:TEXT`\n\nArguments:\n`fix`, `add`, `remove`";

@@ -80,11 +80,15 @@ public class deny extends ListenerAdapter {
     }
     public void initter() {
         lib.getCmdMap().put(getName(), getDescription());
+        lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
-        return "Deny";
+        return deny.class.getSimpleName();
     }
     public String getDescription() {
-        return "Denies all mentioned user the permission";
+        return "Denies all mentioned users the permission";
+    }
+    public String getSyntax() {
+        return "`" + lib.prefix + getName() + " <perm> @USEE`\n\nPermissions:\nsoon:tm:";
     }
 }

@@ -50,12 +50,13 @@ public class add extends ListenerAdapter {
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
 
-        if (u != null && r != null) {
+        if (!u.isEmpty() && !r.isEmpty()) {
             u.forEach(user -> e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r));
         }
         else {
             eb.setColor(Color.red);
-            eb.addField("Possible error","-" + lib.Error_target + "\n-" + lib.Error_perms + "\n-" + lib.Error_wrong,false);
+            eb.setAuthor("Possible error:", null, lib.Error_png);
+            eb.setDescription("-" + lib.Error_target + "\n-" + lib.Error_perms + "\n-" + lib.Error_wrong);
             e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
         }
     }
@@ -67,11 +68,15 @@ public class add extends ListenerAdapter {
     }
     public void initter() {
         lib.getCmdMap().put(getName(), getDescription());
+        lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
-        return "Add";
+        return add.class.getSimpleName();
     }
     public String getDescription() {
-        return "Adds all mentioned roles to all mentioned user";
+        return "Adds all mentioned roles to all mentioned users";
+    }
+    public String getSyntax() {
+        return "`" + lib.prefix + getName() + " @USER @ROLE`";
     }
 }

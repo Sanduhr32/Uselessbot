@@ -54,20 +54,22 @@ public class whitelist extends ListenerAdapter {
             lib.getWhitelist().forEach(string -> eb.addField("User:","**Name:** "+e.getJDA().getUserById(string).getName()+"\n**ID:** "+ string, false));
             e.getAuthor().openPrivateChannel().complete().sendMessage(mb.setEmbed(eb.build()).build()).queue();
         }
-        if (syntax[1].equalsIgnoreCase("add") && e.getMember().isOwner() && !u.isEmpty()) {
+        if (u.isEmpty()&&!e.getMember().isOwner()) {
+            eb.setColor(Color.red);
+            eb.setAuthor("Possible error:", null, lib.Error_png);
+            eb.setDescription("-" + lib.Error_target + "\n-" + lib.Error_perms + "\n-" + lib.Error_target);
+            e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+            return;
+        }
+        if (syntax[1].equalsIgnoreCase("add")) {
             for ( User user : u ) {
                 lib.getWhitelist().add(user.getId());
             }
         }
-        if (syntax[1].equalsIgnoreCase("remove") && e.getMember().isOwner() && !u.isEmpty()) {
+        if (syntax[1].equalsIgnoreCase("remove")) {
             for ( User user : u ) {
                 lib.getWhitelist().remove(user.getId());
             }
-        }
-        if (u.isEmpty()||!e.getMember().isOwner()) {
-            eb.setColor(Color.red);
-            eb.addField("Possible error:","-" + lib.Error_target + "\n-" + lib.Error_perms + "\n-" + "Wrong arguments",false);
-            e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
         }
 
         lib.executedcmd++;
@@ -80,11 +82,15 @@ public class whitelist extends ListenerAdapter {
     }
     public void initter() {
         lib.getCmdMap().put(getName(), getDescription());
+        lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
         return "Whitelist";
     }
     public String getDescription() {
-        return "Adds|Removes users to the whitelist or prints the whitelist";
+        return "Adds|Removes mentioned users to the whitelist or prints the whitelist";
+    }
+    public String getSyntax() {
+        return "`" + lib.prefix + getName() + " <args> @USER`\n\nArguments:`add`, `print`, `remove`";
     }
 }

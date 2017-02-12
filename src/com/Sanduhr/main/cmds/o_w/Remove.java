@@ -56,11 +56,15 @@ public class remove extends ListenerAdapter {
     }
     public void initter() {
         lib.getCmdMap().put(getName(), getDescription());
+        lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
-        return "Remove";
+        return remove.class.getSimpleName();
     }
     public String getDescription() {
         return "Removes all mentioned roles from all mentioned users";
+    }
+    public String getSyntax() {
+        return "`" + lib.prefix + getName() + " @USER @ROLE`";
     }
 }

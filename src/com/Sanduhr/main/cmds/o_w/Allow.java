@@ -54,7 +54,11 @@ public class allow extends ListenerAdapter {
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
 
-        Permission perm = lib.getPermMap().get(syntax[1]);
+        if (syntax.length < 2) {
+            return;
+        }
+
+        Permission perm = lib.getPermMap().get(syntax[1].toLowerCase());
         if (perm != null && !u.isEmpty()) {
             u.forEach(user -> {
                 if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
@@ -66,8 +70,7 @@ public class allow extends ListenerAdapter {
         }
         if (u.isEmpty()||perm == null) {
             eb.setColor(Color.red);
-            eb.addField("Possible error:","**Unknown permission type provided! Your input:** " + syntax[1] +
-                    "\n**Unknown user mentioned!**",false);
+            eb.setDescription("**Unknown permission type provided! Your input:** " + syntax[1] + "\n**Unknown user mentioned!**");
             e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
         }
         lib.executedcmd++;
@@ -80,11 +83,15 @@ public class allow extends ListenerAdapter {
     }
     public void initter() {
         lib.getCmdMap().put(getName(), getDescription());
+        lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
-        return "Allow";
+        return allow.class.getSimpleName();
     }
     public String getDescription() {
-        return "Allows the mentioned user the permission";
+        return "Allows the mentioned users the permission";
+    }
+    public String getSyntax() {
+        return "`" + lib.prefix + getName() + " <perm> @USER`\n\nPermissions:\nsoon:tm:";
     }
 }

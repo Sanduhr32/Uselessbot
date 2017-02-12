@@ -77,6 +77,6 @@ public class game extends ListenerAdapter {
         return "Returns the current game or sets it";
     }
     public String getSyntax() {
-        return "`" + lib.prefix + getName() + " <arg> [:String]` \n\nArguments:\n`get`, `set`";
+        return "`" + lib.prefix + getName() + " <args> [:String]` \n\nArguments:\n`get`, `set`";
     }
 }

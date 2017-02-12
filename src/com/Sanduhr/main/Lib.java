@@ -24,12 +24,14 @@ public class lib {
     public static String Error_target = "You haven't mentioned a user";
     public static String Error_wrong = "Wrong arguments";
     public static String Error_empty = "Empty arguments";
+    public static String Error_many = "Too many arguments";
+    public static String Error_png = "https://cdn.discordapp.com/attachments/279257860121165834/280098209945092097/error.png";
 
     public static Color Green = new Color(40,255,40);
     public static Color Blue = new Color(50, 100,190);
     public static Color Orange = new Color(255, 100, 0);
 
-    public static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm:ss");
+    static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm:ss");
 
     private static ArrayList<String> whitelist = new ArrayList<>();
 
@@ -45,10 +47,10 @@ public class lib {
     public static int executedcmd = 0;
     public static int cleared = 0;
 
-    static void initwhitelist() {
+    private static void initwhitelist() {
         whitelist.add(YOUR_ID);
     }
-    static void initperms() {
+    private static void initperms() {
         permMap.put("write_tts",       Permission.MESSAGE_TTS);
         permMap.put("attach_files",    Permission.MESSAGE_ATTACH_FILES);
         permMap.put("embed_links",     Permission.MESSAGE_EMBED_LINKS);
@@ -63,7 +65,7 @@ public class lib {
         permMap.put("manage_webhooks", Permission.MANAGE_WEBHOOKS);
         permMap.put("manage_msgs",     Permission.MESSAGE_MANAGE);
     }
-    static void initreq() {
+    private static void initreq() {
         reqMap.put("fix",    "to fix");
         reqMap.put("add",    "to add");
         reqMap.put("remove", "to remove");
@@ -84,7 +86,7 @@ public class lib {
         getJ().addListener(new unmute());
         getJ().addListener(new whitelist());
         /* Public */
-        getJ().addListener(new com.Sanduhr.main.cmds.p.game());
+        getJ().addListener(new game());
         getJ().addListener(new github());
         getJ().addListener(new help());
         getJ().addListener(new invite());
@@ -92,6 +94,7 @@ public class lib {
         getJ().addListener(new request());
         getJ().addListener(new sanduhr());
         getJ().addListener(new status());
+        getJ().addListener(new syntax());
         getJ().addListener(new task());
         /* Other */
         getJ().addListener(new eventlist());

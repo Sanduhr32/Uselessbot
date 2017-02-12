@@ -9,18 +9,20 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import java.awt.*;
+
 public class help extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String content = e.getMessage().getContent();
+        String[] syntax = e.getMessage().getContent().split(" ");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())
             return;
 
         //Not the `help` command
-        if (!content.equalsIgnoreCase(lib.prefix + "help")) {
+        if (!syntax[0].equalsIgnoreCase(lib.prefix + "help")) {
             return;
         }
 
@@ -36,11 +38,42 @@ public class help extends ListenerAdapter {
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
 
-        eb.setAuthor(e.getAuthor().getName(),null,e.getAuthor().getEffectiveAvatarUrl());
-        eb.setColor(lib.Orange);
-        lib.getCmdMap().forEach((s, s2) ->
-        eb.addField(s, s2, false));
-        e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+        if (syntax.length < 2) {
+            eb.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getEffectiveAvatarUrl());
+            eb.setColor(lib.Orange);
+            lib.getCmdMap().forEach((s, s2) ->
+                    eb.addField(s, s2, false));
+            e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+            return;
+        }
+        if (syntax.length == 2) {
+            if (syntax[1].isEmpty()) {
+                eb.setColor(Color.red);
+                eb.setAuthor("Possible error:", null, lib.Error_png);
+                eb.setDescription("-" + lib.Error_perms + "\n-" + lib.Error_wrong + "\n-" + lib.Error_empty + "type `"+ lib.prefix + getName() + "`");
+                e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+                return;
+            }
+            String val = lib.getCmdMap().get(syntax[1].toLowerCase());
+            if (val != null ) {
+                eb.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getEffectiveAvatarUrl());
+                eb.setColor(lib.Orange);
+                eb.addField(syntax[1], val, false);
+                e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+            }
+            else {
+                eb.setColor(Color.red);
+                eb.setAuthor("Possible error:", null, lib.Error_png);
+                eb.setDescription("-" + lib.Error_perms + "\n-" + lib.Error_wrong + "\n-" + lib.Error_empty + "\ntype `"+ lib.prefix + getName() + "`");
+                e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+            }
+        }
+        if (syntax.length > 2) {
+            eb.setColor(Color.red);
+            eb.setAuthor("Possible error:", null, lib.Error_png);
+            eb.setDescription("-" + lib.Error_perms + "\n-" + lib.Error_wrong + "\n-" + lib.Error_empty + "\n-" + lib.Error_many +"\ntype `"+ lib.prefix + getName() + "`");
+            e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+        }
 
         lib.executedcmd++;
     }
@@ -61,6 +94,6 @@ public class help extends ListenerAdapter {
         return "Sends you a of all commands";
     }
     public String getSyntax() {
-        return "" + lib.prefix + getName() + "´";
+        return "`" + lib.prefix + getName() + " [CMD]´";
     }
 }

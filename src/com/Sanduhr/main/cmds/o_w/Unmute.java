@@ -96,11 +96,15 @@ public class unmute extends ListenerAdapter {
     }
     public void initter() {
         lib.getCmdMap().put(getName(), getDescription());
+        lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
-        return "Unmute";
+        return unmute.class.getSimpleName();
     }
     public String getDescription() {
         return "Unmutes all mentioned users";
+    }
+    public String getSyntax() {
+        return "`" + lib.prefix + getName() + " @USER`";
     }
 }

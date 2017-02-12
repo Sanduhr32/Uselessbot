@@ -68,11 +68,15 @@ public class status extends ListenerAdapter {
     }
     public void initter() {
         lib.getCmdMap().put(getName(), getDescription());
+        lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
-        return "Status";
+        return status.class.getSimpleName();
     }
     public String getDescription() {
         return "Sends some info's like received|send stuff etc";
+    }
+    public String getSyntax() {
+        return "`" + lib.prefix + getName() + "`";
     }
 }

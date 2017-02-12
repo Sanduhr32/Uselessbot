@@ -72,12 +72,12 @@ public class task extends ListenerAdapter {
         lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
-        return "Task";
+        return task.class.getSimpleName();
     }
     public String getDescription() {
         return "Sends you current infos of the JVM of this bot";
     }
     public String getSyntax() {
-        return lib.prefix + getName();
+        return "`" + lib.prefix + getName() + "`";
     }
 }

@@ -58,11 +58,15 @@ public class clear extends ListenerAdapter {
     }
     public void initter() {
         lib.getCmdMap().put(getName(), getDescription());
+        lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
-        return "Clear";
+        return clear.class.getSimpleName();
     }
     public String getDescription() {
         return "Clears the last x messages";
+    }
+    public String getSyntax() {
+        return "`" + lib.prefix + getName() + " 1-100`";
     }
 }

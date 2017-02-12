@@ -63,11 +63,15 @@ public class ban extends ListenerAdapter {
     }
     public void initter() {
         lib.getCmdMap().put(getName(), getDescription());
+        lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
-        return "Ban";
+        return ban.class.getSimpleName();
     }
     public String getDescription() {
         return "Swings the ban hammer for each mentioned user";
+    }
+    public String getSyntax() {
+        return "`" + lib.prefix + getName() + " @USER :REASON`";
     }
 }

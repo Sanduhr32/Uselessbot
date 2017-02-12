@@ -62,11 +62,15 @@ public class kick extends ListenerAdapter {
     }
     public void initter() {
         lib.getCmdMap().put(getName(), getDescription());
+        lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
-        return "Kick";
+        return kick.class.getSimpleName();
     }
     public String getDescription() {
         return "Kicks all mentioned user";
+    }
+    public String getSyntax() {
+        return "`" + lib.prefix + getName() + " @USER :REASON`";
     }
 }

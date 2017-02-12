@@ -96,11 +96,15 @@ public class mute extends ListenerAdapter {
     }
     public void initter() {
         lib.getCmdMap().put(getName(), getDescription());
+        lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
-        return "Mute";
+        return mute.class.getSimpleName();
     }
     public String getDescription() {
-        return "Mutes all mentioned user at the current channel if no channels are mentioned";
+        return "Mutes all mentioned users at the current channel if no channels are mentioned";
+    }
+    public String getSyntax() {
+        return "`" + lib.prefix + getName() + " @USER`";
     }
 }
