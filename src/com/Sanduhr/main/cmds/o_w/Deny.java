@@ -89,6 +89,6 @@ public class deny extends ListenerAdapter {
         return "Denies all mentioned users the permission";
     }
     public String getSyntax() {
-        return "`" + lib.prefix + getName() + " <perm> @USEE`\n\nPermissions:\nsoon:tm:";
+        return "`" + lib.prefix + getName() + " <perm> @USER`\n\nPermissions:\nsoon:tm:";
     }
 }

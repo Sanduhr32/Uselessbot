@@ -85,7 +85,7 @@ public class whitelist extends ListenerAdapter {
         lib.getSynMap().put(getName(), getSyntax());
     }
     public String getName() {
-        return "Whitelist";
+        return whitelist.class.getSimpleName();
     }
     public String getDescription() {
         return "Adds|Removes mentioned users to the whitelist or prints the whitelist";
