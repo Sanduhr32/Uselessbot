@@ -95,6 +95,7 @@ public class Lib {
         getJ().addListener(new Status());
         getJ().addListener(new Syntax());
         getJ().addListener(new Task());
+        getJ().addListener(new Time());
         /* Other */
         getJ().addListener(new Eventlist());
         getJ().addListener(new Message());
