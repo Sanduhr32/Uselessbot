@@ -15,9 +15,9 @@ public class Useless {
     }
     public static void start() throws Exception {
         Lib.init();
-        JDA jda = j.buildBlocking();
-        JDA = jda;
-        System.out.println(jda.getAccountType());
+        JDA = j.useSharding(1,2).buildBlocking();
+        JDA = .useSharding(0,2).buildBlocking();
+        System.out.println(JDA.getAccountType());
         //Could generate a huge output in the console
         List<Guild> g = JDA.getGuilds();
         if (g.isEmpty()) {
