@@ -16,13 +16,8 @@ public class Useless {
     public static void start() throws Exception {
         Lib.init();
         JDA = j.useSharding(1,2).buildBlocking();
-        JDA = .useSharding(0,2).buildBlocking();
+        JDA = j.useSharding(0,2).buildBlocking();
         System.out.println(JDA.getAccountType());
-        //Could generate a huge output in the console
-        List<Guild> g = JDA.getGuilds();
-        if (g.isEmpty()) {
-            System.out.println("No Guilds");
-        }
     }
     public static JDA getJDA() {
         return JDA;
