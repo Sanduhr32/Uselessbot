@@ -19,7 +19,7 @@ public class Request extends ListenerAdapter {
         if (e.getAuthor().isBot())
             return;
 
-        String[] syntax = e.getMessage().getContent().split(" ");
+        String[] syntax = e.getMessage().getContent().split("\\s+");
         String[] syntaxx = e.getMessage().getContent().split(":");
 
         //Not the `Request` command
@@ -87,6 +87,6 @@ public class Request extends ListenerAdapter {
         return "Requests Sanduhr to fix|Add|Remove it!";
     }
     public String getSyntax() {
-        return "`" + Lib.PREFIX + getName() + " <args> :CMD:TEXT`\n\nArguments:\n`fix`, `Add`, `Remove`";
+        return "`" + Lib.PREFIX + getName() + " <args> :CMD:TEXT`\n\nArguments:\n`fix`, `add`, `remove`";
     }
 }

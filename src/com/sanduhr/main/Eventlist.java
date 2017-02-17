@@ -54,11 +54,13 @@ public class Eventlist extends ListenerAdapter {
     }
     public void onResume(ResumedEvent e) {
         OffsetDateTime now = OffsetDateTime.now();
-        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Resumed " + now.format(Lib.DTF)).queue();
+        int id = e.getJDA().getShardInfo().getShardId() + 1;
+        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Shard " + id + ": Resumed " + now.format(Lib.DTF)).queue();
     }
     public void onReconnect(ReconnectedEvent e) {
         OffsetDateTime now = OffsetDateTime.now();
-        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Reconnected " + now.format(Lib.DTF)).queue();
+        int id = e.getJDA().getShardInfo().getShardId() + 1;
+        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Shard " + id + ": Reconnected " + now.format(Lib.DTF)).queue();
     }
     public void onShutdown(ShutdownEvent e) {
         System.out.println(e.getShutdownTime().format(Lib.DTF));

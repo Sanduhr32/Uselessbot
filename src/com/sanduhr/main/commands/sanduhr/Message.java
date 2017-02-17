@@ -2,10 +2,15 @@ package com.sanduhr.main.commands.sanduhr;
 
 import com.sanduhr.main.Lib;
 import net.dv8tion.jda.core.entities.ChannelType;
+import net.dv8tion.jda.core.entities.Icon;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+
+import java.io.File;
+import java.io.IOException;
+import java.math.BigInteger;
 
 public class Message extends ListenerAdapter {
 
@@ -30,8 +35,7 @@ public class Message extends ListenerAdapter {
 
         Lib.receivedcmd++;
         e.getMessage().delete().queue();
-
-        if (e.getAuthor().getId().equals(Lib.YOUR_ID)) {
+        if (e.getAuthor().getId().equals(Lib.YOUR_ID)||e.getMember().isOwner()) {
             e.getChannel().sendMessage(syntaxx[1]).queue();
         }
         else {

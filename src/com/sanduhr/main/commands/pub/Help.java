@@ -74,7 +74,7 @@ public class Help extends ListenerAdapter {
             eb.setDescription("-" + Lib.ERROR_PERMS + "\n-" + Lib.ERROR_WRONG + "\n-" + Lib.ERROR_EMPTY + "\n-" + Lib.ERROR_MANY +"\ntype `"+ Lib.PREFIX + getName() + "`");
             e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
         }
-
+        
         Lib.executedcmd++;
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
@@ -94,6 +94,6 @@ public class Help extends ListenerAdapter {
         return "Sends you a of all commands";
     }
     public String getSyntax() {
-        return "`" + Lib.PREFIX + getName() + " [CMD]´";
+        return "`" + Lib.PREFIX + getName() + " [CMD]`";
     }
 }

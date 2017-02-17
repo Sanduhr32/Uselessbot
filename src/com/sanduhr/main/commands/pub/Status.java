@@ -36,17 +36,18 @@ public class Status extends ListenerAdapter {
         Lib.receivedcmd++;
         e.getMessage().delete().queue();
         List<Guild> g = e.getJDA().getGuilds();
+        int id = e.getJDA().getShardInfo().getShardId() + 1;
         Lib.member = 0;
         g.forEach(guild -> {
             guild.getMembers();
             Lib.member = Lib.member + guild.getMembers().size() - 1;
         });
 
-        //Builder
+        //Builders
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
 
-        //Configuraing Builder
+        //Configuration of the builders
         eb.setAuthor(e.getJDA().getSelfUser().getName(), null, e.getJDA().getSelfUser().getAvatarUrl());
         eb.addField("Guilds:", String.valueOf(e.getJDA().getGuilds().size()), false);
         eb.addField("Member:", String.valueOf(Lib.member), false);
@@ -55,6 +56,7 @@ public class Status extends ListenerAdapter {
         eb.addField("Sent messages:", String.valueOf(Lib.sent + 1), false);
         eb.addField("Successful executed commands:", String.valueOf(Lib.executedcmd + 1), false);
         eb.addField("Cleared messages:", String.valueOf(Lib.cleared), false);
+        eb.addField("Shards:", "Shard/Total: " + id + "/" + e.getJDA().getShardInfo().getShardTotal(),false);
 
         e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
 

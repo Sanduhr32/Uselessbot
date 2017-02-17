@@ -35,7 +35,7 @@ public class Relog extends ListenerAdapter {
         if (e.getAuthor().getId().equals(Lib.YOUR_ID)) {
             e.getJDA().shutdown(false);
             try {
-                Useless.start();
+                Useless.restart();
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

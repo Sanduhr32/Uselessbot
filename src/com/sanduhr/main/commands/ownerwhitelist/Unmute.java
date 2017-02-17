@@ -105,6 +105,6 @@ public class Unmute extends ListenerAdapter {
         return "Unmutes all mentioned users";
     }
     public String getSyntax() {
-        return "`" + Lib.PREFIX + getName() + " @USER`";
+        return "`" + Lib.PREFIX + getName() + " @USER|@ROLE [#CHANNEL]`";
     }
 }

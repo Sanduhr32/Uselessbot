@@ -10,6 +10,7 @@ import net.dv8tion.jda.core.entities.Game;
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.BinaryOperator;
 
 
 import static com.sanduhr.main.Config.*;
@@ -67,40 +68,41 @@ public class Lib {
     }
     private static void initreq() {
         reqMap.put("fix",    "to fix");
-        reqMap.put("Add",    "to Add");
-        reqMap.put("Remove", "to Remove");
+        reqMap.put("add",    "to add");
+        reqMap.put("remove", "to remove");
     }
     static void init() {
         getJ().setToken(BOT_TOKEN);
         getJ().setGame(Game.of(BOT_GAME));
         getJ().setStatus(OnlineStatus.ONLINE);
         /* Owner and whitelisted */
-        getJ().addListener(new Add());
-        getJ().addListener(new Allow());
-        getJ().addListener(new Ban());
-        getJ().addListener(new Clear());
-        getJ().addListener(new Deny());
-        getJ().addListener(new Kick());
-        getJ().addListener(new Mute());
-        getJ().addListener(new Remove());
-        getJ().addListener(new Unmute());
-        getJ().addListener(new Whitelist());
+            getJ().addListener(new Allow());
+            getJ().addListener(new Deny());
+            getJ().addListener(new Add());
+            getJ().addListener(new Remove());
+            getJ().addListener(new Ban());
+            getJ().addListener(new Kick());
+            getJ().addListener(new Mentioneveryone());
+            getJ().addListener(new Clear());
+            getJ().addListener(new Mute());
+            getJ().addListener(new Unmute());
+            getJ().addListener(new Whitelist());
         /* Public */
-        getJ().addListener(new com.sanduhr.main.commands.pub.Game());
-        getJ().addListener(new Github());
-        getJ().addListener(new Help());
-        getJ().addListener(new Invite());
-        getJ().addListener(new Request());
-        getJ().addListener(new Sanduhr());
-        getJ().addListener(new Status());
-        getJ().addListener(new Syntax());
-        getJ().addListener(new Task());
-        getJ().addListener(new Time());
+            getJ().addListener(new com.sanduhr.main.commands.pub.Game());
+            getJ().addListener(new Github());
+            getJ().addListener(new Help());
+            getJ().addListener(new Invite());
+            getJ().addListener(new Request());
+            getJ().addListener(new Sanduhr());
+            getJ().addListener(new Status());
+            getJ().addListener(new Syntax());
+            getJ().addListener(new Task());
+            getJ().addListener(new Time());
         /* Other */
-        getJ().addListener(new Eventlist());
-        getJ().addListener(new Message());
-        getJ().addListener(new Relog());
-        getJ().addListener(new Shutdown());
+            getJ().addListener(new Eventlist());
+            getJ().addListener(new Message());
+            getJ().addListener(new Relog());
+            getJ().addListener(new Shutdown());
         /* Initting */
         initwhitelist();
         initperms();

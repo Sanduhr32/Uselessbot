@@ -8,6 +8,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class Clear extends ListenerAdapter {
@@ -38,16 +39,23 @@ public class Clear extends ListenerAdapter {
             return;
         }
 
+        if (syntax.length < 3) {
+            return;
+        }
         Lib.receivedcmd++;
         e.getMessage().delete().queue();
         int i = Integer.parseInt(syntax[1]);
-        if (i > 100 || i < 1) {
-            e.getChannel().sendMessage(i + " is no valid number between `1 to 100`").queue();
+        if (i > 100 || i < 2) {
+            e.getChannel().sendMessage(i + " is no valid number between `2 und 100`").queue();
             return;
         }
-
         List<Message> msg = e.getTextChannel().getHistory().retrievePast(i).complete();
-        msg.forEach(message -> message.delete().queue());
+        if (syntax[2].equalsIgnoreCase("fast")) {
+            e.getTextChannel().deleteMessages(msg).queue();
+        }
+        if (syntax[2].equalsIgnoreCase("slow")) {
+            msg.forEach(message -> message.delete().queue());
+        }
         Lib.executedcmd++;
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
@@ -67,6 +75,6 @@ public class Clear extends ListenerAdapter {
         return "Clears the last x messages";
     }
     public String getSyntax() {
-        return "`" + Lib.PREFIX + getName() + " 1-100`";
+        return "`" + Lib.PREFIX + getName() + " 2-100 <mode>`\n\nModes:`fast`, `slow`";
     }
 }

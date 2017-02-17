@@ -105,6 +105,6 @@ public class Mute extends ListenerAdapter {
         return "Mutes all mentioned users at the current channel if no channels are mentioned";
     }
     public String getSyntax() {
-        return "`" + Lib.PREFIX + getName() + " @USER`";
+        return "`" + Lib.PREFIX + getName() + " @USER|@ROLE [#CHANNEL]`";
     }
 }

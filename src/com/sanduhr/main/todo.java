@@ -6,4 +6,4 @@ package com.sanduhr.main;
     /* TODO Add shutdown and relog command               :  ❌  */
     /* TODO Add syntaxes for all commands (synMap)       :  ✔  */
     /* TODO Extend help command                          :  ✔  */
-    /* TOFO Time command                                 :  ❌  */
+

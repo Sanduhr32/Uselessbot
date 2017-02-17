@@ -18,7 +18,7 @@ public class Ban extends ListenerAdapter {
         if (e.getAuthor().isBot())
             return;
 
-        String[] syntax = e.getMessage().getContent().split(" ");
+        String[] syntax = e.getMessage().getContent().split("\\s+");
         String[] syntaxx = e.getMessage().getContent().split(":");
 
         //Not the `ban` command
@@ -45,6 +45,10 @@ public class Ban extends ListenerAdapter {
         int i = Integer.parseInt(syntaxx[2]);
         if (!u.isEmpty() && !syntaxx[1].isEmpty()) {
             for ( User user : u ) {
+                if (!e.getMember().canInteract(e.getGuild().getMember(user))) {
+                    e.getChannel().sendMessage("I cant ban..").queue();
+                    continue;
+                }
                 e.getGuild().getController().ban(user.getId(), i).queue();
                 e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You are banned for " + syntaxx[1] + "!").queue();
             }
@@ -59,9 +63,9 @@ public class Ban extends ListenerAdapter {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
     }
     public void onReady(ReadyEvent e) {
-        initter();
+        init();
     }
-    public void initter() {
+    public void init() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
@@ -72,6 +76,6 @@ public class Ban extends ListenerAdapter {
         return "Swings the ban hammer for each mentioned user";
     }
     public String getSyntax() {
-        return "`" + Lib.PREFIX + getName() + " @USER :REASON`";
+        return "`" + Lib.PREFIX + getName() + " @USER :REASON:DAYS`";
     }
 }

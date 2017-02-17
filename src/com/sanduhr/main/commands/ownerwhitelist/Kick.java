@@ -1,7 +1,9 @@
 package com.sanduhr.main.commands.ownerwhitelist;
 
 import com.sanduhr.main.Lib;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -18,7 +20,7 @@ public class Kick extends ListenerAdapter {
         if (e.getAuthor().isBot())
             return;
 
-        String[] syntax = e.getMessage().getContent().split(" ");
+        String[] syntax = e.getMessage().getContent().split("\\s+");
         String[] syntaxx = e.getMessage().getContent().split(":");
 
         //Not the `kick` command
@@ -40,10 +42,23 @@ public class Kick extends ListenerAdapter {
         }
 
         Lib.receivedcmd++;
-        e.getMessage().delete().queue();
         List<User> u = e.getMessage().getMentionedUsers();
-        if (!u.isEmpty() && !syntaxx[1].isEmpty()) {
+        Member self = e.getGuild().getMember(e.getJDA().getSelfUser());
+        if (!self.hasPermission(Permission.MESSAGE_MANAGE)) {
+            e.getChannel().sendMessage("I don't have permissions").queue();
+            return;
+        }
+        e.getMessage().delete().queue();
+        if (!u.isEmpty() && syntaxx.length == 2) {
+            if (!self.hasPermission(Permission.KICK_MEMBERS)) {
+                e.getChannel().sendMessage("I don't have permissions").queue();
+                return;
+            }
             for ( User user : u ) {
+                if (!self.canInteract(e.getGuild().getMember(user))) {
+                    e.getChannel().sendMessage("I cant kick..").queue();
+                    continue;
+                }
                 e.getGuild().getController().kick(user.getId()).queue();
                 e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You were kicked for " + syntaxx[1] + "!").queue();
             }

@@ -43,6 +43,7 @@ public class Syntax extends ListenerAdapter {
             eb.setColor(Lib.ORANGE);
             Lib.getSynMap().forEach((s, s2) ->
                     eb.addField(s, s2, false));
+            eb.addField("","\n\n*Hint: <...> must be specified but [...] is always optional*", false);
             e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
             return;
         }
@@ -58,7 +59,7 @@ public class Syntax extends ListenerAdapter {
             if (val != null ) {
                 eb.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getEffectiveAvatarUrl());
                 eb.setColor(Lib.ORANGE);
-                eb.addField(syntax[1], val, false);
+                eb.addField(syntax[1], val + "\n*Hint: <...> must be specified but [...] is always optional*", false);
                 e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
             }
             else {

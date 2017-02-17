@@ -18,7 +18,7 @@ public class Add extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntax = e.getMessage().getContent().split(" ");
+        String[] syntax = e.getMessage().getContent().split("\\s+");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())
@@ -51,7 +51,7 @@ public class Add extends ListenerAdapter {
         MessageBuilder mb = new MessageBuilder();
 
         if (!u.isEmpty() && !r.isEmpty()) {
-            u.forEach(user -> e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r));
+            u.forEach(user -> e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue());
         }
         else {
             eb.setColor(Color.red);

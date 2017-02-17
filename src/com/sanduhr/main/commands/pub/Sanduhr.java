@@ -16,7 +16,7 @@ public class Sanduhr extends ListenerAdapter {
             return;
 
         //Not the `Sanduhr` command
-        if (!e.getMessage().isMentioned(e.getJDA().getUserById(Lib.YOUR_ID))) {
+        if (!e.getMessage().isMentioned(e.getGuild().getOwner().getUser())) {
             return;
         }
 
@@ -27,7 +27,7 @@ public class Sanduhr extends ListenerAdapter {
         }
 
         e.getMessage().delete().queue();
-        e.getChannel().sendMessage("Please dont mention " + e.getJDA().getUserById(Lib.YOUR_ID).getName() + "!").queue();
+        e.getChannel().sendMessage("Please dont mention " + e.getGuild().getOwner().getUser().getName() + "!").queue();
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));

@@ -4,8 +4,7 @@ import com.sanduhr.main.Lib;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
@@ -50,6 +49,8 @@ public class Allow extends ListenerAdapter {
 
         Lib.receivedcmd++;
         List<User> u = e.getMessage().getMentionedUsers();
+        List<Role> r = e.getMessage().getMentionedRoles();
+        List<TextChannel> c = e.getMessage().getMentionedChannels();
         e.getMessage().delete().queue();
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
@@ -59,19 +60,44 @@ public class Allow extends ListenerAdapter {
         }
 
         Permission perm = Lib.getPermMap().get(syntax[1].toLowerCase());
-        if (perm != null && !u.isEmpty()) {
-            u.forEach(user -> {
+        if (perm != null && (!u.isEmpty()||!r.isEmpty()) && c.isEmpty()) {
+            for ( User user : u ) {
                 if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
                     e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(perm).queue();
                 } else {
                     e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().grant(perm).queue();
                 }
-            });
+            }
+            for ( Role role : r ) {
+                if (e.getTextChannel().getPermissionOverride(role) == null) {
+                    e.getTextChannel().createPermissionOverride(role).complete().getManager().grant(perm).queue();
+                } else {
+                    e.getTextChannel().getPermissionOverride(role).getManager().grant(perm).queue();
+                }
+            }
         }
-        if (u.isEmpty()||perm == null) {
+        if (perm != null && (!u.isEmpty()||!r.isEmpty()) && !c.isEmpty()) {
+            for ( Channel channel : c ) {
+                for (User user : u) {
+                    if (channel.getPermissionOverride(e.getGuild().getMember(user)) == null) {
+                        channel.createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(perm).queue();
+                    } else {
+                        channel.getPermissionOverride(e.getGuild().getMember(user)).getManager().grant(perm).queue();
+                    }
+                }
+                for (Role role : r) {
+                    if (channel.getPermissionOverride(role) == null){
+                        channel.createPermissionOverride(role).complete().getManager().grant(perm).queue();
+                    } else{
+                        channel.getPermissionOverride(role).getManager().grant(perm).queue();
+                    }
+                }
+            }
+        }
+        if ((u.isEmpty()&&r.isEmpty())||perm == null) {
             eb.setColor(Color.red);
             eb.setAuthor("Possible error:", null, Lib.ERROR_PNG);
-            eb.setDescription("-**Unknown permission type provided! Your input:** " + syntax[1] + "\n-**Unknown user mentioned!**");
+            eb.setDescription("-**Unknown permission type provided! Your input:** " + syntax[1] + "\n-**Unknown object mentioned!**");
             e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
         }
         Lib.executedcmd++;
@@ -93,6 +119,8 @@ public class Allow extends ListenerAdapter {
         return "Allows the mentioned users the permission";
     }
     public String getSyntax() {
-        return "`" + Lib.PREFIX + getName() + " <perm> @USER`\n\nPermissions:\nsoon:tm:";
+        return "`" + Lib.PREFIX + getName() + " <perm> @USER|@ROLE [#CHANNEL]`\n\n" +
+                "Permissions:\n" +
+                "`write`, `write_tts`, `attach_files`, `embed_links`, `ext_emojis`, `mention_@e`, `reactions`, `read`, `read_history`, `create_invites`, `manage_channel`, `manage_perms`, `manage_webhooks`, `manage_msgs`";
     }
 }
