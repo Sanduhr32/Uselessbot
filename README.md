@@ -5,16 +5,12 @@
 
 
 >### Tech
-> |   Key   |  Value  |
-> |   ---   |  -----  |
-> | Language | [Java][Java] |
+> | Language | [Java 8 (1.8.0_121)][Java] |
 > | API | [JDA (Java Discord API)][JDA]|
 > | API Version | [3.0 Beta2 126][Version] |
 > | Bot Version | [2.0-beta][rel] |
 >
 > ### TODO-and-Stats-List
-> |   Key   |  Value  |
-> |   ---   |  -----  |
 > | Start   |  DONE   |
 > | Issues  | now™ |
 > | Pull-Request | now™ |
