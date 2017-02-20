@@ -19,8 +19,7 @@ public class Request extends ListenerAdapter {
         if (e.getAuthor().isBot())
             return;
 
-        String[] syntax = e.getMessage().getContent().split("\\s+");
-        String[] syntaxx = e.getMessage().getContent().split(":");
+        String[] syntax = e.getMessage().getContent().split("\\s+", 4);
 
         //Not the `Request` command
         if (!syntax[0].equalsIgnoreCase(Lib.PREFIX + "Request")) {
@@ -47,19 +46,10 @@ public class Request extends ListenerAdapter {
             return;
         }
 
-        if (syntaxx.length < 2) {
-            eb.setColor(Color.red);
-            eb.setAuthor("Possible error:",null, Lib.ERROR_PNG);
-            eb.setDescription("\n-" + Lib.ERROR_PERMS + "\n-" + Lib.ERROR_WRONG + "\n-" + Lib.ERROR_EMPTY);
-            e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
-            return;
-        }
-
-
         String val = Lib.getReqMap().get(syntax[1].toLowerCase());
-        if (val != null && !syntaxx[1].isEmpty() && !syntaxx[2].isEmpty()) {
-            e.getAuthor().openPrivateChannel().complete().sendMessage("Thanks for requesting " + val + " " + syntaxx[1] + ", " + syntaxx[2]).queue();
-            e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage(e.getAuthor().getName() + " requested " + val + " command " + syntaxx[1] + "\n" + syntaxx[2]).queue();
+        if (val != null && !syntax[2].isEmpty() && !syntax[3].isEmpty()) {
+            e.getAuthor().openPrivateChannel().complete().sendMessage("Thanks for requesting " + val + " " + syntax[2] + ", " + syntax[3]).queue();
+            e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage(e.getAuthor().getName() + " requested " + val + " command " + syntax[2] + "\n" + syntax[3]).queue();
         }
         else {
             eb.setColor(Color.red);
@@ -84,7 +74,7 @@ public class Request extends ListenerAdapter {
         return Request.class.getSimpleName().toLowerCase();
     }
     public String getDescription() {
-        return "Requests Sanduhr to fix|Add|Remove it!";
+        return "Requests Protection to fix|Add|Remove it!";
     }
     public String getSyntax() {
         return "`" + Lib.PREFIX + getName() + " <args> :CMD:TEXT`\n\nArguments:\n`fix`, `add`, `remove`";

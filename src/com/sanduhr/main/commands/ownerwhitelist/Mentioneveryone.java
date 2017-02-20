@@ -11,7 +11,7 @@ public class Mentioneveryone extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntax = e.getMessage().getContent().split(" ");
+        String[] syntax = e.getMessage().getContent().split("\\s+");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())

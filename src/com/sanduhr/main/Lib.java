@@ -3,14 +3,14 @@ package com.sanduhr.main;
 import com.sanduhr.main.commands.ownerwhitelist.*;
 import com.sanduhr.main.commands.pub.*;
 import com.sanduhr.main.commands.sanduhr.*;
-import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.*;
 import net.dv8tion.jda.core.entities.Game;
 
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.BinaryOperator;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 
 import static com.sanduhr.main.Config.*;
@@ -19,6 +19,7 @@ import static com.sanduhr.main.Useless.getJ;
 public class Lib {
     public static final String PREFIX ="??";
     public static final String YOUR_ID = "198137282018934784";
+    public static final String GITHUB_PNG = "https://cdn.discordapp.com/avatars/277970452327038977/74b8b6de441bce1a59f9c4ac74f666e6.png";
 
     public static final String ERROR_GUILDS = "Only works at guilds";
     public static final String ERROR_PERMS = "You don't have permissions to run this command! :no_entry_sign:";
@@ -33,6 +34,8 @@ public class Lib {
     public static final Color ORANGE = new Color(255, 100, 0);
 
     static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm:ss");
+
+    public static final ScheduledExecutorService EXECUTE = Executors.newScheduledThreadPool(1);
 
     private static final ArrayList<String> whitelist = new ArrayList<>();
 
@@ -91,18 +94,19 @@ public class Lib {
             getJ().addListener(new com.sanduhr.main.commands.pub.Game());
             getJ().addListener(new Github());
             getJ().addListener(new Help());
+            getJ().addListener(new Info());
             getJ().addListener(new Invite());
             getJ().addListener(new Request());
-            getJ().addListener(new Sanduhr());
+            getJ().addListener(new Protection());
             getJ().addListener(new Status());
             getJ().addListener(new Syntax());
-            getJ().addListener(new Task());
             getJ().addListener(new Time());
         /* Other */
             getJ().addListener(new Eventlist());
             getJ().addListener(new Message());
             getJ().addListener(new Relog());
             getJ().addListener(new Shutdown());
+            getJ().addListener(new Fix());
         /* Initting */
         initwhitelist();
         initperms();
@@ -112,7 +116,7 @@ public class Lib {
     public static HashMap<String, Permission> getPermMap() {
         return permMap;
     }
-    public static HashMap<String ,String> getCmdMap() {
+    public static HashMap<String, String> getCmdMap() {
         return cmdMap;
     }
     public static HashMap<String, String> getSynMap() {

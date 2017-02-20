@@ -1,6 +1,8 @@
 package com.sanduhr.main.commands.pub;
 
 import com.sanduhr.main.Lib;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -28,12 +30,15 @@ public class Invite extends ListenerAdapter {
             return;
         }
 
+        EmbedBuilder eb = new EmbedBuilder();
+        MessageBuilder mb = new MessageBuilder();
         Lib.receivedcmd++;
         e.getMessage().delete().queue();
+        eb.setAuthor(e.getAuthor().getName(),null,e.getAuthor().getEffectiveAvatarUrl());
+        eb.addField("Add Uselessbot to your server and type `??Syntax` for Help", "[Auth-Link](https://discordapp.com/oauth2/authorize?client_id=" + e.getJDA().getSelfUser().getId() + "&scope=bot&permissions=8)" +
+                "\nIf you need Help or like to talk to the creator of useless, join: [Invite](https://discord.gg/Vz2uaVN)", false);
+        e.getAuthor().openPrivateChannel().complete().sendMessage(mb.setEmbed(eb.build()).build()).queue();
 
-        e.getAuthor().openPrivateChannel().complete().sendMessage("Add Uselessbot to your server and type `??Syntax` for Help" +
-                "\nhttps://discordapp.com/oauth2/authorize?client_id=" + e.getJDA().getSelfUser().getId() + "&scope=bot&permissions=8"+
-                "\nIf you need Help or like to talk to the creator of useless, join: discord.gg/Vz2uaVN").queue();
 
         Lib.executedcmd++;
     }

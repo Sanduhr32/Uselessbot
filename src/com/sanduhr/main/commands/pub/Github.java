@@ -1,6 +1,8 @@
 package com.sanduhr.main.commands.pub;
 
 import com.sanduhr.main.Lib;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -22,16 +24,13 @@ public class Github extends ListenerAdapter {
             return;
         }
 
-        //If `Github` command was received from a non-TextChannel, inform command is Guild-only
-        if (!e.isFromType(ChannelType.TEXT)) {
-            e.getChannel().sendMessage(Lib.ERROR_GUILDS).queue();
-            return;
-        }
-
+        EmbedBuilder eb = new EmbedBuilder();
+        MessageBuilder mb = new MessageBuilder();
         Lib.receivedcmd++;
-        e.getMessage().delete().queue();
-
-        e.getAuthor().openPrivateChannel().complete().sendMessage("https://Github.com/Sanduhr32/Uselessbot\nhttps://Github.com/gerd2002/Uselessbot").queue();
+        eb.setAuthor("GitHub","https://github.com",Lib.GITHUB_PNG);
+        eb.addField("Repositorys:","Sanduhrs: [**[Sanduhr32-Uselessbot]**](https://github.com/Sanduhr32/Uselessbot)" +
+                "\nHelper: [[gerd2002-Uselessbot]](https://github.com/gerd2002/Uselessbot)",false);
+        e.getAuthor().openPrivateChannel().complete().sendMessage(mb.setEmbed(eb.build()).build()).queue();
 
         Lib.executedcmd++;
     }

@@ -10,12 +10,14 @@ import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.awt.*;
+import java.util.concurrent.TimeUnit;
 
 public class Help extends ListenerAdapter {
 
+
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntax = e.getMessage().getContent().split(" ");
+        String[] syntax = e.getMessage().getContent().split("\\s+");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())
@@ -43,7 +45,9 @@ public class Help extends ListenerAdapter {
             eb.setColor(Lib.ORANGE);
             Lib.getCmdMap().forEach((s, s2) ->
                     eb.addField(s, s2, false));
-            e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+            e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue(msg ->
+                Lib.EXECUTE.schedule(() ->
+                    msg.delete().queue(), 15, TimeUnit.SECONDS));
             return;
         }
         if (syntax.length == 2) {
@@ -51,7 +55,9 @@ public class Help extends ListenerAdapter {
                 eb.setColor(Color.red);
                 eb.setAuthor("Possible error:", null, Lib.ERROR_PNG);
                 eb.setDescription("-" + Lib.ERROR_PERMS + "\n-" + Lib.ERROR_WRONG + "\n-" + Lib.ERROR_EMPTY + "type `"+ Lib.PREFIX + getName() + "`");
-                e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+                e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue(msg ->
+                    Lib.EXECUTE.schedule(() ->
+                        msg.delete().queue(), 15, TimeUnit.SECONDS));
                 return;
             }
             String val = Lib.getCmdMap().get(syntax[1].toLowerCase());
@@ -59,20 +65,26 @@ public class Help extends ListenerAdapter {
                 eb.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getEffectiveAvatarUrl());
                 eb.setColor(Lib.ORANGE);
                 eb.addField(syntax[1], val, false);
-                e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+                e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue(msg ->
+                    Lib.EXECUTE.schedule(() ->
+                        msg.delete().queue(), 15, TimeUnit.SECONDS));
             }
             else {
                 eb.setColor(Color.red);
                 eb.setAuthor("Possible error:", null, Lib.ERROR_PNG);
                 eb.setDescription("-" + Lib.ERROR_PERMS + "\n-" + Lib.ERROR_WRONG + "\n-" + Lib.ERROR_EMPTY + "\ntype `"+ Lib.PREFIX + getName() + "`");
-                e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+                e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue(msg ->
+                    Lib.EXECUTE.schedule(() ->
+                        msg.delete().queue(), 15, TimeUnit.SECONDS));
             }
         }
         if (syntax.length > 2) {
             eb.setColor(Color.red);
             eb.setAuthor("Possible error:", null, Lib.ERROR_PNG);
             eb.setDescription("-" + Lib.ERROR_PERMS + "\n-" + Lib.ERROR_WRONG + "\n-" + Lib.ERROR_EMPTY + "\n-" + Lib.ERROR_MANY +"\ntype `"+ Lib.PREFIX + getName() + "`");
-            e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+            e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue(msg ->
+                Lib.EXECUTE.schedule(() ->
+                    msg.delete().queue(), 15, TimeUnit.SECONDS));
         }
         
         Lib.executedcmd++;

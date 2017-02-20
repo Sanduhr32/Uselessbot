@@ -18,7 +18,7 @@ public class Unmute extends ListenerAdapter {
         if (e.getAuthor().isBot())
             return;
 
-        String[] syntax = e.getMessage().getContent().split(" ");
+        String[] syntax = e.getMessage().getContent().split("\\s+");
 
         //Not the `unmute` command
         if (!syntax[0].equalsIgnoreCase(Lib.PREFIX + "unmute")) {

@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.ReconnectedEvent;
 import net.dv8tion.jda.core.events.ResumedEvent;
 import net.dv8tion.jda.core.events.ShutdownEvent;
@@ -11,12 +12,15 @@ import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberLeaveEvent;
-import net.dv8tion.jda.core.events.user.UserTypingEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.time.OffsetDateTime;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Eventlist extends ListenerAdapter {
+    private int countdown;
     @Override
     public void onGuildJoin(GuildJoinEvent e) {
         System.out.println("Joined " + e.getGuild().getName());
@@ -47,10 +51,9 @@ public class Eventlist extends ListenerAdapter {
         Message m  = mb.build();
         e.getGuild().getPublicChannel().sendMessage(m).queue();
     }
-    public void onUserTyping(UserTypingEvent e) {
-        if (e.getMember().getUser().getId().equals(Lib.YOUR_ID)) {
-            e.getChannel().sendTyping().queue();
-        }
+    public void onReady(ReadyEvent e) {
+        countdown = 14;
+        shutdown();
     }
     public void onResume(ResumedEvent e) {
         OffsetDateTime now = OffsetDateTime.now();
@@ -64,5 +67,22 @@ public class Eventlist extends ListenerAdapter {
     }
     public void onShutdown(ShutdownEvent e) {
         System.out.println(e.getShutdownTime().format(Lib.DTF));
+    }
+    private void shutdown() {
+        ScheduledExecutorService EXEC_ = Executors.newScheduledThreadPool(1);
+        Runnable r = () -> {
+            if (countdown != 0) {
+                countdown--;
+                System.out.println(countdown);
+            } else {
+                Useless.getJDA().shutdown(false);
+                try {
+                    Useless.restart();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        EXEC_.scheduleWithFixedDelay(r, 1, 1, TimeUnit.DAYS);
     }
 }

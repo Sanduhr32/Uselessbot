@@ -17,8 +17,7 @@ public class Game extends ListenerAdapter {
         if (e.getAuthor().isBot())
             return;
 
-        String[] syntax = e.getMessage().getContent().split(" ");
-        String[] syntaxx = e.getMessage().getContent().split(":");
+        String[] syntax = e.getMessage().getContent().split("\\s+",3);
 
         //Not the `Game` command
         if (!syntax[0].equalsIgnoreCase(Lib.PREFIX + "Game")) {
@@ -44,16 +43,23 @@ public class Game extends ListenerAdapter {
             eb.addField("Current Game:", GAME, false);
             e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
         }
-        else if (syntax[1].equalsIgnoreCase("set")) {
+        if (syntax[1].equalsIgnoreCase("set")) {
             if (e.getAuthor().getId().equals(Lib.YOUR_ID)) {
-                e.getJDA().getPresence().setGame(net.dv8tion.jda.core.entities.Game.of(syntaxx[1]));
+                e.getJDA().getPresence().setGame(net.dv8tion.jda.core.entities.Game.of(syntax[2]));
                 eb.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
                 eb.setColor(Lib.GREEN);
                 eb.addField("Old Game:", GAME, false);
-                eb.addField("New Game:", syntaxx[1], false);
+                eb.addField("New Game:", syntax[2], false);
                 e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
             }
             else {
+                e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
+            }
+        }
+        if (syntax[1].equalsIgnoreCase("clear")) {
+            if (e.getAuthor().getId().equals(Lib.YOUR_ID)) {
+                e.getJDA().getPresence().setGame(null);
+            } else {
                 e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
             }
         }

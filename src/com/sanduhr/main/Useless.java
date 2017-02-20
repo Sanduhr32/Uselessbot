@@ -1,8 +1,8 @@
 package com.sanduhr.main;
 
-        import net.dv8tion.jda.core.AccountType;
-        import net.dv8tion.jda.core.JDA;
-        import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.JDABuilder;
 
 public class Useless {
     private static JDA JDA;
@@ -10,7 +10,7 @@ public class Useless {
     public static void main(String[] args)throws Exception {
         start();
     }
-    public static void start() throws Exception {
+    private static void start() throws Exception {
         Lib.init();
         JDA = j.useSharding(1, 2).buildBlocking();
         JDA = j.useSharding(0, 2).buildBlocking();
