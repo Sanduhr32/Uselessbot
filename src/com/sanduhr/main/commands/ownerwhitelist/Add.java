@@ -3,6 +3,7 @@ package com.sanduhr.main.commands.ownerwhitelist;
 import com.sanduhr.main.Lib;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
@@ -10,6 +11,7 @@ import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.core.utils.SimpleLog;
 
 import java.awt.*;
 import java.util.List;
@@ -37,7 +39,7 @@ public class Add extends ListenerAdapter {
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist().contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+        if (!Lib.getWhitelist().get(e.getGuild().getId()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
             return;
         }
@@ -45,13 +47,21 @@ public class Add extends ListenerAdapter {
         Lib.receivedcmd++;
         List<User> u = e.getMessage().getMentionedUsers();
         List<Role> r = e.getMessage().getMentionedRoles();
-        e.getMessage().delete().queue();
+        if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            e.getMessage().delete().queue();
+        }
 
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
 
         if (!u.isEmpty() && !r.isEmpty()) {
-            u.forEach(user -> e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue());
+            u.forEach(user -> {
+                StringBuilder sb = new StringBuilder();
+                r.forEach(role -> sb.append(role.getName()).append(", "));
+                String roles = sb.toString();
+                e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
+                System.out.println("[Log]: Added " + roles + "to " + user.getName());
+            });
         }
         else {
             eb.setColor(Color.red);

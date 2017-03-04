@@ -33,7 +33,6 @@ public class Relog extends ListenerAdapter {
         e.getMessage().delete().queue();
 
         if (e.getAuthor().getId().equals(Lib.YOUR_ID)) {
-            e.getJDA().shutdown(false);
             try {
                 Useless.restart();
             } catch (Exception e1) {

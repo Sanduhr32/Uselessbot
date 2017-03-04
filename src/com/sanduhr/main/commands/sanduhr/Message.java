@@ -16,7 +16,7 @@ public class Message extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntaxx = e.getMessage().getContent().split(":");
+        String[] syntaxx = e.getMessage().getRawContent().split("\\s+",2);
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())
@@ -61,6 +61,6 @@ public class Message extends ListenerAdapter {
         return "Send a Message as your Bot";
     }
     public String getSyntax() {
-        return "`" + Lib.PREFIX + getName() + ":TEXT`";
+        return "`" + Lib.PREFIX + getName() + " TEXT`";
     }
 }

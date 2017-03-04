@@ -4,6 +4,7 @@ import com.sanduhr.main.Lib;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.ChannelType;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Whitelist extends ListenerAdapter {
@@ -36,7 +38,7 @@ public class Whitelist extends ListenerAdapter {
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist().contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+        if (!Lib.getWhitelist().get(e.getGuild().getId()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
             return;
         }
@@ -48,12 +50,14 @@ public class Whitelist extends ListenerAdapter {
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
 
-        //If there is no argument
+        //If argument is `print`
         if (syntax[1].equalsIgnoreCase("print")) {
             eb.setColor(Lib.BLUE);
-            Lib.getWhitelist().forEach(string -> eb.addField("User:","**Name:** "+e.getJDA().getUserById(string).getName()+"\n**ID:** "+ string, false));
+            Lib.getWhitelist().get(e.getGuild().getId()).forEach(string -> eb.addField(e.getJDA().getUserById(string.toString()).getName(),string.toString(),false));
             e.getAuthor().openPrivateChannel().complete().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+            return;
         }
+        //If author isn't owner or the list is empty
         if (u.isEmpty()&&!e.getMember().isOwner()) {
             eb.setColor(Color.red);
             eb.setAuthor("Possible error:", null, Lib.ERROR_PNG);
@@ -61,14 +65,16 @@ public class Whitelist extends ListenerAdapter {
             e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
             return;
         }
+        //If argument is `add`
         if (syntax[1].equalsIgnoreCase("add")) {
             for ( User user : u ) {
-                Lib.getWhitelist().add(user.getId());
+                Lib.getWhitelist().get(e.getGuild().getId()).add(user.getId());
             }
         }
+        //If argument is `remove`
         if (syntax[1].equalsIgnoreCase("remove")) {
             for ( User user : u ) {
-                Lib.getWhitelist().remove(user.getId());
+                Lib.getWhitelist().get(e.getGuild().getId()).remove(user.getId());
             }
         }
 
@@ -79,6 +85,12 @@ public class Whitelist extends ListenerAdapter {
     }
     public void onReady(ReadyEvent e) {
         initter();
+        List<Guild> g = e.getJDA().getGuilds();
+        g.forEach(guild -> {
+            ArrayList<String> WL = new ArrayList<>();
+            WL.add(Lib.YOUR_ID);
+            Lib.getWhitelist().put(guild.getId(),WL);
+        });
     }
     public void initter() {
         Lib.getCmdMap().put(getName(), getDescription());

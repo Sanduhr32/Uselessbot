@@ -74,9 +74,9 @@ public class Request extends ListenerAdapter {
         return Request.class.getSimpleName().toLowerCase();
     }
     public String getDescription() {
-        return "Requests Protection to fix|Add|Remove it!";
+        return "Requests Sanduhr to fix|Add|Remove it!";
     }
     public String getSyntax() {
-        return "`" + Lib.PREFIX + getName() + " <args> :CMD:TEXT`\n\nArguments:\n`fix`, `add`, `remove`";
+        return "`" + Lib.PREFIX + getName() + " <args> <CMD> <TEXT>`\n\nArguments:\n`fix`, `add`, `remove`";
     }
 }

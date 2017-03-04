@@ -35,7 +35,7 @@ public class Invite extends ListenerAdapter {
         Lib.receivedcmd++;
         e.getMessage().delete().queue();
         eb.setAuthor(e.getAuthor().getName(),null,e.getAuthor().getEffectiveAvatarUrl());
-        eb.addField("Add Uselessbot to your server and type `??Syntax` for Help", "[Auth-Link](https://discordapp.com/oauth2/authorize?client_id=" + e.getJDA().getSelfUser().getId() + "&scope=bot&permissions=8)" +
+        eb.addField("Add Uselessbot to your server and type `??Syntax` for Help", "[Auth-Link](https://discordapp.com/oauth2/authorize?client_id=" + e.getJDA().getSelfUser().getId() + "&scope=bot&permissions=-1)" +
                 "\nIf you need Help or like to talk to the creator of useless, join: [Invite](https://discord.gg/Vz2uaVN)", false);
         e.getAuthor().openPrivateChannel().complete().sendMessage(mb.setEmbed(eb.build()).build()).queue();
 

@@ -54,7 +54,7 @@ public class Info extends ListenerAdapter {
         MessageBuilder mb = new MessageBuilder();
 
         eb.setColor(Color.BLUE);
-        eb.addField("Libary:","[" + JDAInfo.VERSION + "](http://home.dv8tion.net:8080/job/JDA/" + JDAInfo.VERSION_BUILD + "/)", false);
+        eb.addField("Library:","[" + JDAInfo.VERSION + "](http://home.dv8tion.net:8080/job/JDA/" + JDAInfo.VERSION_BUILD + "/)", false);
         eb.addField("Times:", "**Started:** " + startt.toString() + "\n**Uptime:** " + upp.toString(), false);
         eb.addField("CPU:","**Cores:** " + cpu1 + "\n**Usage:** " + cpu0,false);
         eb.addField("RAM:","**Usage:** " + ram0 +"MB\n**Max:** " + ram1 + "MB", false);

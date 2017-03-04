@@ -2,9 +2,12 @@ package com.sanduhr.main;
 
 import com.sanduhr.main.commands.ownerwhitelist.*;
 import com.sanduhr.main.commands.pub.*;
+import com.sanduhr.main.commands.pub.Game;
+import com.sanduhr.main.commands.pub.Invite;
 import com.sanduhr.main.commands.sanduhr.*;
+import com.sanduhr.main.commands.sanduhr.Message;
 import net.dv8tion.jda.core.*;
-import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.*;
 
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
@@ -12,13 +15,14 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-
-import static com.sanduhr.main.Config.*;
+import static com.sanduhr.main.Config.BOT_GAME;
+import static com.sanduhr.main.Config.TOKEN_BOT;
 import static com.sanduhr.main.Useless.getJ;
 
 public class Lib {
     public static final String PREFIX ="??";
     public static final String YOUR_ID = "198137282018934784";
+    public static final String GERD_ID = "247410291732774913";
     public static final String GITHUB_PNG = "https://cdn.discordapp.com/avatars/277970452327038977/74b8b6de441bce1a59f9c4ac74f666e6.png";
 
     public static final String ERROR_GUILDS = "Only works at guilds";
@@ -37,7 +41,7 @@ public class Lib {
 
     public static final ScheduledExecutorService EXECUTE = Executors.newScheduledThreadPool(1);
 
-    private static final ArrayList<String> whitelist = new ArrayList<>();
+    private static final HashMap<String, ArrayList> whitelist = new HashMap<>();
 
     private static final HashMap<String, Permission> permMap = new HashMap<>();
     private static final HashMap<String, String> cmdMap = new HashMap<>();
@@ -51,9 +55,6 @@ public class Lib {
     public static int executedcmd = 0;
     public static int cleared = 0;
 
-    private static void initwhitelist() {
-        whitelist.add(YOUR_ID);
-    }
     private static void initperms() {
         permMap.put("write_tts",       Permission.MESSAGE_TTS);
         permMap.put("attach_files",    Permission.MESSAGE_ATTACH_FILES);
@@ -75,8 +76,9 @@ public class Lib {
         reqMap.put("remove", "to remove");
     }
     static void init() {
-        getJ().setToken(BOT_TOKEN);
-        getJ().setGame(Game.of(BOT_GAME));
+        System.out.println("[Log]");
+        getJ().setToken(TOKEN_BOT);
+        getJ().setGame(net.dv8tion.jda.core.entities.Game.of(BOT_GAME));
         getJ().setStatus(OnlineStatus.ONLINE);
         /* Owner and whitelisted */
             getJ().addListener(new Allow());
@@ -91,7 +93,7 @@ public class Lib {
             getJ().addListener(new Unmute());
             getJ().addListener(new Whitelist());
         /* Public */
-            getJ().addListener(new com.sanduhr.main.commands.pub.Game());
+            getJ().addListener(new Game());
             getJ().addListener(new Github());
             getJ().addListener(new Help());
             getJ().addListener(new Info());
@@ -107,10 +109,11 @@ public class Lib {
             getJ().addListener(new Relog());
             getJ().addListener(new Shutdown());
             getJ().addListener(new Fix());
+            //getJ().addListener(new Log());
         /* Initting */
-        initwhitelist();
         initperms();
         initreq();
+        System.out.println("DONE");
     }
 
     public static HashMap<String, Permission> getPermMap() {
@@ -125,7 +128,7 @@ public class Lib {
     public static HashMap<String, String> getReqMap() {
         return reqMap;
     }
-    public static ArrayList<String> getWhitelist() {
+    public static HashMap<String, ArrayList> getWhitelist() {
         return whitelist;
     }
 }

@@ -21,7 +21,7 @@ public class Protection extends ListenerAdapter {
         }
 
         //Not the `Protection` command
-        if (!e.getMessage().isMentioned(e.getGuild().getOwner().getUser())||e.getMember().isOwner()||Lib.getWhitelist().contains(e.getAuthor().getId())) {
+        if (!e.getMessage().isMentioned(e.getGuild().getOwner().getUser())||e.getMember().isOwner()||Lib.getWhitelist().get(e.getGuild().getId()).contains(e.getAuthor().getId())) {
             return;
         }
 

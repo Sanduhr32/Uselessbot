@@ -1,15 +1,12 @@
 package com.sanduhr.main.commands.sanduhr;
 
 import com.sanduhr.main.Lib;
-import com.sanduhr.main.Useless;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-
-import java.util.List;
 
 public class Shutdown extends ListenerAdapter {
 
@@ -33,10 +30,12 @@ public class Shutdown extends ListenerAdapter {
         }
 
         Lib.receivedcmd++;
-        e.getMessage().delete().queue();
+        if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            e.getMessage().delete().queue();
+        }
 
         if (e.getAuthor().getId().equals(Lib.YOUR_ID)) {
-            System.exit(1);
+            e.getJDA().shutdown(false);
         }
         else {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();

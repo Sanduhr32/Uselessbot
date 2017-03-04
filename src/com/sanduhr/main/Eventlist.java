@@ -1,20 +1,16 @@
 package com.sanduhr.main;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.events.ReadyEvent;
-import net.dv8tion.jda.core.events.ReconnectedEvent;
-import net.dv8tion.jda.core.events.ResumedEvent;
-import net.dv8tion.jda.core.events.ShutdownEvent;
-import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
-import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
-import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
-import net.dv8tion.jda.core.events.guild.member.GuildMemberLeaveEvent;
+import net.dv8tion.jda.core.*;
+import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.events.*;
+import net.dv8tion.jda.core.events.guild.*;
+import net.dv8tion.jda.core.events.guild.member.*;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import javax.security.auth.login.LoginException;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -23,13 +19,19 @@ public class Eventlist extends ListenerAdapter {
     private int countdown;
     @Override
     public void onGuildJoin(GuildJoinEvent e) {
-        System.out.println("Joined " + e.getGuild().getName());
+        Guild guild = e.getGuild();
+        System.out.println("[Log] Joined " + guild.getName());
         e.getGuild().getPublicChannel().sendMessage("Hello, " + e.getGuild().getOwner().getUser().getName()).queue();
         e.getJDA().getPresence().setGame(Game.of(e.getGuild().getName()));
+        ArrayList<String> WL = new ArrayList<>();
+        WL.add(Lib.YOUR_ID);
+        Lib.getWhitelist().put(guild.getId(),WL);
     }
     public void onGuildLeave(GuildLeaveEvent e) {
-        e.getGuild().getOwner().getUser().openPrivateChannel().complete().sendMessage("Bye").complete();
-        System.out.println("Left " + e.getGuild().getName());
+        Guild guild = e.getGuild();
+        e.getGuild().getOwner().getUser().openPrivateChannel().complete().sendMessage("Bye").queue();
+        System.out.println("[Log] Left " + guild.getName());
+        Lib.getWhitelist().remove(guild.getId());
     }
     public void onGuildMemberJoin(GuildMemberJoinEvent e) {
         EmbedBuilder eb = new EmbedBuilder();
@@ -52,18 +54,20 @@ public class Eventlist extends ListenerAdapter {
         e.getGuild().getPublicChannel().sendMessage(m).queue();
     }
     public void onReady(ReadyEvent e) {
-        countdown = 14;
+        countdown = 48;
         shutdown();
     }
     public void onResume(ResumedEvent e) {
         OffsetDateTime now = OffsetDateTime.now();
         int id = e.getJDA().getShardInfo().getShardId() + 1;
         e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Shard " + id + ": Resumed " + now.format(Lib.DTF)).queue();
+        e.getJDA().getUserById(Lib.GERD_ID).openPrivateChannel().complete().sendMessage("Shard " + id + ": Resumed " + now.format(Lib.DTF)).queue();
     }
     public void onReconnect(ReconnectedEvent e) {
         OffsetDateTime now = OffsetDateTime.now();
         int id = e.getJDA().getShardInfo().getShardId() + 1;
         e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Shard " + id + ": Reconnected " + now.format(Lib.DTF)).queue();
+        e.getJDA().getUserById(Lib.GERD_ID).openPrivateChannel().complete().sendMessage("Shard " + id + ": Reconnected " + now.format(Lib.DTF)).queue();
     }
     public void onShutdown(ShutdownEvent e) {
         System.out.println(e.getShutdownTime().format(Lib.DTF));
@@ -77,12 +81,13 @@ public class Eventlist extends ListenerAdapter {
             } else {
                 Useless.getJDA().shutdown(false);
                 try {
-                    Useless.restart();
-                } catch (Exception e) {
+                    Useless.getJ().useSharding(Useless.getJDA().getShardInfo().getShardId(),Useless.getJDA().getShardInfo().getShardTotal()).buildBlocking();
+                } catch (LoginException | InterruptedException | RateLimitedException e) {
                     e.printStackTrace();
                 }
+                System.out.println(OffsetDateTime.now().format(Lib.DTF) + "[Log] relogged");
             }
         };
-        EXEC_.scheduleWithFixedDelay(r, 1, 1, TimeUnit.DAYS);
+        EXEC_.scheduleWithFixedDelay(r, 1, 1, TimeUnit.HOURS);
     }
 }

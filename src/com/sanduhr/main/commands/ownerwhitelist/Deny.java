@@ -42,7 +42,7 @@ public class Deny extends ListenerAdapter {
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist().contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+        if (!Lib.getWhitelist().get(e.getGuild().getId()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
             return;
         }
@@ -59,16 +59,16 @@ public class Deny extends ListenerAdapter {
         if (perm != null && (!u.isEmpty()||!r.isEmpty()) && c.isEmpty()) {
             for ( User user : u ) {
                 if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
-                    e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(perm).queue();
+                    e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().deny(perm).queue();
                 } else {
-                    e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().grant(perm).queue();
+                    e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().deny(perm).queue();
                 }
             }
             for ( Role role : r ) {
                 if (e.getTextChannel().getPermissionOverride(role) == null) {
-                    e.getTextChannel().createPermissionOverride(role).complete().getManager().grant(perm).queue();
+                    e.getTextChannel().createPermissionOverride(role).complete().getManager().deny(perm).queue();
                 } else {
-                    e.getTextChannel().getPermissionOverride(role).getManager().grant(perm).queue();
+                    e.getTextChannel().getPermissionOverride(role).getManager().deny(perm).queue();
                 }
             }
         }
@@ -76,16 +76,16 @@ public class Deny extends ListenerAdapter {
             for ( Channel channel : c ) {
                 for (User user : u) {
                     if (channel.getPermissionOverride(e.getGuild().getMember(user)) == null) {
-                        channel.createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(perm).queue();
+                        channel.createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().deny(perm).queue();
                     } else {
-                        channel.getPermissionOverride(e.getGuild().getMember(user)).getManager().grant(perm).queue();
+                        channel.getPermissionOverride(e.getGuild().getMember(user)).getManager().deny(perm).queue();
                     }
                 }
                 for (Role role : r) {
                     if (channel.getPermissionOverride(role) == null){
-                        channel.createPermissionOverride(role).complete().getManager().grant(perm).queue();
+                        channel.createPermissionOverride(role).complete().getManager().deny(perm).queue();
                     } else{
-                        channel.getPermissionOverride(role).getManager().grant(perm).queue();
+                        channel.getPermissionOverride(role).getManager().deny(perm).queue();
                     }
                 }
             }
