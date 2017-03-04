@@ -1,11 +1,13 @@
 package com.sanduhr.main.commands.ownerwhitelist;
 
 import com.sanduhr.main.Lib;
+import com.sanduhr.main.Useless;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -60,7 +62,7 @@ public class Add extends ListenerAdapter {
                 r.forEach(role -> sb.append(role.getName()).append(", "));
                 String roles = sb.toString();
                 e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
-                System.out.println("[Log]: Added " + roles + "to " + user.getName());
+                System.out.println("[" + e.getGuild().getName() + "]" + "[Log] Added " + roles + "to " + user.getName());
             });
         }
         else {

@@ -7,7 +7,6 @@ import com.sanduhr.main.commands.pub.Invite;
 import com.sanduhr.main.commands.sanduhr.*;
 import com.sanduhr.main.commands.sanduhr.Message;
 import net.dv8tion.jda.core.*;
-import net.dv8tion.jda.core.entities.*;
 
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +23,8 @@ public class Lib {
     public static final String YOUR_ID = "198137282018934784";
     public static final String GERD_ID = "247410291732774913";
     public static final String GITHUB_PNG = "https://cdn.discordapp.com/avatars/277970452327038977/74b8b6de441bce1a59f9c4ac74f666e6.png";
+
+    public static final String LOG_CHANNEL = "286210279463845888";
 
     public static final String ERROR_GUILDS = "Only works at guilds";
     public static final String ERROR_PERMS = "You don't have permissions to run this command! :no_entry_sign:";
@@ -109,7 +110,7 @@ public class Lib {
             getJ().addListener(new Relog());
             getJ().addListener(new Shutdown());
             getJ().addListener(new Fix());
-            //getJ().addListener(new Log());
+            getJ().addListener(new Log());
         /* Initting */
         initperms();
         initreq();

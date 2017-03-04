@@ -1,6 +1,6 @@
 package com.sanduhr.main.commands.templates;
 
-import com.sanduhr.main.Lib;
+import static com.sanduhr.main.Lib.*;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -18,20 +18,20 @@ public class Pub extends ListenerAdapter {
             return;
 
         //Not the `CMD` command
-        if (!syntax[0].equalsIgnoreCase(Lib.PREFIX + "CMD")) {
+        if (!syntax[0].equalsIgnoreCase(PREFIX + "CMD")) {
             return;
         }
 
         //If `CMD` command was received from a non-TextChannel, inform command is Guild-only
         if (!e.isFromType(ChannelType.TEXT)) {
-            e.getChannel().sendMessage(Lib.ERROR_GUILDS).queue();
+            e.getChannel().sendMessage(ERROR_GUILDS).queue();
             return;
         }
 
-        Lib.receivedcmd++;
+        receivedcmd++;
         e.getMessage().delete().queue();
 
-        Lib.executedcmd++;
+        executedcmd++;
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
@@ -42,8 +42,8 @@ public class Pub extends ListenerAdapter {
     }
 
     public void initter() {
-        Lib.getCmdMap().put(getName(), getDescription());
-        Lib.getSynMap().put(getName(), getSyntax());
+        getCmdMap().put(getName(), getDescription());
+        getSynMap().put(getName(), getSyntax());
     }
 
     public String getName() {
@@ -55,6 +55,6 @@ public class Pub extends ListenerAdapter {
     }
 
     public String getSyntax() {
-        return "`" + Lib.PREFIX + getName() + "`";
+        return "`" + PREFIX + getName() + "`";
     }
 }

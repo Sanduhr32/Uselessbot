@@ -1,6 +1,6 @@
 package com.sanduhr.main.commands.templates;
 
-import com.sanduhr.main.Lib;
+import static com.sanduhr.main.Lib.*;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -18,27 +18,27 @@ public class Ownerwhitelist extends ListenerAdapter {
             return;
 
         //Not the `CMD` command
-        if (!syntax[0].equalsIgnoreCase(Lib.PREFIX + "CMD")) {
+        if (!syntax[0].equalsIgnoreCase(PREFIX + "CMD")) {
             return;
         }
 
         //If `CMD` command was received from a non-TextChannel, inform command is Guild-only
         if (!e.isFromType(ChannelType.TEXT)) {
-            e.getChannel().sendMessage(Lib.ERROR_GUILDS).queue();
+            e.getChannel().sendMessage(ERROR_GUILDS).queue();
             return;
         }
 
         /*If the member that sent the command isn't in the Whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist().get(e.getGuild().getId()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
-            e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
+        if (getWhitelist().get(e.getGuild().getId()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+            e.getChannel().sendMessage(ERROR_PERMS).queue();
             return;
         }
 
-        Lib.receivedcmd++;
+        receivedcmd++;
         e.getMessage().delete().queue();
 
-        Lib.executedcmd++;
+        executedcmd++;
     }
 
     public void onMessageUpdate(MessageUpdateEvent e) {
@@ -50,8 +50,8 @@ public class Ownerwhitelist extends ListenerAdapter {
     }
 
     public void initter() {
-        Lib.getCmdMap().put(getName(), getDescription());
-        Lib.getSynMap().put(getName(), getSyntax());
+        getCmdMap().put(getName(), getDescription());
+        getSynMap().put(getName(), getSyntax());
     }
 
     public String getName() {
@@ -63,6 +63,6 @@ public class Ownerwhitelist extends ListenerAdapter {
     }
 
     public String getSyntax() {
-        return "`" + Lib.PREFIX + getName() + "`";
+        return "`" + PREFIX + getName() + "`";
     }
 }
