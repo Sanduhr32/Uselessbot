@@ -54,20 +54,18 @@ public class Eventlist extends ListenerAdapter {
         e.getGuild().getPublicChannel().sendMessage(m).queue();
     }
     public void onReady(ReadyEvent e) {
-        countdown = 48;
+        countdown = 24;
         shutdown();
     }
     public void onResume(ResumedEvent e) {
         OffsetDateTime now = OffsetDateTime.now();
-        int id = e.getJDA().getShardInfo().getShardId() + 1;
-        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Shard " + id + ": Resumed " + now.format(Lib.DTF)).queue();
-        e.getJDA().getUserById(Lib.GERD_ID).openPrivateChannel().complete().sendMessage("Shard " + id + ": Resumed " + now.format(Lib.DTF)).queue();
+        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Resumed " + now.format(Lib.DTF)).queue();
+        e.getJDA().getUserById(Lib.GERD_ID).openPrivateChannel().complete().sendMessage("Resumed " + now.format(Lib.DTF)).queue();
     }
     public void onReconnect(ReconnectedEvent e) {
         OffsetDateTime now = OffsetDateTime.now();
-        int id = e.getJDA().getShardInfo().getShardId() + 1;
-        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Shard " + id + ": Reconnected " + now.format(Lib.DTF)).queue();
-        e.getJDA().getUserById(Lib.GERD_ID).openPrivateChannel().complete().sendMessage("Shard " + id + ": Reconnected " + now.format(Lib.DTF)).queue();
+        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Reconnected " + now.format(Lib.DTF)).queue();
+        e.getJDA().getUserById(Lib.GERD_ID).openPrivateChannel().complete().sendMessage("Reconnected " + now.format(Lib.DTF)).queue();
     }
     public void onShutdown(ShutdownEvent e) {
         System.out.println(e.getShutdownTime().format(Lib.DTF));
@@ -79,13 +77,12 @@ public class Eventlist extends ListenerAdapter {
                 countdown--;
                 System.out.println(countdown);
             } else {
-                Useless.getJDA().shutdown(false);
                 try {
-                    Useless.getJ().useSharding(Useless.getJDA().getShardInfo().getShardId(),Useless.getJDA().getShardInfo().getShardTotal()).buildBlocking();
-                } catch (LoginException | InterruptedException | RateLimitedException e) {
+                    Useless.restart();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                System.out.println(OffsetDateTime.now().format(Lib.DTF) + "[Log] relogged");
+                System.out.println("[" + OffsetDateTime.now().format(Lib.DTF) + "] [Log] relogged");
             }
         };
         EXEC_.scheduleWithFixedDelay(r, 1, 1, TimeUnit.HOURS);

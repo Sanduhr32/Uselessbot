@@ -14,16 +14,18 @@ public class Log extends ListenerAdapter {
         System.setOut(new PrintStream(System.out){
             @Override
             public void println(String s) {
-                if (s.contains("[Fatal]")
-                    ||s.contains("[Log]")
-                    ||s.contains("[RestAction]")
-                    ||s.contains("[Info]")
-                    ||s.contains("[Warning]")
-                    ||s.contains("[Trace]")
-                    ||s.contains("[Debug]")
-                    ||s.contains("[Finest]")) {
+                if (s.contains("[")&&!s.contains("[Info]")) {
                     e.getJDA().getTextChannelById(LOG_CHANNEL).sendMessage(s).queue();
                 }
+            }
+        });
+        System.setErr(new PrintStream(System.err){
+            @Override
+            public void println(String s) {
+                e.getJDA().getTextChannelById(LOG_CHANNEL).sendMessage(s).queue();
+            }
+            public void print(String s) {
+                e.getJDA().getTextChannelById(LOG_CHANNEL).sendMessage(s).queue();
             }
         });
     }

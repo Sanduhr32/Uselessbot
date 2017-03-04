@@ -50,7 +50,7 @@ public class Remove extends ListenerAdapter {
                 r.forEach(role -> sb.append(role.getName()).append(", "));
                 String roles = sb.toString();
                 e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), r).queue();
-                System.out.println("[" + e.getGuild().getName() + "]" + "[Log] Removed " + roles + "from " + user.getName());
+                System.out.println("[" + e.getGuild().getName() + "] [Log] Removed " + roles + "from " + user.getName());
             });
         }
     }

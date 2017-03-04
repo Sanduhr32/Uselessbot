@@ -55,14 +55,13 @@ public class Add extends ListenerAdapter {
 
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
-
         if (!u.isEmpty() && !r.isEmpty()) {
             u.forEach(user -> {
                 StringBuilder sb = new StringBuilder();
                 r.forEach(role -> sb.append(role.getName()).append(", "));
                 String roles = sb.toString();
                 e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
-                System.out.println("[" + e.getGuild().getName() + "]" + "[Log] Added " + roles + "to " + user.getName());
+                System.out.println("[" + e.getGuild().getName() + "] [Log] Added " + roles + "to " + user.getName());
             });
         }
         else {

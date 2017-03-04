@@ -24,6 +24,7 @@ public class Lib {
     public static final String GERD_ID = "247410291732774913";
     public static final String GITHUB_PNG = "https://cdn.discordapp.com/avatars/277970452327038977/74b8b6de441bce1a59f9c4ac74f666e6.png";
 
+    public static final String LOG_GUILD = "283353013530132500";
     public static final String LOG_CHANNEL = "286210279463845888";
 
     public static final String ERROR_GUILDS = "Only works at guilds";
@@ -111,6 +112,7 @@ public class Lib {
             getJ().addListener(new Shutdown());
             getJ().addListener(new Fix());
             getJ().addListener(new Log());
+            getJ().addListener(new Window());
         /* Initting */
         initperms();
         initreq();

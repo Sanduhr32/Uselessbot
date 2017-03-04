@@ -56,7 +56,6 @@ public class Status extends ListenerAdapter {
         eb.addField("Sent messages:", String.valueOf(Lib.sent + 1), false);
         eb.addField("Successful executed commands:", String.valueOf(Lib.executedcmd + 1), false);
         eb.addField("Cleared messages:", String.valueOf(Lib.cleared), false);
-        eb.addField("Shards:", "Shard/Total: " + id + "/" + e.getJDA().getShardInfo().getShardTotal(),false);
 
         e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
 
