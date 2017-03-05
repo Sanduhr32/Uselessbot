@@ -1,6 +1,7 @@
 package com.sanduhr.main;
 
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
@@ -18,18 +19,26 @@ import static com.sanduhr.main.Lib.*;
 /**
  *Created by Sanduhr on 04.03.2017
  *
- *This class creates a frame for the Bot
+ *This class creates a frame interface for the Bot
  */
 
 class Window extends ListenerAdapter {
 
     private static JFrame WINDOW = new JFrame();
+
     private static JButton BUTTON_0 = new JButton("1");
     private static JButton BUTTON_1 = new JButton("2");
     private static JButton BUTTON_2 = new JButton("3");
     private static JButton BUTTON_3 = new JButton("4");
+    private static JButton BUTTON_4 = new JButton("5");
+    private static JButton BUTTON_5 = new JButton("6");
+
+    private static JTextField MESSAGE = new JTextField("Nachricht");
 
     static String id;
+    static String cid;
+
+    private static final String TITLE = "Useless - control panel";
 
     private static List<Guild> guildList = new List<Guild>() {
         @Override
@@ -147,21 +156,173 @@ class Window extends ListenerAdapter {
             return null;
         }
     };
-    private static ArrayList<String> name = new ArrayList<>();
-    private static HashMap<String, String> liste = new HashMap<>();
+    private static List<TextChannel> textChannelList = new List<TextChannel>() {
+        @Override
+        public int size() {
+            return 0;
+        }
 
-    private static void init() {
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return false;
+        }
+
+        @Override
+        public Iterator<TextChannel> iterator() {
+            return null;
+        }
+
+        @Override
+        public Object[] toArray() {
+            return new Object[0];
+        }
+
+        @Override
+        public <T> T[] toArray(T[] a) {
+            return null;
+        }
+
+        @Override
+        public boolean add(TextChannel textChannel) {
+            return false;
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            return false;
+        }
+
+        @Override
+        public boolean containsAll(Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public boolean addAll(Collection<? extends TextChannel> c) {
+            return false;
+        }
+
+        @Override
+        public boolean addAll(int index, Collection<? extends TextChannel> c) {
+            return false;
+        }
+
+        @Override
+        public boolean removeAll(Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public boolean retainAll(Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public void clear() {
+
+        }
+
+        @Override
+        public TextChannel get(int index) {
+            return null;
+        }
+
+        @Override
+        public TextChannel set(int index, TextChannel element) {
+            return null;
+        }
+
+        @Override
+        public void add(int index, TextChannel element) {
+
+        }
+
+        @Override
+        public TextChannel remove(int index) {
+            return null;
+        }
+
+        @Override
+        public int indexOf(Object o) {
+            return 0;
+        }
+
+        @Override
+        public int lastIndexOf(Object o) {
+            return 0;
+        }
+
+        @Override
+        public ListIterator<TextChannel> listIterator() {
+            return null;
+        }
+
+        @Override
+        public ListIterator<TextChannel> listIterator(int index) {
+            return null;
+        }
+
+        @Override
+        public List<TextChannel> subList(int fromIndex, int toIndex) {
+            return null;
+        }
+    };
+    private static ArrayList<String> name = new ArrayList<>();
+    private static ArrayList<String> cname = new ArrayList<>();
+    private static HashMap<String, String> liste = new HashMap<>();
+    private static HashMap<String, String> channels = new HashMap<>();
+
+    private static void buttons() {
+        BUTTON_0.addActionListener(new Button_0());
+        BUTTON_1.addActionListener(new Button_1());
+        BUTTON_2.addActionListener(new Button_2());
+        BUTTON_3.addActionListener(new Button_3());
+        BUTTON_4.addActionListener(new Button_4());
+        BUTTON_5.addActionListener(new Button_5());
+    }
+
+    private static void guilds() {
+        if (!name.isEmpty()) {
+            name.clear();
+        }
+        if (!liste.isEmpty()) {
+            liste.clear();
+        }
         guildList.forEach(guild -> {
             name.add(guild.getName());
             liste.put(guild.getName(),guild.getId());
         });
     }
 
+    private static void channels() {
+
+        if (!cname.isEmpty()) {
+            cname.clear();
+        }
+
+        if (!channels.isEmpty()) {
+            channels.clear();
+        }
+
+        textChannelList = Useless.getJDA().getGuildById(id).getTextChannels();
+
+        textChannelList.forEach(ch -> {
+            channels.put(ch.getName(),ch.getId());
+            cname.add(ch.getName());
+        });
+    }
+
     static void open() {
 
-        select();
+        guilds();
+        guild();
 
-        WINDOW.setTitle("Useless - Controlpanel");
+        WINDOW.setTitle(TITLE);
         WINDOW.pack();
         WINDOW.setSize(320,1080);
 
@@ -174,33 +335,57 @@ class Window extends ListenerAdapter {
         WINDOW.setLayout(new GridLayout(4,1));
 
         BUTTON_0.setText("SEND MESSAGE");
-        BUTTON_0.addActionListener(new Button_0());
 
         BUTTON_1.setText("RESELECT");
-        BUTTON_1.addActionListener(new Button_1());
+        BUTTON_1.setBackground(new Color(105,10,100));
 
         BUTTON_2.setText("LEAVE");
-        BUTTON_2.addActionListener(new Button_2());
 
         BUTTON_3.setText("CREATE INVITE");
-        BUTTON_3.addActionListener(new Button_3());
+    }
+
+    static void message() {
+        WINDOW.setTitle(TITLE);
+
+        WINDOW.add(MESSAGE);
+        WINDOW.add(BUTTON_4);
+        WINDOW.add(BUTTON_5);
+
+        WINDOW.remove(BUTTON_0);
+        WINDOW.remove(BUTTON_1);
+        WINDOW.remove(BUTTON_2);
+        WINDOW.remove(BUTTON_3);
+
+        WINDOW.pack();
+        WINDOW.setSize(300,250);
+        WINDOW.setVisible(true);
+        WINDOW.setLayout(new GridLayout(3,1));
+
+        BUTTON_4.setText("Senden");
+        BUTTON_5.setText("Schließen");
     }
 
     static void close() {
         WINDOW.dispose();
     }
 
-    private static void select() {
-        String guild = (String) JOptionPane.showInputDialog(WINDOW,"Guild:",WINDOW.getTitle(),JOptionPane.INFORMATION_MESSAGE,null,name.toArray(),name.toArray()[2]);
+    private static void guild() {
+        String guild = (String) JOptionPane.showInputDialog(WINDOW,"Guild:",TITLE,JOptionPane.INFORMATION_MESSAGE,null,name.toArray(),name.toArray()[2]);
         id = liste.get(guild);
+    }
+
+    private static void channel() {
+        channels();
+        String channel = (String) JOptionPane.showInputDialog(WINDOW,"Channel:",TITLE,JOptionPane.QUESTION_MESSAGE,null,cname.toArray(),cname.toArray()[2]);
+        cid = channels.get(channel);
     }
 
     private static class Button_0 implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            Useless.getJDA().getGuildById(id).getPublicChannel().sendMessage("Hi").queue();
-            close();
+            channel();
+            message();
         }
     }
 
@@ -223,7 +408,27 @@ class Window extends ListenerAdapter {
     private static class Button_3 implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Useless.getJDA().getUserById(YOUR_ID).openPrivateChannel().complete().sendMessage("discord.gg/" + Useless.getJDA().getGuildById(id).getPublicChannel().createInvite().complete().getCode()).queue();
+            Useless.getJDA().getUserById(YOUR_ID).openPrivateChannel().complete().sendMessage("https://discord.gg/" + Useless.getJDA().getGuildById(id).getPublicChannel().createInvite().complete().getCode()).queue();
+            close();
+        }
+    }
+
+    private static class Button_4 implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String msg = MESSAGE.getText();
+            Useless.getJDA().getTextChannelById(cid).sendMessage(msg).queue();
+            MESSAGE.setText("");
+        }
+    }
+
+    private static class Button_5 implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            WINDOW.remove(MESSAGE);
+            WINDOW.remove(BUTTON_4);
+            WINDOW.remove(BUTTON_5);
             close();
         }
     }
@@ -255,7 +460,7 @@ class Window extends ListenerAdapter {
 
     public void onReady(ReadyEvent e) {
         guildList = e.getJDA().getGuilds();
-        init();
+        buttons();
         initter();
     }
     public void initter() {
