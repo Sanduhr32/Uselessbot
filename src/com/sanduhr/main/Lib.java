@@ -2,10 +2,7 @@ package com.sanduhr.main;
 
 import com.sanduhr.main.commands.ownerwhitelist.*;
 import com.sanduhr.main.commands.pub.*;
-import com.sanduhr.main.commands.pub.Game;
-import com.sanduhr.main.commands.pub.Invite;
 import com.sanduhr.main.commands.sanduhr.*;
-import com.sanduhr.main.commands.sanduhr.Message;
 import com.sanduhr.main.utils.Whitelist;
 import net.dv8tion.jda.core.*;
 import net.dv8tion.jda.core.entities.Guild;
@@ -21,10 +18,13 @@ import static com.sanduhr.main.Useless.*;
 
 public class Lib {
 
+    public static ArrayList<JDA.ShardInfo> shards = new ArrayList<>(10);
+    public static ArrayList<String> WL = new ArrayList<>();
+
     public static final String PREFIX ="??";
     public static final String YOUR_ID = "198137282018934784";
     public static final String GERD_ID = "247410291732774913";
-    public static final String PASCAL_ = "189702310429982720";
+    public static final String NOBODY = "189702310429982720";
     public static final String GITHUB_PNG = "https://cdn.discordapp.com/avatars/277970452327038977/74b8b6de441bce1a59f9c4ac74f666e6.png";
 
     static final String LOG_GUILD = "283353013530132500";
@@ -43,7 +43,7 @@ public class Lib {
     public static final Color ORANGE = new Color(255, 100, 0);
     private static final Color GREY = new Color(105,100,100);
 
-    static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm:ss");
+    public static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm:ss");
 
     public static final ScheduledExecutorService EXECUTE = Executors.newScheduledThreadPool(1);
 
@@ -54,17 +54,19 @@ public class Lib {
     private static final HashMap<String, String> cmdMap = new HashMap<>();
     private static final HashMap<String, String> synMap = new HashMap<>();
     private static final HashMap<String, String> reqMap = new HashMap<>();
+    private static final HashMap<Guild, Boolean> conMap = new HashMap<>();
 
-    private static Object Add = new Add();
-    private static Object File = new Filegeneration();
-    private static Object jarupdate = new Jarupdate();
-    private static Object Unknown = new Unknown();
-    private static Object WL = new Whitelister();
+    private static final Object Add = new Add();
+    private static final Object Eval = new Eval();
+    private static final Object File = new Filegeneration();
+    private static final Object jarupdate = new Jarupdate();
+    private static final Object Unknown = new Unknown();
+    private static final Object Wl = new Whitelister();
 
     public static int member = 0;
-    public static int received = 0;
+    public static final int received = 0;
     public static int receivedcmd = 0;
-    public static int sent = 0;
+    public static final int sent = 0;
     public static int executedcmd = 0;
     public static int cleared = 0;
 
@@ -91,6 +93,7 @@ public class Lib {
     }
 
     static void init() {
+        WL();
         System.out.println("[Log]");
         getJ().setToken(TOKEN_BOT);
         getJ().setGame(net.dv8tion.jda.core.entities.Game.of(BOT_GAME));
@@ -114,7 +117,7 @@ public class Lib {
         getJ().addListener(new Clear());
         getJ().addListener(new Mute());
         getJ().addListener(new Unmute());
-        getJ().addListener(WL);
+        getJ().addListener(Wl);
     }
     private static void pub() {
         /* Public */
@@ -141,11 +144,17 @@ public class Lib {
         getJ().addListener(jarupdate);
         getJ().addListener(Unknown);
         getJ().addListener(File);
+        getJ().addListener(Eval);
     }
     private static void initting() {
         /* Initting */
         initperms();
         initreq();
+    }
+    private static void WL() {
+        WL.add(YOUR_ID);
+        WL.add(GERD_ID);
+        WL.add(NOBODY);
     }
 
     public static HashMap<String, Permission> getPermMap() {
@@ -159,6 +168,9 @@ public class Lib {
     }
     public static HashMap<String, String> getReqMap() {
         return reqMap;
+    }
+    public static HashMap<Guild, Boolean> getConMap() {
+        return conMap;
     }
     public static HashMap<Guild, ArrayList> getWhitelist_() {
         return whitelist_;
