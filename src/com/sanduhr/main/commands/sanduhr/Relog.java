@@ -8,6 +8,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+@SuppressWarnings("ALL")
 public class Relog extends ListenerAdapter {
 
     @Override
@@ -54,20 +55,21 @@ public class Relog extends ListenerAdapter {
         initter();
     }
 
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
 
-    public String getName() {
+    private String getName() {
         return Relog.class.getSimpleName().toLowerCase();
     }
 
-    public String getDescription() {
+    @SuppressWarnings("SameReturnValue")
+    private String getDescription() {
         return "";
     }
 
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + "`";
     }
 }

@@ -11,6 +11,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public class Ban extends ListenerAdapter {
 
     @Override
@@ -68,17 +69,18 @@ public class Ban extends ListenerAdapter {
     public void onReady(ReadyEvent e) {
         init();
     }
-    public void init() {
+    private void init() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return Ban.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    @SuppressWarnings("SameReturnValue")
+    private String getDescription() {
         return "Swings the ban hammer for each mentioned user";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + " @USER :REASON:DAYS`";
     }
 }

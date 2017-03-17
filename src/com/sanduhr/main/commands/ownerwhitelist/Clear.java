@@ -1,6 +1,7 @@
 package com.sanduhr.main.commands.ownerwhitelist;
 
 import com.sanduhr.main.Lib;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.ReadyEvent;
@@ -9,7 +10,9 @@ import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+@SuppressWarnings("ALL")
 public class Clear extends ListenerAdapter {
 
     @Override
@@ -42,19 +45,32 @@ public class Clear extends ListenerAdapter {
             return;
         }
         Lib.receivedcmd++;
-        e.getMessage().delete().queue();
+
+        if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            e.getMessage().delete().queue();
+        }
+
         int i = Integer.parseInt(syntax[1]);
+
         if (i > 100 || i < 2) {
             e.getChannel().sendMessage(i + " is no valid number between `2 und 100`").queue();
             return;
         }
+
         List<Message> msg = e.getTextChannel().getHistory().retrievePast(i).complete();
+
+        msg.stream().filter(message -> !message.getRawContent().contains("`Important`")).collect(Collectors.toList());
+
         if (syntax[2].equalsIgnoreCase("fast")) {
+            Lib.cleared = Lib.cleared + msg.size();
             e.getTextChannel().deleteMessages(msg).queue();
         }
+
         if (syntax[2].equalsIgnoreCase("slow")) {
+            Lib.cleared = Lib.cleared + msg.size();
             msg.forEach(message -> message.delete().queue());
         }
+
         Lib.executedcmd++;
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
@@ -63,17 +79,18 @@ public class Clear extends ListenerAdapter {
     public void onReady(ReadyEvent e) {
         initter();
     }
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return Clear.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    @SuppressWarnings("SameReturnValue")
+    private String getDescription() {
         return "Clears the last x messages";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + " 2-100 <mode>`\n\nModes:`fast`, `slow`";
     }
 }

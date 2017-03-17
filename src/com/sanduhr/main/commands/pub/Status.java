@@ -2,7 +2,9 @@ package com.sanduhr.main.commands.pub;
 
 import com.sanduhr.main.Lib;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.ReadyEvent;
@@ -10,6 +12,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Status extends ListenerAdapter {
@@ -33,10 +36,13 @@ public class Status extends ListenerAdapter {
             return;
         }
 
-        Lib.receivedcmd++;
-        e.getMessage().delete().queue();
         List<Guild> g = e.getJDA().getGuilds();
-        int id = e.getJDA().getShardInfo().getShardId() + 1;
+        Lib.receivedcmd++;
+
+        if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            e.getMessage().delete().queue();
+        }
+
         Lib.member = 0;
         g.forEach(guild -> {
             guild.getMembers();
@@ -49,7 +55,7 @@ public class Status extends ListenerAdapter {
 
         //Configuration of the builders
         eb.setAuthor(e.getJDA().getSelfUser().getName(), null, e.getJDA().getSelfUser().getAvatarUrl());
-        eb.addField("Guilds:", String.valueOf(e.getJDA().getGuilds().size()), false);
+        eb.addField("Guilds:", String.valueOf(g.size()), false);
         eb.addField("Member:", String.valueOf(Lib.member), false);
         eb.addField("Received messages:",String.valueOf(Lib.received), false);
         eb.addField("Received commands:", String.valueOf(Lib.receivedcmd),false);
@@ -67,17 +73,17 @@ public class Status extends ListenerAdapter {
     public void onReady(ReadyEvent e) {
         initter();
     }
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return Status.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    private String getDescription() {
         return "Sends some info's like received|send stuff etc";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + "`";
     }
 }

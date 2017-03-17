@@ -1,8 +1,11 @@
 package com.sanduhr.main.commands.pub;
 
 import com.sanduhr.main.Lib;
+import com.sanduhr.main.utils.Logutils;
+import com.sanduhr.main.utils.ScheduleUtil;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -35,7 +38,10 @@ public class Help extends ListenerAdapter {
         }
 
         Lib.receivedcmd++;
-        e.getMessage().delete().queue();
+
+        if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            e.getMessage().delete().queue();
+        }
 
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
@@ -46,8 +52,8 @@ public class Help extends ListenerAdapter {
             Lib.getCmdMap().forEach((s, s2) ->
                     eb.addField(s, s2, false));
             e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue(msg ->
-                Lib.EXECUTE.schedule(() ->
-                    msg.delete().queue(), 30, TimeUnit.SECONDS));
+                ScheduleUtil.scheduledAction(()-> msg.delete().queue(), 30, TimeUnit.SECONDS));
+            Logutils.log.info(e.getAuthor().getName() + " got help");
             return;
         }
         if (syntax.length == 2) {
@@ -56,8 +62,7 @@ public class Help extends ListenerAdapter {
                 eb.setAuthor("Possible error:", null, Lib.ERROR_PNG);
                 eb.setDescription("-" + Lib.ERROR_PERMS + "\n-" + Lib.ERROR_WRONG + "\n-" + Lib.ERROR_EMPTY + "type `"+ Lib.PREFIX + getName() + "`");
                 e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue(msg ->
-                    Lib.EXECUTE.schedule(() ->
-                        msg.delete().queue(), 30, TimeUnit.SECONDS));
+                    ScheduleUtil.scheduledAction(()-> msg.delete().queue(), 30, TimeUnit.SECONDS));
                 return;
             }
             String val = Lib.getCmdMap().get(syntax[1].toLowerCase());
@@ -66,16 +71,15 @@ public class Help extends ListenerAdapter {
                 eb.setColor(Lib.ORANGE);
                 eb.addField(syntax[1], val, false);
                 e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue(msg ->
-                    Lib.EXECUTE.schedule(() ->
-                        msg.delete().queue(), 30, TimeUnit.SECONDS));
+                    ScheduleUtil.scheduledAction(()-> msg.delete().queue(), 30, TimeUnit.SECONDS));
+                Logutils.log.info(e.getAuthor().getName() + " got help");
             }
             else {
                 eb.setColor(Color.red);
                 eb.setAuthor("Possible error:", null, Lib.ERROR_PNG);
                 eb.setDescription("-" + Lib.ERROR_PERMS + "\n-" + Lib.ERROR_WRONG + "\n-" + Lib.ERROR_EMPTY + "\ntype `"+ Lib.PREFIX + getName() + "`");
                 e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue(msg ->
-                    Lib.EXECUTE.schedule(() ->
-                        msg.delete().queue(), 30, TimeUnit.SECONDS));
+                    ScheduleUtil.scheduledAction(()-> msg.delete().queue(), 30, TimeUnit.SECONDS));
             }
         }
         if (syntax.length > 2) {
@@ -83,8 +87,7 @@ public class Help extends ListenerAdapter {
             eb.setAuthor("Possible error:", null, Lib.ERROR_PNG);
             eb.setDescription("-" + Lib.ERROR_PERMS + "\n-" + Lib.ERROR_WRONG + "\n-" + Lib.ERROR_EMPTY + "\n-" + Lib.ERROR_MANY +"\ntype `"+ Lib.PREFIX + getName() + "`");
             e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue(msg ->
-                Lib.EXECUTE.schedule(() ->
-                    msg.delete().queue(), 30, TimeUnit.SECONDS));
+                ScheduleUtil.scheduledAction(()-> msg.delete().queue(), 30, TimeUnit.SECONDS));
         }
         
         Lib.executedcmd++;
@@ -95,17 +98,17 @@ public class Help extends ListenerAdapter {
     public void onReady(ReadyEvent e) {
         initter();
     }
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return Help.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    private String getDescription() {
         return "Sends you a of all commands";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + " [CMD]`";
     }
 }

@@ -18,12 +18,12 @@ import static com.sanduhr.main.Lib.LOG_GUILD;
 /**
  * Created by Sanduhr on 08.03.2017
  */
-public class Jarupdate extends ListenerAdapter {
+class Jarupdate extends ListenerAdapter {
 
     private static String server = "[`[2.0.Beta_104]`](https://cdn.discordapp.com/attachments/288695554773614592/289157997215612928/useless.jar)";
     private static String panel = "[`[1.0]`](https://cdn.discordapp.com/attachments/288695554773614592/289050751534235648/Panel.jar)";
     private static String util = "[`[0.5]`](https://cdn.discordapp.com/attachments/288695554773614592/289447575202037760/Util.jar)";
-    private Color update = new Color(158,255,92);
+    private final Color update = new Color(158,255,92);
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {

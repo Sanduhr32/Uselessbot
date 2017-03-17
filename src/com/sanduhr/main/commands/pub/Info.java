@@ -5,6 +5,7 @@ import com.sun.management.OperatingSystemMXBean;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -16,6 +17,7 @@ import java.lang.management.ManagementFactory;
 import java.sql.Time;
 import java.text.DecimalFormat;
 
+@SuppressWarnings("ALL")
 public class Info extends ListenerAdapter {
 
     @Override
@@ -38,7 +40,10 @@ public class Info extends ListenerAdapter {
         }
 
         Lib.receivedcmd++;
-        e.getMessage().delete().queue();
+
+        if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            e.getMessage().delete().queue();
+        }
 
         String cpu0 = new DecimalFormat("###.###%").format(ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class).getProcessCpuLoad());
         int cpu1 = ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
@@ -55,7 +60,7 @@ public class Info extends ListenerAdapter {
 
         eb.setColor(Color.BLUE);
         eb.addField("Library:","[" + JDAInfo.VERSION + "](http://home.dv8tion.net:8080/job/JDA/" + JDAInfo.VERSION_BUILD + "/)", false);
-        eb.addField("Times:", "**Started:** " + startt.toString() + "\n**Uptime:** " + upp.toString(), false);
+        eb.addField("Times:", "**Started:** " + startt.toString() + "\n**Uptime:** " + upp.toString().replaceFirst(":"," hours ").replaceFirst(":"," minutes ").replaceFirst(":"," seconds"), false);
         eb.addField("CPU:","**Cores:** " + cpu1 + "\n**Usage:** " + cpu0,false);
         eb.addField("RAM:","**Usage:** " + ram0 +"MB\n**Max:** " + ram1 + "MB", false);
 
@@ -69,17 +74,18 @@ public class Info extends ListenerAdapter {
     public void onReady(ReadyEvent e) {
         initter();
     }
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return Info.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    @SuppressWarnings("SameReturnValue")
+    private String getDescription() {
         return "Sends you current infos of the JVM of this bot";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + "`";
     }
 }

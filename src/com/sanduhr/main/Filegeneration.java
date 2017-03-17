@@ -1,5 +1,6 @@
 package com.sanduhr.main;
 
+import com.sanduhr.main.utils.Fileutils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.ShutdownEvent;
@@ -9,18 +10,16 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static com.sanduhr.main.Lib.EXECUTE;
 import static com.sanduhr.main.Lib.getWhitelist;
 
-public class Filegeneration extends ListenerAdapter {
+class Filegeneration extends ListenerAdapter {
 
     private List<Guild> guilds = new ArrayList<>();
     private FileWriter whitelistJSON;
-    private File wl = new File(".\\whitelist.json");
-    private File jars = new File(".\\jars.json");
-    private FileWriter jarlogJSON;
+    private final File wl = new File(".\\whitelist.json");
+    private final File jars = new File(".\\jars.json");
     private String whitelist;
 
 
@@ -28,12 +27,10 @@ public class Filegeneration extends ListenerAdapter {
     private static String panel = "[`[1.0]`](https://cdn.discordapp.com/attachments/288695554773614592/289050751534235648/Panel.jar)";
     private static String util = "[`[0.5]`](https://cdn.discordapp.com/attachments/288695554773614592/289447575202037760/Util.jar)";
 
-    private BufferedReader reader;
-
-    private Jar SERVER = new Jar("Server-jar",server);
-    private Jar PANEL = new Jar("Panel-jar",panel);
-    private Jar UTIL = new Jar("Util-jar",util);
-    private List<Jar> JARS = new ArrayList<>();
+    private final Jar SERVER = new Jar("Server-jar",server);
+    private final Jar PANEL = new Jar("Panel-jar",panel);
+    private final Jar UTIL = new Jar("Util-jar",util);
+    private final List<Jar> JARS = new ArrayList<>();
 
     @Override
     public void onReady(ReadyEvent e) {
@@ -44,9 +41,7 @@ public class Filegeneration extends ListenerAdapter {
         whitelist = getWhitelist().toString();
         replacer();
         writter();
-        Runnable jarbackup = () -> {
-            writeJARS();
-        };
+        Runnable jarbackup = () -> writeJARS();
         EXECUTE.scheduleWithFixedDelay(jarbackup, 20, 20, TimeUnit.SECONDS);
     }
 
@@ -56,25 +51,11 @@ public class Filegeneration extends ListenerAdapter {
 
     private void replacer() {
         whitelist = whitelist.replace("G:", "\n")
-                .replace("}", "\n}");
+                             .replace("}", "\n}");
     }
     private void writter() {
-        whitelistJSON = null;
         replacer();
-        try {
-            whitelistJSON = new FileWriter(wl);
-            whitelistJSON.write(whitelist);
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        } finally {
-            if (whitelistJSON != null) {
-                try {
-                    whitelistJSON.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
+        Fileutils.writeFile(wl,whitelist);
     }
 
     private void getJARS() {
@@ -93,46 +74,28 @@ public class Filegeneration extends ListenerAdapter {
     }
 
     private void writeJARS() {
-        getJARS();
         readJARS();
-        jarlogJSON = null;
-        try {
-            jarlogJSON = new FileWriter(jars);
-            jarlogJSON.write(j());
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        } finally {
-            if (jarlogJSON != null) {
-                try {
-                    jarlogJSON.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        }
+        Fileutils.writeFile(jars,j());
     }
 
     private void readJARS() {
-        try {
-            reader = new BufferedReader(new FileReader(jars));
-            List<String> LINES = reader.lines().collect(Collectors.toList());
-            LINES.forEach(s -> {
-                String[] in = s.split(":",4);
-                if (in[1].equalsIgnoreCase("server-jar")) {
-                    SERVER.Version = in[3];
-                    return;
-                }
-                if (in[1].equalsIgnoreCase("panel-jar")) {
-                    PANEL.Version = in[3];
-                    return;
-                }
-                if (in[1].equalsIgnoreCase("util-jar")) {
-                    UTIL.Version = in[3].replace(")]",")");
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!jars.exists()) {
+            return;
         }
+        Fileutils.getFileLines(jars).forEach(s -> {
+            String[] in = s.split(":",4);
+            if (in[1].equalsIgnoreCase("server-jar")) {
+                SERVER.Version = in[3];
+                return;
+            }
+            if (in[1].equalsIgnoreCase("panel-jar")) {
+                PANEL.Version = in[3];
+                return;
+            }
+            if (in[1].equalsIgnoreCase("util-jar")) {
+                UTIL.Version = in[3].replace(")]",")");
+            }
+        });
     }
 
     private String j() {

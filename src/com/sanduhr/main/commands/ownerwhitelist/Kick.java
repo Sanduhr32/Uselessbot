@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public class Kick extends ListenerAdapter {
 
     @Override
@@ -36,29 +37,38 @@ public class Kick extends ListenerAdapter {
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist().get(e.getGuild()).getIds().contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+        if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
             return;
         }
 
         Lib.receivedcmd++;
         List<User> u = e.getMessage().getMentionedUsers();
-        Member self = e.getGuild().getMember(e.getJDA().getSelfUser());
+        Member self = e.getGuild().getSelfMember();
+
         if (!self.hasPermission(Permission.MESSAGE_MANAGE)) {
             e.getChannel().sendMessage("I don't have permissions").queue();
             return;
         }
-        e.getMessage().delete().queue();
+
+        if (self.hasPermission(Permission.MESSAGE_MANAGE)) {
+            e.getMessage().delete().queue();
+        }
+
         if (!u.isEmpty() && syntaxx.length == 2) {
+
             if (!self.hasPermission(Permission.KICK_MEMBERS)) {
                 e.getChannel().sendMessage("I don't have permissions").queue();
                 return;
             }
+
             for ( User user : u ) {
+
                 if (!self.canInteract(e.getGuild().getMember(user))) {
                     e.getChannel().sendMessage("I cant kick..").queue();
                     continue;
                 }
+
                 e.getGuild().getController().kick(user.getId()).queue();
                 e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You were kicked for " + syntaxx[1] + "!").queue();
             }
@@ -75,17 +85,18 @@ public class Kick extends ListenerAdapter {
     public void onReady(ReadyEvent e) {
         initter();
     }
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return Kick.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    @SuppressWarnings("SameReturnValue")
+    private String getDescription() {
         return "Kicks all mentioned user";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + " @USER :REASON`";
     }
 }

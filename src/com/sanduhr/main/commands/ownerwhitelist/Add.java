@@ -1,6 +1,7 @@
 package com.sanduhr.main.commands.ownerwhitelist;
 
 import com.sanduhr.main.Lib;
+import com.sanduhr.main.utils.Logutils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
@@ -15,8 +16,10 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import java.awt.*;
 import java.util.List;
 
-import static com.sanduhr.main.utils.RoleUtil.*;
+import static com.sanduhr.main.utils.Guild.MemberUtil.*;
+import static com.sanduhr.main.utils.Guild.RoleUtil.*;
 
+@SuppressWarnings("ALL")
 public class Add extends ListenerAdapter {
 
     @Override
@@ -48,6 +51,7 @@ public class Add extends ListenerAdapter {
         Lib.receivedcmd++;
         List<User> u = e.getMessage().getMentionedUsers();
         List<Role> r = e.getMessage().getMentionedRoles();
+
         if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
             e.getMessage().delete().queue();
         }
@@ -57,8 +61,9 @@ public class Add extends ListenerAdapter {
         if (!u.isEmpty() && !r.isEmpty()) {
             u.forEach(user -> {
                 e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
-                System.out.println("[" + e.getGuild().getName() + "] [Log] Added " + RoleListAsNameList(r) + " to " + user.getName());
+
             });
+            Logutils.log.info("Added " + RoleListAsName(r) + " to " + UserToNameList(u));
         }
         else {
             eb.setColor(Color.red);
@@ -73,17 +78,18 @@ public class Add extends ListenerAdapter {
     public void onReady(ReadyEvent e) {
         initter();
     }
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return Add.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    @SuppressWarnings("SameReturnValue")
+    private String getDescription() {
         return "Adds all mentioned roles to all mentioned users";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + " @USER @ROLE`";
     }
 }

@@ -3,6 +3,7 @@ package com.sanduhr.main.commands.pub;
 import com.sanduhr.main.Lib;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.awt.*;
 
+@SuppressWarnings("ALL")
 public class Request extends ListenerAdapter {
 
     @Override
@@ -33,7 +35,10 @@ public class Request extends ListenerAdapter {
         }
 
         Lib.receivedcmd++;
-        e.getMessage().delete().queue();
+
+        if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            e.getMessage().delete().queue();
+        }
 
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
@@ -66,17 +71,18 @@ public class Request extends ListenerAdapter {
     public void onReady(ReadyEvent e) {
         initter();
     }
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return Request.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    @SuppressWarnings("SameReturnValue")
+    private String getDescription() {
         return "Requests Sanduhr to fix|Add|Remove it!";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + " <args> <CMD> <TEXT>`\n\nArguments:\n`fix`, `add`, `remove`";
     }
 }

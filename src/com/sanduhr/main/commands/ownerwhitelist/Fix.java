@@ -1,12 +1,14 @@
 package com.sanduhr.main.commands.ownerwhitelist;
 
 import com.sanduhr.main.Lib;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+@SuppressWarnings("ALL")
 public class Fix extends ListenerAdapter {
 
     @Override
@@ -36,7 +38,11 @@ public class Fix extends ListenerAdapter {
         }
 
         Lib.receivedcmd++;
-        e.getMessage().delete().queue();
+
+        if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            e.getMessage().delete().queue();
+        }
+
         e.getGuild().getController().createCopyOfRole(e.getGuild().getPublicRole()).setMentionable(true).setName("everyone").queue();
 
         Lib.executedcmd++;
@@ -50,20 +56,22 @@ public class Fix extends ListenerAdapter {
         initter();
     }
 
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
 
-    public String getName() {
+    @SuppressWarnings("SameReturnValue")
+    private String getName() {
         return "fix@e";
     }
 
-    public String getDescription() {
+    @SuppressWarnings("SameReturnValue")
+    private String getDescription() {
         return "";
     }
 
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + "`";
     }
 }

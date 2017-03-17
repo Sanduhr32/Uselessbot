@@ -1,9 +1,9 @@
 package com.sanduhr.main.commands.pub;
 
 import com.sanduhr.main.Lib;
+import com.sanduhr.main.utils.Logutils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
@@ -32,6 +32,8 @@ public class Github extends ListenerAdapter {
                 "\nHelper: [[gerd2002-Uselessbot]](https://github.com/gerd2002/Uselessbot)",false);
         e.getAuthor().openPrivateChannel().complete().sendMessage(mb.setEmbed(eb.build()).build()).queue();
 
+        Logutils.log.info(e.getAuthor().getName() + " looked into the github repositories");
+
         Lib.executedcmd++;
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
@@ -40,17 +42,17 @@ public class Github extends ListenerAdapter {
     public void onReady(ReadyEvent e) {
         initter();
     }
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return Github.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    private String getDescription() {
         return "Sends you a dm with the Github of useless";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + "`";
     }
 }

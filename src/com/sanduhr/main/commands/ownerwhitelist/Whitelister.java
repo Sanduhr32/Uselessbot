@@ -1,10 +1,10 @@
 package com.sanduhr.main.commands.ownerwhitelist;
 
 import com.sanduhr.main.Lib;
-import com.sanduhr.main.utils.MemberUtil;
 import com.sanduhr.main.utils.Whitelist;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.User;
@@ -17,8 +17,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sanduhr.main.utils.MemberUtil.*;
-
+@SuppressWarnings("ALL")
 public class Whitelister extends ListenerAdapter {
 
     @Override
@@ -42,14 +41,17 @@ public class Whitelister extends ListenerAdapter {
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist().get(e.getGuild()).getIds().contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+        if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
             return;
         }
 
         Lib.receivedcmd++;
         List<User> u = e.getMessage().getMentionedUsers();
-        e.getMessage().delete().queue();
+
+        if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            e.getMessage().delete().queue();
+        }
 
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
@@ -81,7 +83,7 @@ public class Whitelister extends ListenerAdapter {
         //If argument is `remove`
         if (syntax[1].equalsIgnoreCase("remove")) {
             for (User user : u) {
-                Lib.getWhitelist_().get(e.getGuild()).add(user.getId());
+                Lib.getWhitelist_().get(e.getGuild()).remove(user.getId());
             }
         }
 
@@ -96,24 +98,24 @@ public class Whitelister extends ListenerAdapter {
         ArrayList<String> ids = new ArrayList<>();
         ids.add(Lib.YOUR_ID);
         ids.add(Lib.GERD_ID);
-        ids.add(Lib.PASCAL_);
+        ids.add(Lib.NOBODY);
         g.forEach(guild -> {
-            Whitelist wl = new Whitelist(guild,ids);
+            //Whitelist wl = new Whitelist(guild,ids);
             //Lib.getWhitelist().put(guild,wl);
             Lib.getWhitelist_().put(guild,ids);
         });
     }
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return "whitelist";
     }
-    public String getDescription() {
+    private String getDescription() {
         return "Adds|Removes mentioned users to the whitelist or prints the whitelist";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + " <args> @USER`\n\nArguments:`add`, `print`, `remove`";
     }
 }

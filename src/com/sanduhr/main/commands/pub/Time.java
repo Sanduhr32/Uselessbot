@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 
 import static com.sanduhr.main.Lib.*;
 
+@SuppressWarnings("ALL")
 public class Time extends ListenerAdapter {
 
     @Override
@@ -41,20 +42,21 @@ public class Time extends ListenerAdapter {
         initter();
     }
 
-    public void initter() {
+    private void initter() {
         getCmdMap().put(getName(), getDescription());
         getSynMap().put(getName(), getSyntax());
     }
 
-    public String getName() {
+    private String getName() {
         return Time.class.getSimpleName().toLowerCase();
     }
 
-    public String getDescription() {
+    @SuppressWarnings("SameReturnValue")
+    private String getDescription() {
         return "Returns the current time (german time)";
     }
 
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + PREFIX + getName() + "`";
     }
 }

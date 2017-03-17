@@ -1,7 +1,8 @@
 package com.sanduhr.main.commands.ownerwhitelist;
 
 import com.sanduhr.main.Lib;
-import com.sanduhr.main.utils.RoleUtil;
+import com.sanduhr.main.utils.Logutils;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
@@ -12,8 +13,10 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
 
-import static com.sanduhr.main.utils.RoleUtil.*;
+import static com.sanduhr.main.utils.Guild.MemberUtil.*;
+import static com.sanduhr.main.utils.Guild.RoleUtil.*;
 
+@SuppressWarnings("ALL")
 public class Remove extends ListenerAdapter {
 
     @Override
@@ -45,13 +48,16 @@ public class Remove extends ListenerAdapter {
         Lib.receivedcmd++;
         List<User> u = e.getMessage().getMentionedUsers();
         List<Role> r = e.getMessage().getMentionedRoles();
-        e.getMessage().delete().queue();
+
+        if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            e.getMessage().delete().queue();
+        }
 
         if (u != null && r != null) {
             u.forEach(user -> {
                 e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), r).queue();
-                System.out.println("[" + e.getGuild().getName() + "] [Log] Removed " + RoleListAsNameList(r) + "from " + user.getName());
             });
+            Logutils.log.info("Removed " + RoleListAsName(r) + " from " + UserToNameList(u));
         }
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
@@ -60,17 +66,17 @@ public class Remove extends ListenerAdapter {
     public void onReady(ReadyEvent e) {
         initter();
     }
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return Remove.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    private String getDescription() {
         return "Removes all mentioned roles from all mentioned users";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + " @USER @ROLE`";
     }
 }

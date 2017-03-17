@@ -1,6 +1,7 @@
 package com.sanduhr.main.commands.ownerwhitelist;
 
 import com.sanduhr.main.Lib;
+import com.sanduhr.main.utils.Logutils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
@@ -12,6 +13,10 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.awt.*;
 import java.util.List;
+
+import static com.sanduhr.main.utils.Channel.TextChannelUtils.*;
+import static com.sanduhr.main.utils.Guild.MemberUtil.*;
+import static com.sanduhr.main.utils.Guild.RoleUtil.*;
 
 public class Allow extends ListenerAdapter {
 
@@ -51,7 +56,11 @@ public class Allow extends ListenerAdapter {
         List<User> u = e.getMessage().getMentionedUsers();
         List<Role> r = e.getMessage().getMentionedRoles();
         List<TextChannel> c = e.getMessage().getMentionedChannels();
-        e.getMessage().delete().queue();
+
+        if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            e.getMessage().delete().queue();
+        }
+
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
 
@@ -68,6 +77,9 @@ public class Allow extends ListenerAdapter {
                     e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().grant(perm).queue();
                 }
             }
+
+            Logutils.log.info("Allowed " + perm + " for " + UserToNameList(u) + " in " + e.getTextChannel().getName());
+
             for ( Role role : r ) {
                 if (e.getTextChannel().getPermissionOverride(role) == null) {
                     e.getTextChannel().createPermissionOverride(role).complete().getManager().grant(perm).queue();
@@ -75,6 +87,9 @@ public class Allow extends ListenerAdapter {
                     e.getTextChannel().getPermissionOverride(role).getManager().grant(perm).queue();
                 }
             }
+
+            Logutils.log.info("Allowed " + perm + " for " + RoleListAsName(r) + " in " + e.getTextChannel().getName());
+
         }
         if (perm != null && (!u.isEmpty()||!r.isEmpty()) && !c.isEmpty()) {
             for ( Channel channel : c ) {
@@ -93,6 +108,8 @@ public class Allow extends ListenerAdapter {
                     }
                 }
             }
+            Logutils.log.info("Allowed " + perm + " for " + UserToNameList(u) + " in " + TextChannelAsName(c));
+            Logutils.log.info("Allowed " + perm + " for " + RoleListAsName(r) + " in " + TextChannelAsName(c));
         }
         if ((u.isEmpty()&&r.isEmpty())||perm == null) {
             eb.setColor(Color.red);
@@ -108,17 +125,17 @@ public class Allow extends ListenerAdapter {
     public void onReady(ReadyEvent e) {
         initter();
     }
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return Allow.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    private String getDescription() {
         return "Allows the mentioned users the permission";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + " <perm> @USER|@ROLE [#CHANNEL]`\n\n" +
                 "Permissions:\n" +
                 "`write`, `write_tts`, `attach_files`, `embed_links`, `ext_emojis`, `mention_@e`, `reactions`, `read`, `read_history`, `create_invites`, `manage_channel`, `manage_perms`, `manage_webhooks`, `manage_msgs`";

@@ -10,6 +10,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public class Unmute extends ListenerAdapter {
 
     @Override
@@ -33,41 +34,47 @@ public class Unmute extends ListenerAdapter {
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist().get(e.getGuild()).getIds().contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+        if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
             return;
         }
 
         Lib.receivedcmd++;
-        e.getMessage().delete().queue();
+
+        if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+            e.getMessage().delete().queue();
+        }
+
         List<User> u = e.getMessage().getMentionedUsers();
         List<Role> r = e.getMessage().getMentionedRoles();
         List<TextChannel> c = e.getMessage().getMentionedChannels();
-        System.out.println(u);
-        System.out.println(r);
-        System.out.println(c);
 
         if ((!u.isEmpty() || !r.isEmpty()) && c.isEmpty()) {
+
             for ( User user : u ) {
+
                 if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
                     e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(Permission.MESSAGE_WRITE).queue();
-                }
-                else {
+                } else {
                     e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().grant(Permission.MESSAGE_WRITE).queue();
                 }
             }
             for ( Role role : r) {
+
                 if (e.getTextChannel().getPermissionOverride(role) == null) {
                     e.getTextChannel().createPermissionOverride(role).complete().getManager().grant(Permission.MESSAGE_WRITE).queue();
-                }
-                else {
+                } else {
                     e.getTextChannel().getPermissionOverride(role).getManager().grant(Permission.MESSAGE_WRITE).queue();
                 }
             }
         }
+
         if ((!u.isEmpty() || !r.isEmpty()) && !c.isEmpty()) {
+
             for ( Channel channel : c ) {
+
                 for ( User user : u) {
+
                     if (channel.getPermissionOverride(e.getGuild().getMember(user)) == null) {
                         channel.createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(Permission.MESSAGE_WRITE).queue();
                     } else {
@@ -75,6 +82,7 @@ public class Unmute extends ListenerAdapter {
                     }
                 }
                 for ( Role role : r) {
+
                     if (channel.getPermissionOverride(role) == null) {
                         channel.createPermissionOverride(role).complete().getManager().grant(Permission.MESSAGE_WRITE).queue();
                     } else {
@@ -94,17 +102,17 @@ public class Unmute extends ListenerAdapter {
     public void onReady(ReadyEvent e) {
         initter();
     }
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return Unmute.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    private String getDescription() {
         return "Unmutes all mentioned users";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + " @USER|@ROLE [#CHANNEL]`";
     }
 }

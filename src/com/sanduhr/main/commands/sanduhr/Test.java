@@ -2,8 +2,6 @@ package com.sanduhr.main.commands.sanduhr;
 
 import com.sanduhr.main.Lib;
 import net.dv8tion.jda.core.entities.ChannelType;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
@@ -11,11 +9,9 @@ import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static com.sanduhr.main.utils.MemberUtil.hasMutualGuilds;
 
 
+@SuppressWarnings("ALL")
 public class Test extends ListenerAdapter {
 
     @Override
@@ -64,20 +60,21 @@ public class Test extends ListenerAdapter {
         initter();
     }
 
-    public void initter() {
+    private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());
     }
 
-    public String getName() {
+    private String getName() {
         return Test.class.getSimpleName().toLowerCase();
     }
 
-    public String getDescription() {
+    @SuppressWarnings("SameReturnValue")
+    private String getDescription() {
         return "";
     }
 
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + Lib.PREFIX + getName() + "`";
     }
 }

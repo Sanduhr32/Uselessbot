@@ -7,7 +7,8 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-public class Ownerwhitelist extends ListenerAdapter {
+@SuppressWarnings("ALL")
+class Ownerwhitelist extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
@@ -49,20 +50,21 @@ public class Ownerwhitelist extends ListenerAdapter {
         initter();
     }
 
-    public void initter() {
+    private void initter() {
         getCmdMap().put(getName(), getDescription());
         getSynMap().put(getName(), getSyntax());
     }
 
-    public String getName() {
+    private String getName() {
         return Ownerwhitelist.class.getSimpleName().toLowerCase();
     }
 
-    public String getDescription() {
+    @SuppressWarnings("SameReturnValue")
+    private String getDescription() {
         return "";
     }
 
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + PREFIX + getName() + "`";
     }
 }

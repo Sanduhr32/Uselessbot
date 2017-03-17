@@ -1,9 +1,12 @@
 package com.sanduhr.main;
 
+import com.sanduhr.main.utils.ScheduleUtil;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+
+import java.util.concurrent.TimeUnit;
 
 import static com.sanduhr.main.Lib.*;
 
@@ -11,7 +14,7 @@ import static com.sanduhr.main.Lib.*;
  * Created by Sanduhr on 07.03.2017
  * This class tests if the provided command exists
  */
-public class Unknown extends ListenerAdapter {
+class Unknown extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
 
@@ -32,7 +35,8 @@ public class Unknown extends ListenerAdapter {
 
         String desc = getCmdMap().get(cmd);
         if (desc == null) {
-            e.getChannel().sendMessage("Unknown command! Type `??help`!").queue();
+            e.getChannel().sendMessage("Unknown command! Type `??help`!").queue(msg->
+                    ScheduleUtil.scheduledAction(()->msg.delete().queue(),10, TimeUnit.SECONDS));
         }
     }
 
