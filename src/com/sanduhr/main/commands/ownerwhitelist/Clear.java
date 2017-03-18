@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,9 +60,12 @@ public class Clear extends ListenerAdapter {
 
         List<Message> msg = e.getTextChannel().getHistory().retrievePast(i).complete();
 
-        msg.stream().filter(message -> !message.getRawContent().contains("`Important`")).collect(Collectors.toList());
+        String filter = "`important`";
+
+        msg = msg.stream().filter(message -> !message.getRawContent().toLowerCase().contains(filter)).collect(Collectors.toList());
 
         if (syntax[2].equalsIgnoreCase("fast")) {
+            msg = msg.stream().filter(message -> !message.getCreationTime().isBefore(OffsetDateTime.now().minusWeeks(2))).collect(Collectors.toList());
             Lib.cleared = Lib.cleared + msg.size();
             e.getTextChannel().deleteMessages(msg).queue();
         }
@@ -86,7 +90,6 @@ public class Clear extends ListenerAdapter {
     private String getName() {
         return Clear.class.getSimpleName().toLowerCase();
     }
-    @SuppressWarnings("SameReturnValue")
     private String getDescription() {
         return "Clears the last x messages";
     }
