@@ -36,7 +36,7 @@ public class Shutdown extends ListenerAdapter {
         }
 
         if (e.getAuthor().getId().equals(Lib.YOUR_ID)) {
-            e.getJDA().shutdown();
+            e.getJDA().shutdown(true);
         }
         else {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();

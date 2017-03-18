@@ -78,8 +78,6 @@ public class Allow extends ListenerAdapter {
                 }
             }
 
-            Logutils.log.info("Allowed " + perm + " for " + UserToNameList(u) + " in " + e.getTextChannel().getName());
-
             for ( Role role : r ) {
                 if (e.getTextChannel().getPermissionOverride(role) == null) {
                     e.getTextChannel().createPermissionOverride(role).complete().getManager().grant(perm).queue();
@@ -88,12 +86,17 @@ public class Allow extends ListenerAdapter {
                 }
             }
 
+            Logutils.log.info("Allowed " + perm + " for " + UserToNameList(u) + " in " + e.getTextChannel().getName());
             Logutils.log.info("Allowed " + perm + " for " + RoleListAsName(r) + " in " + e.getTextChannel().getName());
-
+            return;
         }
+
         if (perm != null && (!u.isEmpty()||!r.isEmpty()) && !c.isEmpty()) {
+
             for ( Channel channel : c ) {
+
                 for (User user : u) {
+
                     if (channel.getPermissionOverride(e.getGuild().getMember(user)) == null) {
                         channel.createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().grant(perm).queue();
                     } else {
@@ -101,6 +104,7 @@ public class Allow extends ListenerAdapter {
                     }
                 }
                 for (Role role : r) {
+
                     if (channel.getPermissionOverride(role) == null){
                         channel.createPermissionOverride(role).complete().getManager().grant(perm).queue();
                     } else{
@@ -110,6 +114,7 @@ public class Allow extends ListenerAdapter {
             }
             Logutils.log.info("Allowed " + perm + " for " + UserToNameList(u) + " in " + TextChannelAsName(c));
             Logutils.log.info("Allowed " + perm + " for " + RoleListAsName(r) + " in " + TextChannelAsName(c));
+            return;
         }
         if ((u.isEmpty()&&r.isEmpty())||perm == null) {
             eb.setColor(Color.red);

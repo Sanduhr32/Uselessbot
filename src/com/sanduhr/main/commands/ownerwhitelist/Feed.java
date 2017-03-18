@@ -1,5 +1,11 @@
 package com.sanduhr.main.commands.ownerwhitelist;
 
+/**
+ * Created by Sanduhr on 17.03.2017
+ */
+
+import static com.sanduhr.main.Lib.*;
+
 import com.sanduhr.main.Lib;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
@@ -8,8 +14,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-@SuppressWarnings("ALL")
-public class Fix extends ListenerAdapter {
+public class Feed extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
@@ -19,33 +24,37 @@ public class Fix extends ListenerAdapter {
         if (e.getAuthor().isBot())
             return;
 
-        //Not the `Fix` command
-        if (!syntax[0].equalsIgnoreCase(Lib.PREFIX + "Fix@e")) {
+        //Not the `Feed` command
+        if (!syntax[0].equalsIgnoreCase(PREFIX + "Feed")) {
             return;
         }
 
-        //If `Fix` command was received from a non-TextChannel, inform command is Guild-only
+        //If `Feed` command was received from a non-TextChannel, inform command is Guild-only
         if (!e.isFromType(ChannelType.TEXT)) {
-            e.getChannel().sendMessage(Lib.ERROR_GUILDS).queue();
+            e.getChannel().sendMessage(ERROR_GUILDS).queue();
             return;
         }
 
         /*If the member that sent the command isn't in the Whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!e.getMember().isOwner()) {
-            e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
+        if (!getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+            e.getChannel().sendMessage(ERROR_PERMS).queue();
             return;
         }
 
-        Lib.receivedcmd++;
+        receivedcmd++;
 
         if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
             e.getMessage().delete().queue();
         }
 
-        e.getGuild().getController().createCopyOfRole(e.getGuild().getPublicRole()).setMentionable(true).setName("everyone").queue();
+        boolean feed = Lib.getConMap().get(e.getGuild());
 
-        Lib.executedcmd++;
+        feed = !feed;
+
+        Lib.getConMap().put(e.getGuild(), feed);
+
+        executedcmd++;
     }
 
     public void onMessageUpdate(MessageUpdateEvent e) {
@@ -56,18 +65,20 @@ public class Fix extends ListenerAdapter {
         initter();
     }
 
-    private void initter() {
-        Lib.getCmdMap().put(getName(), getDescription());
-        Lib.getSynMap().put(getName(), getSyntax());
+    public void initter() {
+        getCmdMap().put(getName(), getDescription());
+        getSynMap().put(getName(), getSyntax());
     }
 
-    private String getName() {
-        return "fix@e";
+    public String getName() {
+        return Feed.class.getSimpleName().toLowerCase();
     }
-    private String getDescription() {
+
+    public String getDescription() {
         return "";
     }
-    private String getSyntax() {
-        return "`" + Lib.PREFIX + getName() + "`";
+
+    public String getSyntax() {
+        return "`" + PREFIX + getName() + "`";
     }
 }
