@@ -58,6 +58,7 @@ public class Lib {
 
     private static final Object Add = new Add();
     private static final Object Eval = new Eval();
+    private static final Object Feed = new Feed();
     private static final Object File = new Filegeneration();
     private static final Object jarupdate = new Jarupdate();
     private static final Object Unknown = new Unknown();
@@ -118,6 +119,7 @@ public class Lib {
         getJ().addListener(new Mute());
         getJ().addListener(new Unmute());
         getJ().addListener(Wl);
+        getJ().addListener(Feed);
     }
     private static void pub() {
         /* Public */

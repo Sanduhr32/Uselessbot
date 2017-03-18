@@ -89,6 +89,6 @@ public class Game extends ListenerAdapter {
         return "Returns the current Game or sets it";
     }
     private String getSyntax() {
-        return "`" + Lib.PREFIX + getName() + " <args> [:String]` \n\nArguments:\n`get`, `set`";
+        return "`" + Lib.PREFIX + getName() + " <args> [String]` \n\nArguments:\n`get`, `set`, `clear`";
     }
 }
