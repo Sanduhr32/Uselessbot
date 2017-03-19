@@ -43,7 +43,9 @@ public class Eval extends ListenerAdapter {
 
         String modified_msg = event.getMessage().getRawContent()
                 .replaceAll("#","().")
-                .replace("getToken","getTextChannelById(channel.getId()).sendMessage(\"UnsupportedOperationException(`Nice try m8!`)\").queue()");
+                .replace("getToken","getTextChannelById(channel.getId()).sendMessage(\"UnsupportedOperationException(`Nice try m8!`)\").queue()")
+                .replace("Runtime.getRuntime().exec","getTextChannelById(channel.getId()).sendMessage(\"UnsupportedOperationException(`Nice try m8!`)\").queue()")
+                .replace("ProcessBuilder","getTextChannelById(channel.getId()).sendMessage(\"UnsupportedOperationException(`Nice try m8!`)\").queue()");
 
         List<String> splitContent = new LinkedList<>();
         Collections.addAll(splitContent, modified_msg.split("\\s+"));
