@@ -34,28 +34,42 @@ public class Eval extends ListenerAdapter {
             return;
         }
         ScriptEngine se = new ScriptEngineManager().getEngineByName("Nashorn");
-        se.put("event",   event);
-        se.put("jda",     event.getJDA());
-        se.put("guild",   event.getGuild());
-        se.put("channel", event.getChannel());
-        se.put("message", event.getMessage());
-        se.put("author",  event.getAuthor());
+        try {
+            se.eval("var imports = new JavaImporter(" +
+                    "Packages.com.sanduhr.main.utils," +
+                    "Packages.com.sanduhr.main.utils.Channel," +
+                    "Packages.com.sanduhr.main.utils.Guild," +
+                    "Packages.java.nio.file," +
+                    "Packages.net.dv8tion.jda.core.Permission" +
+                    ");");
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        }
 
         String modified_msg = event.getMessage().getRawContent()
                 .replaceAll("#","().")
-                .replace("getToken","getTextChannelById(channel.getId()).sendMessage(\"UnsupportedOperationException(`Nice try m8!`)\").queue()");
+                .replace("getToken","getTextChannelById(channel.getId()).sendMessage(\"UnsupportedOperationException(\\\"Nice try m8!\\\")\").queue()")
+                .replace("Runtime.getRuntime().exec","getTextChannelById(channel.getId()).sendMessage(\"UnsupportedOperationException(\\\"Nice try m8!\\\")\").queue()")
+                .replace("ProcessBuilder","getTextChannelById(channel.getId()).sendMessage(\"UnsupportedOperationException(\\\"Nice try m8!\\\")\").queue()");
 
-        List<String> splitContent = new LinkedList<>();
-        Collections.addAll(splitContent, modified_msg.split("\\s+"));
-        splitContent.remove(0);
-        String statement = String.join(" ", splitContent);
+        String[] splitContent = modified_msg.split("\\s+",2);
 
         try {
-            event.getMessage().getTextChannel().sendMessage(new StringBuilder().append("```Java\n").append(statement)
-                    .append("\n```\nEvaluated successfully:\n```Java\n").append(se.eval(statement)).append("\n```").toString()).queue();
-        } catch (Exception e) {
-            event.getMessage().getTextChannel().sendMessage(new StringBuilder().append("```Java\n").append(statement)
-                    .append("\n```\nAn exception was thrown:\n```Java\n").append(e).append("\n```").toString()).queue();
+            Object out = se.eval(
+                    "{" +
+                            "with (imports) {" +
+                            splitContent[1] +
+                                "}" +
+                            "};");
+
+            if (out == null) {
+                out = "Your action..";
+            }
+            event.getMessage().getTextChannel().sendMessage(new StringBuilder().append("```Java\n").append(splitContent[1])
+                    .append("```Evaluated successfully:```Java\n").append(out).append("```").toString()).queue();
+        } catch (ScriptException e) {
+            event.getMessage().getTextChannel().sendMessage(new StringBuilder().append("```Java\n").append(splitContent[1])
+                    .append("```An exception was thrown:```Java\n").append(e).append("```").toString()).queue();
         }
     }
 
