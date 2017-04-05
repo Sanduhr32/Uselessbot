@@ -1,6 +1,7 @@
 package com.sanduhr.discord;
 
 import com.sanduhr.discord.commands.Experimental.Eval_exp;
+import com.sanduhr.discord.commands.console.Input;
 import com.sanduhr.discord.commands.ownerwhitelist.*;
 import com.sanduhr.discord.commands.pub.*;
 import com.sanduhr.discord.commands.pub.Game;
@@ -217,6 +218,7 @@ public class Lib {
         getJ().addListener(Module);
         getJ().removeListener(Eval);
         getJ().addListener(EXP);
+        getJ().addListener(new Input());
         getJ().setGame(net.dv8tion.jda.core.entities.Game.of("EXPERIMENTAL","twitch.tv"));
     }
 
