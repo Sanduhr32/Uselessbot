@@ -1,15 +1,12 @@
 package com.sanduhr.discord.commands.Experimental;
 
-/**
- * Created by Sanduhr on 12.03.2017
- */
-
 import static com.sanduhr.discord.Lib.*;
 
 import com.sanduhr.discord.Lib;
 import com.sanduhr.discord.utils.Logutils;
 
 import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
@@ -20,6 +17,10 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+
+/**
+ * Created by Sanduhr on 12.03.2017
+ */
 
 public class Eval_exp extends ListenerAdapter {
 
@@ -107,13 +108,11 @@ public class Eval_exp extends ListenerAdapter {
 
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
         if (e.getReaction().getEmote().getName().equalsIgnoreCase("\uD83D\uDD02") && Lib.WL.contains(e.getUser().getId())) {
-            e.getChannel().getMessageById(e.getMessageId()).complete().clearReactions().queue();
+            if (e.getJDA().getTextChannelById(e.getChannel().getId()).getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
+                e.getChannel().getMessageById(e.getMessageId()).complete().clearReactions().queue();
+            }
             onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getChannel().getMessageById(e.getMessageId()).complete()));
         }
-    }
-
-    public void onGenericMessageReaction(GenericMessageReactionEvent event) {
-
     }
 
     public void onReady(ReadyEvent e) {
