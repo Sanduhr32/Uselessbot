@@ -31,12 +31,11 @@ public class Message extends ListenerAdapter {
 
         Lib.receivedcmd++;
 
-        if (e.getAuthor().getId().equals(Lib.YOUR_ID)||e.getMember().isOwner()) {
+        if (Lib.YOUR_ID == e.getAuthor().getIdLong()||e.getMember().isOwner()) {
             e.getChannel().sendMessage(syntaxx[1]).queue();
             e.getMessage().delete().queue();
         }
         else {
-
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
         }
 

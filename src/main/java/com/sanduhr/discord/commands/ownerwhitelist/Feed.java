@@ -68,20 +68,20 @@ public class Feed extends ListenerAdapter {
         initter();
     }
 
-    public void initter() {
+    private void initter() {
         getCmdMap().put(getName(), getDescription());
         getSynMap().put(getName(), getSyntax());
     }
 
-    public String getName() {
+    private String getName() {
         return Feed.class.getSimpleName().toLowerCase();
     }
 
-    public String getDescription() {
+    private String getDescription() {
         return "";
     }
 
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + PREFIX + getName() + "`";
     }
 }

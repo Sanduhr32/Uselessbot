@@ -10,7 +10,6 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
-import net.dv8tion.jda.core.events.message.react.GenericMessageReactionEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
@@ -31,7 +30,7 @@ public class Eval_exp extends ListenerAdapter {
         //    return;
         //}
 
-        if (!Lib.WL.contains(event.getAuthor().getId())) {
+        if (!Lib.WL.contains(event.getAuthor().getIdLong())) {
             return;
         }
 
@@ -102,12 +101,14 @@ public class Eval_exp extends ListenerAdapter {
         Logutils.log.info(event.getAuthor().getName() + " evaluated");
     }
 
+    @Override
     public void onMessageUpdate(MessageUpdateEvent e) {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
     }
 
+    @Override
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
-        if (e.getReaction().getEmote().getName().equalsIgnoreCase("\uD83D\uDD02") && Lib.WL.contains(e.getUser().getId())) {
+        if (e.getReaction().getEmote().getName().equalsIgnoreCase("\uD83D\uDD02") && Lib.WL.contains(e.getUser().getIdLong())) {
             if (e.getJDA().getTextChannelById(e.getChannel().getId()).getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
                 e.getChannel().getMessageById(e.getMessageId()).complete().clearReactions().queue();
             }
@@ -119,17 +120,17 @@ public class Eval_exp extends ListenerAdapter {
         initter();
     }
 
-    public void initter() {
+    private void initter() {
         getCmdMap().put("eval", getDescription());
         getSynMap().put("eval", getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return Eval_exp.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    private String getDescription() {
         return "";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + PREFIX + getName() + "`";
     }
     //public static Commandutils.Command EVAL =

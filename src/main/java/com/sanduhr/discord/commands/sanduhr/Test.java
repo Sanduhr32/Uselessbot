@@ -21,15 +21,13 @@ public class Test extends ListenerAdapter {
 
         //Tierutils.add(Tierutils.Tier.BOT_DEVELOPER, "137232539008892928", null);
     }
-    public static String getName() {
+    private static String getName() {
         return Test.class.getSimpleName().toLowerCase();
     }
-    public static String getDescription() {
+    private static String getDescription() {
         return "NullPointerExcption";
     }
-    public static String getSyntax() {
+    private static String getSyntax() {
         return "`" + Lib.PREFIX + getName() + "`";
     }
-    public static Commandutils.Command TEST =
-            new Commandutils.Command(Lib.PREFIX, getName(), getDescription(), getSyntax(), Tierutils.SANDUHR, new Test());
 }

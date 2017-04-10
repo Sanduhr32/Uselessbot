@@ -10,7 +10,6 @@ import com.sanduhr.discord.Lib;
 import com.sanduhr.discord.utils.Commandutils;
 import com.sanduhr.discord.utils.Logutils;
 import com.sanduhr.discord.utils.Tierutils;
-import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
@@ -27,7 +26,7 @@ public class Eval extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
 
-        if (!Lib.WL.contains(event.getAuthor().getId())) {
+        if (!Lib.WL.contains(event.getAuthor().getIdLong())) {
             return;
         }
 
@@ -103,7 +102,7 @@ public class Eval extends ListenerAdapter {
     }
 
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
-        if (e.getReaction().getEmote().getName().equalsIgnoreCase("\uD83D\uDD02") && Lib.WL.contains(e.getUser().getId())) {
+        if (e.getReaction().getEmote().getName().equalsIgnoreCase("\uD83D\uDD02") && Lib.WL.contains(e.getUser().getIdLong())) {
             e.getChannel().getMessageById(e.getMessageId()).complete().clearReactions().queue();
             onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getChannel().getMessageById(e.getMessageId()).complete()));
         }
@@ -117,19 +116,17 @@ public class Eval extends ListenerAdapter {
         initter();
     }
 
-    public void initter() {
+    private void initter() {
         getCmdMap().put(getName(), getDescription());
         getSynMap().put(getName(), getSyntax());
     }
-    public static String getName() {
+    private static String getName() {
         return Eval.class.getSimpleName().toLowerCase();
     }
-    public static String getDescription() {
+    private static String getDescription() {
         return "";
     }
-    public static String getSyntax() {
+    private static String getSyntax() {
         return "`" + PREFIX + getName() + "`";
     }
-    public static Commandutils.Command EVAL =
-            new Commandutils.Command(Lib.PREFIX, getName(), getDescription(), getSyntax(), Tierutils.DEVS, new Eval());
 }
