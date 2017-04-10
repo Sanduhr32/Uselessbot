@@ -16,9 +16,9 @@ public class Tierutils {
     public static HashMap<String, Level> tierMap = new HashMap<>();
     public static Level SANDUHR;
     public static Level DEVS;
-    public static Level GUILD_OWNER;
-    public static Level GUILD_WHITE;
-    public static Level PUBLIC;
+    private static Level GUILD_OWNER;
+    private static Level GUILD_WHITE;
+    private static Level PUBLIC;
 
     public enum Tier {
         BOT_OWNER(1,"sanduhr"),

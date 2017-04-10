@@ -20,16 +20,16 @@ import static com.sanduhr.discord.Useless.*;
 
 public class Lib {
 
-    public static ArrayList<String> WL = new ArrayList<>();
+    public static ArrayList<Long> WL = new ArrayList<>();
 
     public static final String PREFIX ="??";
-    public static final String YOUR_ID = "198137282018934784";
-    public static final String GERD_ID = "247410291732774913";
-    public static final String NOBODY = "189702310429982720";
+    public static final long YOUR_ID = 198137282018934784L;
+    public static final long GERD_ID = 247410291732774913L;
+    private static final long NOBODY = 189702310429982720L;
     public static final String GITHUB_PNG = "https://cdn.discordapp.com/avatars/277970452327038977/74b8b6de441bce1a59f9c4ac74f666e6.png";
 
-    static final        String LOG_GUILD = "283353013530132500";
-    public static final String LOG_CHANNEL = "286210279463845888";
+    static final        long LOG_GUILD = 283353013530132500L;
+    public static final long LOG_CHANNEL = 286210279463845888L;
 
     public static final String ERROR_GUILDS = "Only works at guilds";
     public static final String ERROR_PERMS = "You don't have permissions to run this command! :no_entry_sign:";
@@ -63,6 +63,7 @@ public class Lib {
     private static final Object Allow = new Allow();
     private static final Object Deny = new Deny();
     private static final Object Mention = new Mentioneveryone();
+    private static final Object Calc = new Calculate();
     private static final Object Clear = new Clear();
     private static final Object Mute = new Mute();
     private static final Object Unmute = new Unmute();
@@ -125,44 +126,45 @@ public class Lib {
     }
     private static void ownerwhitelist() {
         /* Owner and whitelisted */
-        getJ().addListener(Wl);
-        getJ().addListener(Feed);
+        getJ().addEventListener(Wl);
+        getJ().addEventListener(Feed);
     }
     private static void pub() {
         /* Public */
         if (start) {
-            getJ().addListener(new Game());
+            getJ().addEventListener(new Game());
 
-            getJ().addListener(new Github());
-            getJ().addListener(new Invite());
+            getJ().addEventListener(new Github());
+            getJ().addEventListener(new Invite());
 
-            getJ().addListener(new Help());
-            getJ().addListener(new Syntax());
+            getJ().addEventListener(new Help());
+            getJ().addEventListener(new Syntax());
 
-            getJ().addListener(new Request());
-            getJ().addListener(new Info());
+            getJ().addEventListener(new Request());
+            getJ().addEventListener(new Info());
 
-            getJ().addListener(new Status());
-            getJ().addListener(new Time());
+            getJ().addEventListener(new Status());
+            getJ().addEventListener(new Time());
         }
     }
     private static void other() {
         /* Other */
         if (start) {
-            getJ().addListener(new Eventlist());
-            getJ().addListener(new Message());
-            getJ().addListener(new Protection());
-            getJ().addListener(new Relog());
-            getJ().addListener(new Shutdown());
-            getJ().addListener(new Fix());
-            getJ().addListener(new Log());
-            //getJ().addListener(jarupdate);
-            getJ().addListener(Unknown);
-            //getJ().addListener(File);
-            getJ().addListener(Eval);
-            //getJ().addListener(Module);
-            getJ().addListener(DISOCRD);
-            getJ().addListener(new Test());
+            getJ().addEventListener(Calc);
+            getJ().addEventListener(new Eventlist());
+            getJ().addEventListener(new Message());
+            getJ().addEventListener(new Protection());
+            getJ().addEventListener(new Relog());
+            getJ().addEventListener(new Shutdown());
+            getJ().addEventListener(new Fix());
+            getJ().addEventListener(new Log());
+            //getJ().addEventListener(jarupdate);
+            getJ().addEventListener(Unknown);
+            //getJ().addEventListener(File);
+            getJ().addEventListener(Eval);
+            //getJ().addEventListener(Module);
+            getJ().addEventListener(DISOCRD);
+            getJ().addEventListener(new Test());
         }
     }
     private static void initting() {
@@ -188,37 +190,37 @@ public class Lib {
 
         if (listenerMap.get(Permissions)) {
             for (Object part : Permissions) {
-                getJ().addListener(part);
+                getJ().addEventListener(part);
             }
         }
 
         if (listenerMap.get(Roles)) {
 
             for (Object part : Roles) {
-                getJ().addListener(part);
+                getJ().addEventListener(part);
             }
         }
 
         if (listenerMap.get(Guilds)) {
 
             for (Object part : Guilds) {
-                getJ().addListener(part);
+                getJ().addEventListener(part);
             }
         }
 
         if (listenerMap.get(Channels)) {
 
             for (Object part : Channels) {
-                getJ().addListener(part);
+                getJ().addEventListener(part);
             }
         }
     }
     static void init_exp() {
         modules();
-        getJ().addListener(Module);
-        getJ().removeListener(Eval);
-        getJ().addListener(EXP);
-        getJ().addListener(new Input());
+        getJ().addEventListener(Module);
+        getJ().removeEventListener(Eval);
+        getJ().addEventListener(EXP);
+        getJ().addEventListener(new Input());
         getJ().setGame(net.dv8tion.jda.core.entities.Game.of("EXPERIMENTAL","twitch.tv"));
     }
 

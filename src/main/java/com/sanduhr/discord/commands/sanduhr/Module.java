@@ -41,7 +41,7 @@ public class Module extends ListenerAdapter {
 
         /*If the member that sent the command isn't in the Whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!YOUR_ID.equals(e.getAuthor().getId())) {
+        if (YOUR_ID != e.getAuthor().getIdLong()) {
             e.getChannel().sendMessage(ERROR_PERMS).queue(msg->msg.delete().queueAfter(10,TimeUnit.SECONDS));
             return;
         }
@@ -97,17 +97,17 @@ public class Module extends ListenerAdapter {
         initter();
     }
 
-    public void initter() {
+    private void initter() {
         getCmdMap().put(getName(), getDescription());
         getSynMap().put(getName(), getSyntax());
     }
-    public String getName() {
+    private String getName() {
         return Module.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    private String getDescription() {
         return "";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + PREFIX + getName() + "<args> [int]" + "`\nArguments:\n`list`, `load`, `unload`\nInteger:\n`1`, `2`, `3`, `4`";
     }
 

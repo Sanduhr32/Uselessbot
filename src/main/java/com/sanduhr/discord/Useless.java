@@ -14,12 +14,23 @@ public class Useless {
     public static void main(String[] args) throws Exception {
         System.err.println("Useless im EXPERIMENTAL Modus starten? yes/no");
         String in = new Scanner(System.in).nextLine();
-        if (in.equals("yes")) {
-            exp();
+
+        switch (in) {
+            case "yes":
+                exp();
+                break;
+            case "no":
+                start();
+                break;
+            default:
+                int i = 0;
+                System.err.println("Invalid");
+                for (Character c : in.toCharArray()) {
+                    i += c.hashCode();
+                }
+                System.exit(i);
         }
-        else if (in.equals("no")) {
-            start();
-        }
+		
     }
     private static void start() throws Exception {
         Lib.init();

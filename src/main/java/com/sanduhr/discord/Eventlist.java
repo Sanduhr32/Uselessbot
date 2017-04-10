@@ -28,6 +28,7 @@ public class Eventlist extends ListenerAdapter {
 
         Logutils.log.info("Joined " + guild.getName());
     }
+    @Override
     public void onGuildLeave(GuildLeaveEvent e) {
         Guild guild = e.getGuild();
         e.getGuild().getOwner().getUser().openPrivateChannel().complete().sendMessage("Bye").queue(
@@ -37,7 +38,10 @@ public class Eventlist extends ListenerAdapter {
 
         Logutils.log.info("Left " + guild.getName());
     }
+    @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent e) {
+
+        Logutils.log.info("[" + e.getGuild().getName() + "] [JoinEvent] " + e.getMember().getUser().getName());
 
         if (!Lib.getConMap().get(e.getGuild())) {
             return;
@@ -52,17 +56,20 @@ public class Eventlist extends ListenerAdapter {
         Message m  = mb.build();
         e.getGuild().getPublicChannel().sendMessage(m).queue(
                 msg -> msg.delete().queueAfter(10,TimeUnit.HOURS));
-        if (e.getGuild().getId().equals(Lib.LOG_GUILD)) {
+        if (e.getGuild().getIdLong() == Lib.LOG_GUILD) {
             if (e.getMember().getUser().getName().toLowerCase().contains("testuser")) {
                 e.getGuild().getController().addRolesToMember(e.getMember(),e.getGuild().getRolesByName("testuser",true)).queue();
             }
         }
     }
+    @Override
     public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
 
         if (e.getMember().equals(e.getGuild().getSelfMember())) {
             return;
         }
+
+        Logutils.log.info("[" + e.getGuild().getName() + "] [LeaveEvent] " + e.getMember().getUser().getName());
 
         if (!Lib.getConMap().get(e.getGuild())) {
             return;
@@ -86,21 +93,32 @@ public class Eventlist extends ListenerAdapter {
         List<Guild> g = e.getJDA().getGuilds();
         g.forEach(guild -> {
             Lib.getConMap().put(guild, false);
-//              n.put(guild, Lib.WL);
+            Lib.getWhitelist_().put(guild, Lib.WL);
         });
         Tierutils.tierMap.get(Tierutils.Tier.GUILD_WHITELIST.getName()).setOBJECT(n);
     }
+    @Override
     public void onResume(ResumedEvent e) {
         OffsetDateTime now = OffsetDateTime.now();
         e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Resumed " + now.format(Lib.DTF)).queue();
         e.getJDA().getUserById(Lib.GERD_ID).openPrivateChannel().complete().sendMessage("Resumed " + now.format(Lib.DTF)).queue();
     }
+    @Override
     public void onReconnect(ReconnectedEvent e) {
         OffsetDateTime now = OffsetDateTime.now();
         e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Reconnected " + now.format(Lib.DTF)).queue();
         e.getJDA().getUserById(Lib.GERD_ID).openPrivateChannel().complete().sendMessage("Reconnected " + now.format(Lib.DTF)).queue();
     }
+    @Override
     public void onShutdown(ShutdownEvent e) {
         System.out.println(e.getShutdownTime().format(Lib.DTF));
+    }
+    @Override
+    public void onException(ExceptionEvent e) {
+        if (e.isLogged()) {
+            return;
+        }
+        System.err.println("\n===== Received Silent Exception/Error =====\n");
+        e.getCause().printStackTrace();
     }
 }
