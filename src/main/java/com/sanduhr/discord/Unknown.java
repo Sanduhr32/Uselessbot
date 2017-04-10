@@ -34,7 +34,11 @@ class Unknown extends ListenerAdapter {
 
         String desc = getCmdMap().get(cmd);
         if (desc == null) {
-            e.getChannel().sendMessage("Unknown command! Type `??help`!").queue(msg->msg.delete().queueAfter(10,TimeUnit.SECONDS));
+            if (e.getTextChannel().canTalk()) {
+                e.getChannel().sendMessage("Unknown command! Type `??help`!").queue(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
+            } else {
+                e.getAuthor().openPrivateChannel().complete().sendMessage("Unknown command! Type `??help`!\n\n*Btw i'm sorry i can't write in " + e.getChannel().getName() + " at " + e.getGuild().getName() + "*").queue();
+            }
         }
     }
 

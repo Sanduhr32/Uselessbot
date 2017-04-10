@@ -11,7 +11,6 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
 
-@SuppressWarnings("ALL")
 public class Ban extends ListenerAdapter {
 
     @Override
@@ -20,8 +19,8 @@ public class Ban extends ListenerAdapter {
         if (e.getAuthor().isBot())
             return;
 
-        String[] syntax = e.getMessage().getContent().split("\\s+");
-        String[] syntaxx = e.getMessage().getContent().split(":");
+        String[] syntax = e.getMessage().getRawContent().split("\\s+",2);
+        String[] syntaxx = e.getMessage().getRawContent().split(":",3);
 
         //Not the `ban` command
         if (!syntax[0].equalsIgnoreCase(Lib.PREFIX + "ban")) {
@@ -38,6 +37,11 @@ public class Ban extends ListenerAdapter {
          or the Owner of the Guild, they don't have permission to run this command!*/
         if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
+            return;
+        }
+
+        if (syntax.length < 2 && syntaxx.length < 3) {
+            e.getChannel().sendMessage("Error :eyes:").queue();
             return;
         }
 
@@ -63,12 +67,17 @@ public class Ban extends ListenerAdapter {
 
         Lib.executedcmd++;
     }
+
+    @Override
     public void onMessageUpdate(MessageUpdateEvent e) {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
     }
+
+    @Override
     public void onReady(ReadyEvent e) {
         init();
     }
+
     private void init() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());

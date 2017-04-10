@@ -124,12 +124,17 @@ public class Allow extends ListenerAdapter {
         }
         Lib.executedcmd++;
     }
+
+    @Override
     public void onMessageUpdate(MessageUpdateEvent e) {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
     }
+
+    @Override
     public void onReady(ReadyEvent e) {
         initter();
     }
+
     private void initter() {
         Lib.getCmdMap().put(getName(), getDescription());
         Lib.getSynMap().put(getName(), getSyntax());

@@ -17,11 +17,11 @@ import static com.sanduhr.discord.Lib.getSynMap;
  * Created by Sanduhr on 21.03.2017
  */
 public class Discord extends ListenerAdapter {
-    private ArrayList<String> zitate = new ArrayList<>();
-    private String TWITTER = "https://cdn.discordapp.com/attachments/293410445031768064/298070195149209601/Twitter_bird_logo_2012.png";
-    private String SANDUHR = "https://twitter.com/Sanduhr32";
-    private String MONDANZ = "";
-    private String DISCORD = "https://twitter.com/discordapp";
+    private final ArrayList<String> zitate = new ArrayList<>();
+    private final String TWITTER = "https://cdn.discordapp.com/attachments/293410445031768064/298070195149209601/Twitter_bird_logo_2012.png";
+    private final String SANDUHR = "https://twitter.com/Sanduhr32";
+    private final String MONDANZ = "";
+    private final String DISCORD = "https://twitter.com/discordapp";
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
 
@@ -50,7 +50,7 @@ public class Discord extends ListenerAdapter {
         initter();
     }
 
-    public void initter() {
+    private void initter() {
         getCmdMap().put(getName(), getDescription());
         getSynMap().put(getName(), getSyntax());
         zitate.add("[@Sanduhr32]("+SANDUHR+") [Neustarten ist sowieso immer meine Lieblingsempfehlung! Das solltest du gleich nochmal durchführen.. :-D](https://twitter.com/discordapp/status/848148308447121408)");
@@ -65,13 +65,13 @@ public class Discord extends ListenerAdapter {
                 "(Es war in einer langen Email \uD83D\uDE0F)](https://twitter.com/Sanduhr32/status/835513741315878913)");
         zitate.add("[@Sanduhr32]("+SANDUHR+") [Hey! Was ein Copycat Bot! Aber das gefällt uns trotzdem gut! Ganz so useless ist der Bot wohl gar nicht mehr, mh? :)](https://twitter.com/discordapp/status/848557178046877696)");
     }
-    public String getName() {
+    private String getName() {
         return Discord.class.getSimpleName().toLowerCase();
     }
-    public String getDescription() {
+    private String getDescription() {
         return "Zitiert ein paar Discord Mitarbeiter";
     }
-    public String getSyntax() {
+    private String getSyntax() {
         return "`" + PREFIX + getName() + "`";
     }
 }

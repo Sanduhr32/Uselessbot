@@ -19,7 +19,6 @@ import java.util.List;
 import static com.sanduhr.discord.utils.Guild.MemberUtil.*;
 import static com.sanduhr.discord.utils.Guild.RoleUtil.*;
 
-@SuppressWarnings("ALL")
 public class Add extends ListenerAdapter {
 
     @Override
@@ -59,10 +58,7 @@ public class Add extends ListenerAdapter {
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
         if (!u.isEmpty() && !r.isEmpty()) {
-            u.forEach(user -> {
-                e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue();
-
-            });
+            u.forEach(user -> e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue());
             Logutils.log.info("Added " + RoleListAsName(r) + " to " + UserToNameList(u));
         }
         else {
@@ -72,9 +68,13 @@ public class Add extends ListenerAdapter {
             e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
         }
     }
+
+    @Override
     public void onMessageUpdate(MessageUpdateEvent e) {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
     }
+
+    @Override
     public void onReady(ReadyEvent e) {
         initter();
     }
@@ -85,7 +85,6 @@ public class Add extends ListenerAdapter {
     private String getName() {
         return Add.class.getSimpleName().toLowerCase();
     }
-    @SuppressWarnings("SameReturnValue")
     private String getDescription() {
         return "Adds all mentioned roles to all mentioned users";
     }

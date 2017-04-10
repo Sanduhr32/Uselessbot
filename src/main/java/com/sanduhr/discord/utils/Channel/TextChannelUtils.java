@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.events.Event;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Sanduhr on 11.03.2017
@@ -16,38 +17,12 @@ public class TextChannelUtils {
     private static int temp = 1;
 
     public static String TextChannelAsName(Collection<TextChannel> textChannels) {
-        StringBuilder sb = new StringBuilder();
-        for (TextChannel t : textChannels) {
-            if (temp != textChannels.size()) {
-                temp++;
-                sb.append(t.getName()).append(", ");
-            } else {
-                sb.append(t.getName());
-            }
-        }
-        return sb.toString();
-    }
-    public static String TextChannelAsName(List<TextChannel> textChannels) {
-        StringBuilder sb = new StringBuilder();
-        for (TextChannel t : textChannels) {
-            if (temp != textChannels.size()) {
-                temp++;
-                sb.append(t.getName()).append(", ");
-            } else {
-                sb.append(t.getName());
-            }
-        }
-        return sb.toString();
+
+        return textChannels.stream().map(TextChannel::getName).collect(Collectors.joining(", "));
     }
 
-    public static List<TextChannel> getTextChannelsByIds(Event event, ArrayList<String> ids) {
+    public static List<TextChannel> getTextChannelsByIds(Event event, ArrayList<Long> ids) {
 
-        List<TextChannel> out = new ArrayList<>();
-
-        for (String ID : ids) {
-            out.add(event.getJDA().getTextChannelById(ID));
-        }
-
-        return out;
+        return ids.stream().map(aLong -> event.getJDA().getTextChannelById(aLong)).collect(Collectors.toList());
     }
 }

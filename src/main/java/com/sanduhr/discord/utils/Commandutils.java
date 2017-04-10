@@ -62,12 +62,12 @@ public class Commandutils {
     }
     @Deprecated
     public static void registerCommand(JDABuilder api, Command command) {
-        api.addListener(command.getCLASS());
+        api.addEventListener(command.getCLASS());
         commands.put(command.getNAME(), command);
     }
 
     /**
-     * @author Sanduhr32
+	 *
      * @param event Can't be null
      * @param prefix The String prefix can be null but a command must be set
      * @param command The Command can be null but a prefix must be set

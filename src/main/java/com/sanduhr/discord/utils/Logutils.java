@@ -10,7 +10,6 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by Sanduhr on 11.03.2017
@@ -24,8 +23,8 @@ public class Logutils extends ListenerAdapter {
 
     private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm:ss");
 
-    private static ArrayList<String> tid = new ArrayList<>();
-    private static ArrayList<String> pid = new ArrayList<>();
+    private static ArrayList<Long> tid = new ArrayList<>();
+    private static ArrayList<Long> pid = new ArrayList<>();
 
     private static boolean log_private = false;
     private static boolean log_text = false;
@@ -36,23 +35,13 @@ public class Logutils extends ListenerAdapter {
 
     public static void addTextChannel(Collection<TextChannel> textChannels) {
         for (TextChannel t : textChannels) {
-            tid.add(t.getId());
-        }
-    }
-    public static void addTextChannel(List<TextChannel> textChannels) {
-        for (TextChannel t : textChannels) {
-            tid.add(t.getId());
+            tid.add(t.getIdLong());
         }
     }
 
     public static void addPrivateChannel(Collection<PrivateChannel> privateChannels) {
         for (PrivateChannel p : privateChannels) {
-            pid.add(p.getId());
-        }
-    }
-    public static void addPrivateChannel(List<PrivateChannel> privateChannels) {
-        for (PrivateChannel p : privateChannels) {
-            pid.add(p.getId());
+            pid.add(p.getIdLong());
         }
     }
 
@@ -62,23 +51,13 @@ public class Logutils extends ListenerAdapter {
 
     public static void removeTextChannel(Collection<TextChannel> textChannels) {
         for (TextChannel t : textChannels) {
-            tid.remove(t.getId());
-        }
-    }
-    public static void removeTextChannel(List<TextChannel> textChannels) {
-        for (TextChannel t : textChannels) {
-            tid.remove(t.getId());
+            tid.remove(t.getIdLong());
         }
     }
 
     public static void removePrivateChannel(Collection<PrivateChannel> privateChannels) {
         for (PrivateChannel p : privateChannels) {
-            pid.remove(p.getId());
-        }
-    }
-    public static void removePrivateChannel(List<PrivateChannel> privateChannels) {
-        for (PrivateChannel p : privateChannels) {
-            pid.remove(p.getId());
+            pid.remove(p.getIdLong());
         }
     }
 
@@ -89,26 +68,14 @@ public class Logutils extends ListenerAdapter {
     public static void setTextChannel(Collection<TextChannel> textChannels) {
         tid.clear();
         for (TextChannel t : textChannels) {
-            tid.add(t.getId());
-        }
-    }
-    public static void setTextChannel(List<TextChannel> textChannels) {
-        tid.clear();
-        for (TextChannel t : textChannels) {
-            tid.add(t.getId());
+            tid.add(t.getIdLong());
         }
     }
 
     public static void setPrivateChannel(Collection<PrivateChannel> privateChannels) {
         pid.clear();
         for (PrivateChannel p : privateChannels) {
-            pid.add(p.getId());
-        }
-    }
-    public static void setPrivateChannel(List<PrivateChannel> privateChannels) {
-        pid.clear();
-        for (PrivateChannel p : privateChannels) {
-            pid.add(p.getId());
+            pid.add(p.getIdLong());
         }
     }
 
@@ -116,10 +83,10 @@ public class Logutils extends ListenerAdapter {
      * Returns an ArrayList of the ids from the logging channels
      */
 
-    public static ArrayList<String> getPrivateChannels() {
+    public static ArrayList<Long> getPrivateChannels() {
         return pid;
     }
-    public static ArrayList<String> getTextChannels() {
+    public static ArrayList<Long> getTextChannels() {
         return tid;
     }
 
@@ -175,7 +142,7 @@ public class Logutils extends ListenerAdapter {
                 if (!log_text) {
                     return;
                 }
-                for (String ID : tid) {
+                for (long ID : tid) {
                     if (!level.equals(SimpleLog.Level.TRACE)) {
                         if (o.toString().contains("Unrecognized event")) {
                             return;
@@ -200,7 +167,7 @@ public class Logutils extends ListenerAdapter {
                 if (!log_text) {
                     return;
                 }
-                for (String ID : tid) {
+                for (long ID : tid) {
                     String msg = "[%time%]: " + throwable;
                     msg = msg.replace("%time%", OffsetDateTime.now().format(DTF));
                     new MessageBuilder().append(msg).buildAll(MessageBuilder.SplitPolicy.SPACE, MessageBuilder.SplitPolicy.NEWLINE, MessageBuilder.SplitPolicy.ANYWHERE).forEach(message -> e.getJDA().getTextChannelById(ID).sendMessage(message).queue());
@@ -228,7 +195,7 @@ public class Logutils extends ListenerAdapter {
                 if (!log_private) {
                     return;
                 }
-                for (String ID : pid) {
+                for (long ID : pid) {
                     if (!level.equals(SimpleLog.Level.TRACE)) {
                         String msg = "[%time%] [%level%]: " + o;
                         msg = msg.replace("%time%", OffsetDateTime.now().format(DTF));
@@ -249,7 +216,7 @@ public class Logutils extends ListenerAdapter {
                 if (!log_private) {
                     return;
                 }
-                for (String ID : pid) {
+                for (long ID : pid) {
                     String msg = "[%time%]: " + throwable;
                     msg = msg.replace("%time%", OffsetDateTime.now().format(DTF));
                     new MessageBuilder().append(msg).buildAll(MessageBuilder.SplitPolicy.SPACE, MessageBuilder.SplitPolicy.NEWLINE, MessageBuilder.SplitPolicy.ANYWHERE).forEach(message -> e.getJDA().getPrivateChannelById(ID).sendMessage(message).queue());
