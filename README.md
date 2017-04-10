@@ -8,7 +8,7 @@
 > | Language | [Java 8 (1.8.0_121)][Java] |
 > |   ---   |  -----  |
 > | API | [JDA (Java Discord API)][JDA]|
-> | API Version | [3.0.Beta2_148][Version] |
+> | API Version | [3.0.0_171 ][Version] |
 > | Latest Release | [2.1-beta][rel] |
 >
 > ### TODO-and-Stats-List
@@ -21,5 +21,5 @@
 
 [Java]: <https://Java.com>
 [JDA]: <http://home.dv8tion.net:8080/job/JDA/>
-[Version]: <http://home.dv8tion.net:8080/job/JDA/148/>
+[Version]: <http://home.dv8tion.net:8080/job/JDA/171/>
 [rel]: <https://github.com/Sanduhr32/Uselessbot/releases>
