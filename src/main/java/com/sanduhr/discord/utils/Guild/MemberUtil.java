@@ -3,6 +3,7 @@ package com.sanduhr.discord.utils.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
  * Created by Sanduhr on 08.03.2017
  * This project contains some Utils for JDA Bots
  */
-public class MemberUtil {
+public class MemberUtil extends ListenerAdapter {
 
     private static int temp = 1;
 

@@ -43,7 +43,7 @@ public class Clear extends ListenerAdapter {
 //            return;
 //        }
 
-        if (!e.getMember().isOwner()||!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getId())) {
+        if (!e.getMember().isOwner()||!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getIdLong())) {
             return;
         }
 
@@ -54,6 +54,8 @@ public class Clear extends ListenerAdapter {
 
         if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
             e.getMessage().delete().queue();
+        } else {
+            e.getChannel().sendMessage("Uhm.. i cant delete messages.. clear wont work. pls fix kthx").queue();
         }
 
         int i = Integer.parseInt(syntax[1]);

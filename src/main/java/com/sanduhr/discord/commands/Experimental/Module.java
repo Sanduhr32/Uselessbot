@@ -1,4 +1,4 @@
-package com.sanduhr.discord.commands.sanduhr;
+package com.sanduhr.discord.commands.Experimental;
 
 /**
  * Created by Sanduhr on 18.03.2017
