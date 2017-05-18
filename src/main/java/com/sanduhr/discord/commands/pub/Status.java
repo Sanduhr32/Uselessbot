@@ -1,6 +1,7 @@
 package com.sanduhr.discord.commands.pub;
 
 import com.sanduhr.discord.Lib;
+import com.sanduhr.discord.Useless;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Status extends ListenerAdapter {
@@ -34,7 +36,8 @@ public class Status extends ListenerAdapter {
             return;
         }
 
-        List<Guild> g = e.getJDA().getGuilds();
+        List<Guild> g = new ArrayList<>();
+        Useless.shards.forEach(jda->g.addAll(jda.getGuilds()));
         Lib.receivedcmd++;
 
         if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
@@ -43,7 +46,6 @@ public class Status extends ListenerAdapter {
 
         Lib.member = 0;
         g.forEach(guild -> {
-            guild.getMembers();
             Lib.member = Lib.member + guild.getMembers().size() - 1;
         });
 
@@ -61,7 +63,10 @@ public class Status extends ListenerAdapter {
         eb.addField("Successful executed commands:", String.valueOf(Lib.executedcmd + 1), false);
         eb.addField("Cleared messages:", String.valueOf(Lib.cleared), false);
 
-        e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+        e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue(msg->e.getChannel().sendMessage(new EmbedBuilder()
+                .addField("Ping:","**Discord API:** " + e.getJDA().getPing() + "ms\n" +
+                        "**You:** " + String.valueOf((msg.getCreationTime().getNano() / 1000000) - (e.getMessage().getCreationTime().getNano() / 1000000)) +"ms",false).build()).queue());
+
 
         Lib.executedcmd++;
     }

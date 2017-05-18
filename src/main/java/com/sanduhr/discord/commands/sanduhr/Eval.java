@@ -7,9 +7,7 @@ package com.sanduhr.discord.commands.sanduhr;
 import static com.sanduhr.discord.Lib.*;
 
 import com.sanduhr.discord.Lib;
-import com.sanduhr.discord.utils.Commandutils;
 import com.sanduhr.discord.utils.Logutils;
-import com.sanduhr.discord.utils.Tierutils;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
@@ -21,18 +19,19 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-public class Eval extends ListenerAdapter {
+public class Eval {
 
-    @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
+    public static void run(MessageReceivedEvent event, String arguments, boolean respondToBots) {
+
+        if (event.getAuthor().isBot() != respondToBots) {
+            return;
+        }
 
         if (!Lib.WL.contains(event.getAuthor().getIdLong())) {
             return;
         }
 
-        if (!event.getMessage().getRawContent().startsWith("??eval")) {
-            return;
-        }
+        String[] args = arguments.split("\\s+",2);
 
         ScriptEngine se = new ScriptEngineManager().getEngineByName("Nashorn");
         try {
@@ -57,27 +56,21 @@ public class Eval extends ListenerAdapter {
         se.put("message", event.getMessage());
         se.put("author", event.getAuthor());
 
-        String modified_msg = event.getMessage().getRawContent()
+        String modified_msg = args[1]
                 .replace("getToken", "getTextChannelById(channel.getId()).sendMessage(\"UnsupportedOperationException(\\\"Nice try m8!\\\")\").queue")
                 .replace("ProcessBuilder","throw new UnsupportedOperationException(\"Locked\")");
 
         modified_msg = modified_msg.replaceAll("#", "().");
 
-        String[] splitContent = modified_msg.split("\\s+",2);
-
-        if (!splitContent[0].equalsIgnoreCase("??eval")) {
-            return;
-        }
-
-        if (splitContent[1].startsWith("Runtime")) {
-            splitContent[1] = splitContent[1].replaceFirst("Runtime","throw new NullPointerException(\"UnsupportedOperationException(null))\")");
+        if (modified_msg.startsWith("Runtime")) {
+            modified_msg = modified_msg.replaceFirst("Runtime","throw new NullPointerException(\"UnsupportedOperationException(null))\")");
         }
 
         try {
             Object out = se.eval(
                     "{" +
                             "with (imports) {" +
-                            splitContent[1] +
+                            modified_msg +
                             "}" +
                             "};");
 
@@ -85,11 +78,11 @@ public class Eval extends ListenerAdapter {
                 out = "Your action..";
             }
 
-            event.getChannel().sendMessage(new StringBuilder().append("```Java\n").append(splitContent[1])
+            event.getChannel().sendMessage(new StringBuilder().append("```Java\n").append(modified_msg)
                     .append("```Evaluated successfully:").toString()).queue();
             event.getChannel().sendMessage(new StringBuilder().append("```Java\n").append(out).append("```").toString()).queue();
         } catch (ScriptException e) {
-            event.getChannel().sendMessage(new StringBuilder().append("```Java\n").append(splitContent[1])
+            event.getChannel().sendMessage(new StringBuilder().append("```Java\n").append(modified_msg)
                     .append("```An exception was thrown:").toString()).queue();
             event.getChannel().sendMessage(new StringBuilder().append("```Java\n").append(e).append("```").toString()).queue();
         }
@@ -97,29 +90,6 @@ public class Eval extends ListenerAdapter {
         Logutils.log.info(event.getAuthor().getName() + " evaluated");
     }
 
-    public void onMessageUpdate(MessageUpdateEvent e) {
-        onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
-    }
-
-    public void onMessageReactionAdd(MessageReactionAddEvent e) {
-        if (e.getReaction().getEmote().getName().equalsIgnoreCase("\uD83D\uDD02") && Lib.WL.contains(e.getUser().getIdLong())) {
-            e.getChannel().getMessageById(e.getMessageId()).complete().clearReactions().queue();
-            onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getChannel().getMessageById(e.getMessageId()).complete()));
-        }
-    }
-
-    public void onGenericMessageReaction(GenericMessageReactionEvent event) {
-
-    }
-
-    public void onReady(ReadyEvent e) {
-        initter();
-    }
-
-    private void initter() {
-        getCmdMap().put(getName(), getDescription());
-        getSynMap().put(getName(), getSyntax());
-    }
     private static String getName() {
         return Eval.class.getSimpleName().toLowerCase();
     }

@@ -8,7 +8,7 @@
 > | Language | [Java 8 (1.8.0_121)][Java] |
 > |   ---   |  -----  |
 > | API | [JDA (Java Discord API)][JDA]|
-> | API Version | [3.0.0_171 ][Version] |
+> | API Version | [3.0.0_171][Version] |
 > | Latest Release | [2.1-beta][rel] |
 >
 > ### TODO-and-Stats-List

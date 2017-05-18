@@ -1,6 +1,7 @@
 package com.sanduhr.discord.commands.pub;
 
 import com.sanduhr.discord.Lib;
+import com.sanduhr.discord.Useless;
 import com.sun.management.OperatingSystemMXBean;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDAInfo;
@@ -17,24 +18,12 @@ import java.lang.management.ManagementFactory;
 import java.sql.Time;
 import java.text.DecimalFormat;
 
-public class Info extends ListenerAdapter {
+public class Info {
 
-    @Override
-    public void onMessageReceived(MessageReceivedEvent e) {
-        String content = e.getMessage().getContent();
+    public static void run(MessageReceivedEvent e, String arguments, boolean respondToBots) {
 
         //Never respond to a bot!
-        if (e.getAuthor().isBot())
-            return;
-
-        //Not the `Info` command
-        if (!content.equalsIgnoreCase(Lib.PREFIX + "Info")) {
-            return;
-        }
-
-        //If `Info` command was received from a non-TextChannel, inform command is Guild-only
-        if (!e.isFromType(ChannelType.TEXT)) {
-            e.getChannel().sendMessage(Lib.ERROR_GUILDS).queue();
+        if (e.getAuthor().isBot() != respondToBots) {
             return;
         }
 
@@ -47,6 +36,7 @@ public class Info extends ListenerAdapter {
         String OS = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class).getName();
         OS = OS + " " + ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class).getArch() + " " + ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class).getVersion();
         String cpu0 = new DecimalFormat("###.###%").format(ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class).getProcessCpuLoad());
+        String cpu2 = new DecimalFormat("###.###%").format(ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class).getSystemCpuLoad());
         int cpu1 = ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors();
         long ram0 = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() / 1000000;
         long ram1 = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getMax() / 1000000;
@@ -61,20 +51,15 @@ public class Info extends ListenerAdapter {
 
         eb.setColor(Color.BLUE);
         eb.addField("Operating System:",OS,false);
-        eb.addField("Library:","[" + JDAInfo.VERSION + "](http://home.dv8tion.net:8080/job/JDA/" + JDAInfo.VERSION_BUILD + "/)", false);
+        eb.addField("Library:","[JDA (Java Discord API) " + JDAInfo.VERSION + "](http://home.dv8tion.net:8080/job/JDA/" + JDAInfo.VERSION_BUILD + "/)", false);
         eb.addField("Times:", "**Started:** " + startt.toString() + "\n**Uptime:** " + upp.toString(), false);
-        eb.addField("CPU:","**Cores:** " + cpu1 + "\n**Usage:** " + cpu0,false);
+        eb.addField("Bot version:", Useless.VERSION, false);
+        eb.addField("CPU:","**Cores:** " + cpu1 + "\n**Usage:** " + cpu0 + " / " + cpu2,false);
         eb.addField("RAM:","**Usage:** " + ram0 +"MB\n**Max:** " + ram1 + "MB", false);
 
         e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
 
         Lib.executedcmd++;
-    }
-    public void onMessageUpdate(MessageUpdateEvent e) {
-        onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
-    }
-    public void onReady(ReadyEvent e) {
-        initter();
     }
     
     private void initter() {

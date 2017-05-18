@@ -10,7 +10,6 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
 
-@SuppressWarnings("ALL")
 public class Mute extends ListenerAdapter {
 
     @Override
