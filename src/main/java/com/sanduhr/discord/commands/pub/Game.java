@@ -52,27 +52,27 @@ public class Game extends ListenerAdapter {
             return;
         }
 
-        if (!e.getAuthor().getId().equals(Lib.YOUR_ID)) {
+        if (!e.getAuthor().equals(e.getJDA().asBot().getApplicationInfo().complete().getOwner())) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue(msg->msg.delete().queueAfter(30, TimeUnit.SECONDS));
             return;
         }
+
         if (syntax[1].equalsIgnoreCase("set")) {
-                e.getJDA().getPresence().setGame(net.dv8tion.jda.core.entities.Game.of(syntax[2]));
-                eb.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
-                eb.setColor(Lib.GREEN);
-                eb.addField("Old Game:", GAME, false);
-                eb.addField("New Game:", syntax[2], false);
-                e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+            e.getJDA().getPresence().setGame(net.dv8tion.jda.core.entities.Game.of(syntax[2]));
+            eb.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
+            eb.setColor(Lib.GREEN);
+            eb.addField("Old Game:", GAME, false);
+            eb.addField("New Game:", syntax[2], false);
+            e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+            return;
         }
         if (syntax[1].equalsIgnoreCase("clear")) {
-            if (e.getAuthor().getId().equals(Lib.YOUR_ID)) {
-                e.getJDA().getPresence().setGame(null);
-            } else {
-                e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
-            }
+            e.getJDA().getPresence().setGame(null);
+            return;
         }
-
-        Lib.executedcmd++;
+        if (syntax[1].equalsIgnoreCase("stream")) {
+            e.getJDA().getPresence().setGame(net.dv8tion.jda.core.entities.Game.of(syntax[2], "https://twitch.tv/Sanduhr32"));
+        }
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));

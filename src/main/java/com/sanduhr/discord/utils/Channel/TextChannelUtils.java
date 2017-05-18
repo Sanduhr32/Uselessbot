@@ -2,6 +2,7 @@ package com.sanduhr.discord.utils.Channel;
 
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.Event;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
  * Created by Sanduhr on 11.03.2017
  * This project contains some Utils for JDA Bots
  */
-public class TextChannelUtils {
+public class TextChannelUtils extends ListenerAdapter {
 
     private static int temp = 1;
 

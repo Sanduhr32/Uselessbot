@@ -4,6 +4,7 @@ import com.sanduhr.discord.Lib;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,14 +12,14 @@ import java.util.HashMap;
 /**
  * Created by Sanduhr on 31.03.2017
  */
-public class Tierutils {
+public class Tierutils extends ListenerAdapter {
 
     public static HashMap<String, Level> tierMap = new HashMap<>();
     public static Level SANDUHR;
     public static Level DEVS;
-    private static Level GUILD_OWNER;
-    private static Level GUILD_WHITE;
-    private static Level PUBLIC;
+    public static Level GUILD_OWNER;
+    public static Level GUILD_WHITE;
+    public static Level PUBLIC;
 
     public enum Tier {
         BOT_OWNER(1,"sanduhr"),
@@ -87,7 +88,6 @@ public class Tierutils {
         tierMap.put("public",      PUBLIC);
     }
 
-    @Deprecated
     public static boolean isTier(String ID, Tier tier, Guild guild) {
         Level level = tierMap.get(tier.getName());
 
@@ -101,17 +101,15 @@ public class Tierutils {
         }
 
         if (level.getTIER().equals(Tier.GUILD_WHITELIST)) {
-            HashMap<Guild, ArrayList<String>> GUILD_MAP = (HashMap<Guild, ArrayList<String>>) level.getOBJECT();
-            return GUILD_MAP.get(guild).contains(ID);
+            HashMap<Guild, ArrayList<Long>> GUILD_MAP = (HashMap<Guild, ArrayList<Long>>) level.getOBJECT();
+            return GUILD_MAP.get(guild).contains(Long.parseLong(ID));
         }
 
         return level.getOBJECT().toString().contains(ID);
     }
-    @Deprecated
     public static boolean isTier(User user, Tier tier, Guild guild) {
         return isTier(user.getId(), tier, guild);
     }
-    @Deprecated
     public static boolean isTier(Member member, Tier tier, Guild guild) {
         return isTier(member.getUser(), tier, guild);
     }

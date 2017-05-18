@@ -2,13 +2,16 @@ package com.sanduhr.discord;
 
 import com.sanduhr.discord.utils.Logutils;
 import com.sanduhr.discord.utils.Tierutils;
+import com.sanduhr.discord.utils.Voteutils;
 import net.dv8tion.jda.core.*;
 import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.*;
 import net.dv8tion.jda.core.events.guild.*;
 import net.dv8tion.jda.core.events.guild.member.*;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import java.awt.*;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,14 +22,26 @@ public class Eventlist extends ListenerAdapter {
     public static List<Object> CORE = new ArrayList<>();
     @Override
     public void onGuildJoin(GuildJoinEvent e) {
+        Message JOIN_MESSAGE = new MessageBuilder().append("Hello, " + e.getGuild().getOwner().getUser().getName() + " and other!\nMy prefix is **`??`**\nIf you need help type `??help` or `??syntax`").build();
         Guild guild = e.getGuild();
-        e.getGuild().getPublicChannel().sendMessage("Hello, " + e.getGuild().getOwner().getUser().getName()).queue(
-                msg -> msg.delete().queueAfter(10,TimeUnit.HOURS)
-        );
+        e.getGuild().getPublicChannel().sendMessage(JOIN_MESSAGE).queue(
+            msg ->
+                msg.delete().queueAfter(10, TimeUnit.HOURS),
+            failed_msg ->
+                e.getGuild().getOwner().getUser().openPrivateChannel().complete().sendMessage(JOIN_MESSAGE).queue(
+                    null,
+                    fail -> {
+                        Logutils.log.fatal("The owner from " + e.getGuild().getName() + " blocked me and i cant send messages in the private channel!");
+                        Voteutils.createVote(new EmbedBuilder().setColor(new Color(255, 0, 0)).setTitle("LEAVE VOTE", null)
+                                .setDescription("Should i leave " + e.getGuild().getName() + "?\n__**Reason:**__\nCant send JOIN_MESSAGE into the guild or the PM with the guildowner.")
+                                .build());
+                    }
+                )
+            );
         e.getJDA().getPresence().setGame(Game.of(e.getGuild().getName()));
         Lib.getWhitelist_().put(guild,Lib.WL);
 
-        Logutils.log.info("Joined " + guild.getName());
+        Logutils.log.info("`Important` Joined " + guild.getName());
     }
     @Override
     public void onGuildLeave(GuildLeaveEvent e) {
@@ -36,7 +51,7 @@ public class Eventlist extends ListenerAdapter {
         );
         Lib.getWhitelist_().remove(guild);
 
-        Logutils.log.info("Left " + guild.getName());
+        Logutils.log.info("`Important` Left " + guild.getName());
     }
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent e) {

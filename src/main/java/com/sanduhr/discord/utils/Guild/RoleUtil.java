@@ -1,6 +1,7 @@
 package com.sanduhr.discord.utils.Guild;
 
 import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
  * This project contains some Utils for JDA Bots
  */
 
-public class RoleUtil {
+public class RoleUtil extends ListenerAdapter {
 
     private static int temp = 1;
 

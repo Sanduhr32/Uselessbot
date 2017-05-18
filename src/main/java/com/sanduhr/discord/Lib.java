@@ -1,7 +1,6 @@
 package com.sanduhr.discord;
 
-import com.sanduhr.discord.commands.Experimental.Eval_exp;
-import com.sanduhr.discord.commands.console.Input;
+import com.sanduhr.discord.commands.Experimental.Module;
 import com.sanduhr.discord.commands.ownerwhitelist.*;
 import com.sanduhr.discord.commands.pub.*;
 import com.sanduhr.discord.commands.pub.Game;
@@ -14,6 +13,7 @@ import net.dv8tion.jda.core.entities.*;
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 
 import static com.sanduhr.discord.Config.*;
 import static com.sanduhr.discord.Useless.*;
@@ -28,7 +28,7 @@ public class Lib {
     private static final long NOBODY = 189702310429982720L;
     public static final String GITHUB_PNG = "https://cdn.discordapp.com/avatars/277970452327038977/74b8b6de441bce1a59f9c4ac74f666e6.png";
 
-    static final        long LOG_GUILD = 283353013530132500L;
+    public static final long LOG_GUILD = 283353013530132500L;
     public static final long LOG_CHANNEL = 286210279463845888L;
 
     public static final String ERROR_GUILDS = "Only works at guilds";
@@ -47,8 +47,9 @@ public class Lib {
 
     static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd.MM.YYYY HH:mm:ss");
 
+    public static final List<String> commands = new ArrayList<>();
 
-    private static final HashMap<Guild, ArrayList> whitelist_ = new HashMap<>();
+    private static final HashMap<Guild, ArrayList<Long>> whitelist_ = new HashMap<>();
 
     private static final HashMap<String,   Permission> permMap = new HashMap<>();
     private static final HashMap<String,   String> cmdMap = new HashMap<>();
@@ -69,11 +70,8 @@ public class Lib {
     private static final Object Unmute = new Unmute();
     private static final Object Ban = new Ban();
     private static final Object Kick = new Kick();
-    private static final Object Eval = new Eval();
-    private static final Object EXP = new Eval_exp();
-    //private static final Object File = new Filegeneration();
-    //private static final Object jarupdate = new Jarupdate();
-    private static final Object Unknown = new Unknown();
+    private static final Object MSG_MNG = new MessageManager();
+    private static final Object PING = new Ping();
     private static final Object Module = new Module();
     private static final Object Wl = new Whitelist();
     private static final Object DISOCRD = new Discord();
@@ -122,6 +120,10 @@ public class Lib {
         pub();
         other();
         initting();
+        commands.add("eval");
+        commands.add("vote");
+        commands.add("info");
+        commands.add("say");
         System.out.println("DONE");
     }
     private static void ownerwhitelist() {
@@ -141,7 +143,6 @@ public class Lib {
             getJ().addEventListener(new Syntax());
 
             getJ().addEventListener(new Request());
-            getJ().addEventListener(new Info());
 
             getJ().addEventListener(new Status());
             getJ().addEventListener(new Time());
@@ -158,13 +159,8 @@ public class Lib {
             getJ().addEventListener(new Shutdown());
             getJ().addEventListener(new Fix());
             getJ().addEventListener(new Log());
-            //getJ().addEventListener(jarupdate);
-            getJ().addEventListener(Unknown);
-            //getJ().addEventListener(File);
-            getJ().addEventListener(Eval);
-            //getJ().addEventListener(Module);
             getJ().addEventListener(DISOCRD);
-            getJ().addEventListener(new Test());
+            getJ().addEventListener(MSG_MNG);
         }
     }
     private static void initting() {
@@ -218,10 +214,8 @@ public class Lib {
     static void init_exp() {
         modules();
         getJ().addEventListener(Module);
-        getJ().removeEventListener(Eval);
-        getJ().addEventListener(EXP);
-        getJ().addEventListener(new Input());
-        getJ().setGame(net.dv8tion.jda.core.entities.Game.of("EXPERIMENTAL","twitch.tv"));
+        getJ().addEventListener(PING);
+        getJ().setGame(net.dv8tion.jda.core.entities.Game.of("EXPERIMENTAL","https://twitch.tv/Sanduhr32"));
     }
 
     public static HashMap<String,   Permission> getPermMap() {
@@ -242,7 +236,7 @@ public class Lib {
     public static HashMap<Object[], Boolean> getListenerMap() {
         return listenerMap;
     }
-    public static HashMap<Guild,    ArrayList> getWhitelist_() {
+    public static HashMap<Guild,    ArrayList<Long>> getWhitelist_() {
         return whitelist_;
     }
 }

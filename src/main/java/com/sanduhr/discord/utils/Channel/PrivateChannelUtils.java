@@ -1,6 +1,7 @@
 package com.sanduhr.discord.utils.Channel;
 
 import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
  * Created by Sanduhr on 11.03.2017
  * This project contains some Utils for JDA Bots
  */
-public class PrivateChannelUtils {
+public class PrivateChannelUtils extends ListenerAdapter {
 
     private static int temp = 1;
 

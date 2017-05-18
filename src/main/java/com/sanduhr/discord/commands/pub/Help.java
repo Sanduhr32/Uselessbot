@@ -30,12 +30,6 @@ public class Help extends ListenerAdapter {
             return;
         }
 
-        //If `Help` command was received from a non-TextChannel, inform command is Guild-only
-        if (!e.isFromType(ChannelType.TEXT)) {
-            e.getChannel().sendMessage(Lib.ERROR_GUILDS).queue();
-            return;
-        }
-
         Lib.receivedcmd++;
 
         if (e.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
