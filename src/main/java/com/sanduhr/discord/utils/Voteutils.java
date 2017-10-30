@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by Sanduhr on 18.04.2017
  */
-public class Voteutils extends ListenerAdapter{
+public class Voteutils extends ListenerAdapter {
     private static HashMap<Integer, Long> voteMap = new HashMap<>();
 
     public static void createVote(String text) {
@@ -39,28 +39,28 @@ public class Voteutils extends ListenerAdapter{
     }
 
     public static void createVote(MessageBuilder messageBuilder) {
-        createVote(messageBuilder.append(" | Vote#"+voteMap.size()).build());
+        createVote(messageBuilder.append(" | Vote#" + voteMap.size()).build());
     }
 
     private static void createVote(Message message) {
         Useless.shards.get(0).getGuildById(Lib.LOG_GUILD).getTextChannelsByName("nsfw-votes", true).get(0).sendMessage(message)
-            .queue(msg -> {
-                msg.addReaction("\u2705").queue();
-                msg.addReaction("\u274C").queue();
-                voteMap.put(voteMap.size(), msg.getIdLong());
-            });
+                .queue(msg -> {
+                    msg.addReaction("\u2705").queue();
+                    msg.addReaction("\u274C").queue();
+                    voteMap.put(voteMap.size(), msg.getIdLong());
+                });
     }
 
     public static void deleteVote(Integer id, Event event, boolean shouldDelete) {
         JDA jda = Useless.shards.get(0);
         TextChannel textChannel = jda.getGuildById(Lib.LOG_GUILD).getTextChannelsByName("nsfw-votes", true).get(0);
-        Long msgId =  voteMap.get(id);
+        Long msgId = voteMap.get(id);
         final String[] msg_ = {""};
         textChannel.getMessageById(msgId).queue(message -> {
             msg_[0] = message.getContent();
         });
-        textChannel.sendMessage(getResult(id, event)).queue(msg->{
-            textChannel.editMessageById(msgId, "**CLOSED**\n~~" + msg_[0] + "~~").queue();
+        textChannel.sendMessage(getResult(id, event)).queue(msg -> {
+            textChannel.editMessageById(msgId + "", "**CLOSED**\n~~" + msg_[0] + "~~").queue();
         });
         if (shouldDelete) {
             Useless.shards.get(0).getGuildById(Lib.LOG_GUILD).getTextChannelsByName("nsfw-votes", true).get(0).deleteMessageById(voteMap.get(id)).queue();
@@ -72,7 +72,7 @@ public class Voteutils extends ListenerAdapter{
         final int[] yes = {0};
         final int[] no = {0};
 
-        MessageReceivedEvent MRE = new MessageReceivedEvent(event.getJDA(), event.getResponseNumber(), event.getJDA().getGuildById(Lib.LOG_GUILD).getTextChannelsByName("nsfw-votes",true).get(0).getMessageById(voteMap.get(id)).complete());
+        MessageReceivedEvent MRE = new MessageReceivedEvent(event.getJDA(), event.getResponseNumber(), event.getJDA().getGuildById(Lib.LOG_GUILD).getTextChannelsByName("nsfw-votes", true).get(0).getMessageById(voteMap.get(id)).complete());
 
         MRE.getMessage().getReactions().forEach(reaction -> {
             if (reaction.getEmote().getName().equalsIgnoreCase("\u2705")) {
@@ -97,7 +97,8 @@ public class Voteutils extends ListenerAdapter{
         }
         if (no[0] == 1) {
             sb.append("(" + no[0] + ") ").append(" \uD83D\uDC64 people voted for `no`");
-        } if (no[0] > 2) {
+        }
+        if (no[0] > 2) {
             sb.append(no[0]).append(" \uD83D\uDC65 people voted for `no`");
         }
 
@@ -109,7 +110,7 @@ public class Voteutils extends ListenerAdapter{
 
         voteMap.forEach((integer, Long) -> {
             votes.add(event.getJDA().getGuildById(Lib.LOG_GUILD)
-                    .getTextChannelsByName("votes",true).get(0)
+                    .getTextChannelsByName("votes", true).get(0)
                     .getMessageById(voteMap.get(Long)).complete());
         });
 
