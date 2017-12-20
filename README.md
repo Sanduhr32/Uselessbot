@@ -1,6 +1,7 @@
 # Uselessbot
 
-This bot has been partially deprecated in favor of [KuhlBot](https://github.com/Sanduhr32/kuhlBot). While PRs are still accepted, the active development of this bot has been nearly stopped.
+This bot has been partially deprecated. While PRs are still accepted, the active development of this bot has been nearly stopped.
+I started a project for german friends, visit it [here](https://github.com/Sanduhr32/kuhlBot)
 > ***NOTE: JDA Version is outdated!***
 
 >## Tech
