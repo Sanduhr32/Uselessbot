@@ -9,3 +9,4 @@ package com.sanduhr.discord;
     /* TODO Ask Gerd..                                   :  ❌  */
     /* TODO Finish Control panel                         :  ❌  */
     /* TODO Make a beautiful Control panel               :  ❌  */
+    /* TODO Becomming a troll                            :  ✔  */
