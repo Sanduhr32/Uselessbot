@@ -7,12 +7,12 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-@SuppressWarnings("ALL")
+
 public class Message extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntaxx = e.getMessage().getRawContent().split("\\s+",2);
+        String[] syntaxx = e.getMessage().getContentRaw().split("\\s+",2);
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())

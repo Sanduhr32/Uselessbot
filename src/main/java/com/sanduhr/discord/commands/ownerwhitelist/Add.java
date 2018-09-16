@@ -1,7 +1,6 @@
 package com.sanduhr.discord.commands.ownerwhitelist;
 
 import com.sanduhr.discord.Lib;
-import com.sanduhr.discord.utils.Logutils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
@@ -23,7 +22,7 @@ public class Add extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntax = e.getMessage().getContent().split("\\s+");
+        String[] syntax = e.getMessage().getContentDisplay().split("\\s+");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())
@@ -42,7 +41,7 @@ public class Add extends ListenerAdapter {
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getId())&& !e.getMember().isOwner()) {
+        if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getIdLong())&& !e.getMember().isOwner()) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
             return;
         }
@@ -59,7 +58,7 @@ public class Add extends ListenerAdapter {
         MessageBuilder mb = new MessageBuilder();
         if (!u.isEmpty() && !r.isEmpty()) {
             u.forEach(user -> e.getGuild().getController().addRolesToMember(e.getGuild().getMember(user), r).queue());
-            Logutils.log.info("Added " + RoleListAsName(r) + " to " + UserToNameList(u));
+            System.out.println("Added " + RoleListAsName(r) + " to " + UserToNameList(u));
         }
         else {
             eb.setColor(Color.red);

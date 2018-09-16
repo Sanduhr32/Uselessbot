@@ -8,13 +8,13 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-@SuppressWarnings("ALL")
+
 public class Shutdown extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
 
-        String[] syntax = e.getMessage().getContent().split("\\s+");
+        String[] syntax = e.getMessage().getContentDisplay().split("\\s+");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())
@@ -36,9 +36,10 @@ public class Shutdown extends ListenerAdapter {
             e.getMessage().delete().queue();
         }
 
-        if (e.getAuthor().getId().equals(Lib.YOUR_ID)) {
+        if (e.getAuthor().getIdLong() == Lib.YOUR_ID) {
             e.getJDA().shutdown();
-        } else {
+        }
+        else {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
         }
 

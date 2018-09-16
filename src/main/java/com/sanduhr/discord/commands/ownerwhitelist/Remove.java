@@ -1,7 +1,6 @@
 package com.sanduhr.discord.commands.ownerwhitelist;
 
 import com.sanduhr.discord.Lib;
-import com.sanduhr.discord.utils.Logutils;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Role;
@@ -16,12 +15,12 @@ import java.util.List;
 import static com.sanduhr.discord.utils.Guild.MemberUtil.*;
 import static com.sanduhr.discord.utils.Guild.RoleUtil.*;
 
-@SuppressWarnings("ALL")
+
 public class Remove extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntax = e.getMessage().getContent().split("\\s+");
+        String[] syntax = e.getMessage().getContentDisplay().split("\\s+");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())
@@ -40,7 +39,7 @@ public class Remove extends ListenerAdapter {
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+        if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getIdLong()) && !e.getMember().isOwner()) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
             return;
         }
@@ -57,7 +56,7 @@ public class Remove extends ListenerAdapter {
             u.forEach(user -> {
                 e.getGuild().getController().removeRolesFromMember(e.getGuild().getMember(user), r).queue();
             });
-            Logutils.log.info("Removed " + RoleListAsName(r) + " from " + UserToNameList(u));
+            System.out.println("Removed " + RoleListAsName(r) + " from " + UserToNameList(u));
         }
     }
     public void onMessageUpdate(MessageUpdateEvent e) {

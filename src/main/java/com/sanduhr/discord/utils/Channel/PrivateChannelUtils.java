@@ -1,8 +1,7 @@
 package com.sanduhr.discord.utils.Channel;
 
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.PrivateChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.impl.UserImpl;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.Collection;
@@ -19,35 +18,28 @@ public class PrivateChannelUtils extends ListenerAdapter {
 
     /**
      * Returns the private channels of type
-     *
      * @param members as List or Collection
      */
 
     public static List<PrivateChannel> getPrivateChannelsByMember(Collection<Member> members) {
-
-
-        return members.stream().map(member -> member.getUser().openPrivateChannel().complete()).collect(Collectors.toList());
+        return members.stream().map(member -> ((UserImpl) member.getUser()).getPrivateChannel()).collect(Collectors.toList());
     }
 
     /**
      * Returns the private channels of type
-     *
      * @param users as List or Collection
      */
 
     public static List<PrivateChannel> getPrivateChannelsByUser(Collection<User> users) {
-
-        return users.stream().map(user -> user.openPrivateChannel().complete()).collect(Collectors.toList());
+        return users.stream().map(user -> ((UserImpl) user).getPrivateChannel()).collect(Collectors.toList());
     }
 
     /**
      * Returns a String of the Names from the private channels
-     *
      * @param privateChannels as List or Collection
      */
 
     public static String PrivateChannelAsName(Collection<PrivateChannel> privateChannels) {
-
         return privateChannels.stream().map(PrivateChannel::getName).collect(Collectors.joining(", "));
     }
 }

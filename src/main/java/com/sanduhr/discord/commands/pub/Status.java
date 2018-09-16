@@ -19,7 +19,7 @@ public class Status extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String content = e.getMessage().getContent();
+        String content = e.getMessage().getContentDisplay();
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())

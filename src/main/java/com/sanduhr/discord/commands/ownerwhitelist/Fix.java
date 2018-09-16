@@ -12,7 +12,7 @@ public class Fix extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntax = e.getMessage().getContent().split("\\s+");
+        String[] syntax = e.getMessage().getContentDisplay().split("\\s+");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())

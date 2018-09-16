@@ -1,10 +1,22 @@
-apply plugin: 'java'
+plugins {
+    id'java'
+    id'application'
+    id'com.github.johnrengelman.shadow' version '2.0.4'
+}
 
+mainClassName = 'com.sanduhr.discord.Useless'
+
+version '1.0'
+
+
+sourceCompatibility = 1.8
 
 repositories {
     jcenter()
 }
 
 dependencies {
-    compile 'net.dv8tion:JDA:3.3.1_297'
+    compile 'net.dv8tion:JDA:3.7.1_398'
 }
+
+compileJava.options.encoding = 'UTF-8'

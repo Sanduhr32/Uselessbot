@@ -4,20 +4,14 @@ package com.sanduhr.discord.commands.sanduhr;
  * Created by Sanduhr on 12.03.2017
  */
 
-import static com.sanduhr.discord.Lib.*;
-
 import com.sanduhr.discord.Lib;
-import com.sanduhr.discord.utils.Logutils;
-import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
-import net.dv8tion.jda.core.events.message.react.GenericMessageReactionEvent;
-import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+
+import static com.sanduhr.discord.Lib.PREFIX;
 
 public class Eval {
 
@@ -87,7 +81,7 @@ public class Eval {
             event.getChannel().sendMessage(new StringBuilder().append("```Java\n").append(e).append("```").toString()).queue();
         }
 
-        Logutils.log.info(event.getAuthor().getName() + " evaluated");
+        System.out.println(event.getAuthor().getName() + " evaluated");
     }
 
     private static String getName() {

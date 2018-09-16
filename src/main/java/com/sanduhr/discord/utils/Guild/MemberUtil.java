@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
  */
 public class MemberUtil extends ListenerAdapter {
 
-    private static int temp = 1;
-
     public static boolean MemberHasOneOfRole(Member m, Collection<Role> roles) {
         for(Role r : roles){
             if(m.getRoles().contains(r)){

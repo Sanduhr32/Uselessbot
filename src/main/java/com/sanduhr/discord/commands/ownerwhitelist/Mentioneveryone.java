@@ -7,12 +7,12 @@ import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-@SuppressWarnings("ALL")
+
 public class Mentioneveryone extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent e) {
-        String[] syntax = e.getMessage().getContent().split("\\s+");
+        String[] syntax = e.getMessage().getContentDisplay().split("\\s+");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())

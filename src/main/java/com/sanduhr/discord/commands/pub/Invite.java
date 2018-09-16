@@ -9,12 +9,12 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-@SuppressWarnings("ALL")
+
 public class Invite extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String content = e.getMessage().getContent();
+        String content = e.getMessage().getContentDisplay();
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())
@@ -34,11 +34,11 @@ public class Invite extends ListenerAdapter {
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
         Lib.receivedcmd++;
-        e.getMessage().delete().queue();
+//        e.getMessage().delete().queue();
         eb.setAuthor(e.getAuthor().getName(),null,e.getAuthor().getEffectiveAvatarUrl());
         eb.addField("Add Uselessbot to your server and type `??Syntax` for Help", "[Auth-Link](https://discordapp.com/oauth2/authorize?client_id=" + e.getJDA().getSelfUser().getId() + "&scope=bot&permissions=-1)" +
                 "\nIf you need Help or like to talk to the creator of useless, join: [Invite](https://discord.gg/gKakhJs)", false);
-        e.getAuthor().openPrivateChannel().complete().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+        e.getAuthor().openPrivateChannel().queue(chan -> chan.sendMessage(mb.setEmbed(eb.build()).build()).queue());
 
 
         Lib.executedcmd++;

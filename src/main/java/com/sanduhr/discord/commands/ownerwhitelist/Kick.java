@@ -12,7 +12,6 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
 
-@SuppressWarnings("ALL")
 public class Kick extends ListenerAdapter {
 
     @Override
@@ -21,8 +20,8 @@ public class Kick extends ListenerAdapter {
         if (e.getAuthor().isBot())
             return;
 
-        String[] syntax = e.getMessage().getContent().split("\\s+");
-        String[] syntaxx = e.getMessage().getContent().split(":");
+        String[] syntax = e.getMessage().getContentDisplay().split("\\s+");
+        String[] syntaxx = e.getMessage().getContentDisplay().split(":");
 
         //Not the `kick` command
         if (!syntax[0].equalsIgnoreCase(Lib.PREFIX + "kick")) {
@@ -37,7 +36,7 @@ public class Kick extends ListenerAdapter {
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+        if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getIdLong()) && !e.getMember().isOwner()) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
             return;
         }
@@ -70,7 +69,8 @@ public class Kick extends ListenerAdapter {
                 }
 
                 e.getGuild().getController().kick(user.getId()).queue();
-                e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You were kicked for " + syntaxx[1] + "!").queue();
+                e.getJDA().getUserById(user.getId()).openPrivateChannel()
+                        .queue(chan -> chan.sendMessage("You were kicked for " + syntaxx[1] + "!").queue());
             }
         }
         else {

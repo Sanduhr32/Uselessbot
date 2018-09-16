@@ -19,8 +19,8 @@ public class Ban extends ListenerAdapter {
         if (e.getAuthor().isBot())
             return;
 
-        String[] syntax = e.getMessage().getRawContent().split("\\s+",2);
-        String[] syntaxx = e.getMessage().getRawContent().split(":",3);
+        String[] syntax = e.getMessage().getContentRaw().split("\\s+",2);
+        String[] syntaxx = e.getMessage().getContentRaw().split(":",3);
 
         //Not the `ban` command
         if (!syntax[0].equalsIgnoreCase(Lib.PREFIX + "ban")) {
@@ -35,7 +35,7 @@ public class Ban extends ListenerAdapter {
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+        if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getIdLong()) && !e.getMember().isOwner()) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
             return;
         }
@@ -58,7 +58,7 @@ public class Ban extends ListenerAdapter {
                     continue;
                 }
                 e.getGuild().getController().ban(user.getId(), i).queue();
-                e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You are banned for " + syntaxx[1] + "!").queue();
+                //e.getJDA().getUserById(user.getId()).openPrivateChannel().complete().sendMessage("You are banned for " + syntaxx[1] + "!").queue();
             }
         }
         else {

@@ -12,7 +12,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.awt.*;
 
-@SuppressWarnings("ALL")
+
 public class Request extends ListenerAdapter {
 
     @Override
@@ -21,7 +21,7 @@ public class Request extends ListenerAdapter {
         if (e.getAuthor().isBot())
             return;
 
-        String[] syntax = e.getMessage().getContent().split("\\s+", 4);
+        String[] syntax = e.getMessage().getContentDisplay().split("\\s+", 4);
 
         //Not the `Request` command
         if (!syntax[0].equalsIgnoreCase(Lib.PREFIX + "Request")) {
@@ -53,8 +53,10 @@ public class Request extends ListenerAdapter {
 
         String val = Lib.getReqMap().get(syntax[1].toLowerCase());
         if (val != null && !syntax[2].isEmpty() && !syntax[3].isEmpty()) {
-            e.getAuthor().openPrivateChannel().complete().sendMessage("Thanks for requesting " + val + " " + syntax[2] + ", " + syntax[3]).queue();
-            e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage(e.getAuthor().getName() + " requested " + val + " command " + syntax[2] + "\n" + syntax[3]).queue();
+            e.getAuthor().openPrivateChannel()
+                    .queue(chan -> chan.sendMessage("Thanks for requesting " + val + " " + syntax[2] + ", " + syntax[3]).queue());
+            e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel()
+                    .queue(chan -> chan.sendMessage(e.getAuthor().getName() + " requested " + val + " command " + syntax[2] + "\n" + syntax[3]).queue());
         }
         else {
             eb.setColor(Color.red);

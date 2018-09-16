@@ -13,8 +13,6 @@ import java.util.stream.Collectors;
 
 public class RoleUtil extends ListenerAdapter {
 
-    private static int temp = 1;
-
     public static String RoleListAsMention(Collection<Role> roles) {
 
         return roles.stream().map(Role::getAsMention).collect(Collectors.joining(", "));

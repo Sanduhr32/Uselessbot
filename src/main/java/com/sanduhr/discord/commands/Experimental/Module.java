@@ -7,7 +7,6 @@ package com.sanduhr.discord.commands.Experimental;
 import static com.sanduhr.discord.Lib.*;
 
 import com.sanduhr.discord.Eventlist;
-import com.sanduhr.discord.utils.Logutils;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.ReadyEvent;
@@ -22,7 +21,7 @@ public class Module extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntax = e.getMessage().getContent().split("\\s+");
+        String[] syntax = e.getMessage().getContentDisplay().split("\\s+");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())
@@ -114,107 +113,66 @@ public class Module extends ListenerAdapter {
     private void load(String[] syntax, MessageReceivedEvent e) {
         if (syntax[2].equalsIgnoreCase("1")) {
             boolean value = getListenerMap().get(Permissions);
-            if (value) {
-                e.getChannel().sendMessage("You cant enable it.. its already..").queue();
-            } else {
-                for (Object part : Permissions) {
-                    e.getJDA().addEventListener(part);
-                }
-                getListenerMap().put(Permissions, true);
-                Logutils.log.warn("Successfully enabled module 1");
-            }
+            loadModule(e, value, Permissions);
         }
 
         if (syntax[2].equalsIgnoreCase("2")) {
             boolean value = getListenerMap().get(Roles);
-            if (value) {
-                e.getChannel().sendMessage("You cant enable it.. its already..").queue();
-            } else {
-                for (Object part : Roles) {
-                    e.getJDA().addEventListener(part);
-                }
-                getListenerMap().put(Roles, true);
-                Logutils.log.warn("Successfully enabled module 2");
-            }
+            loadModule(e, value, Roles);
         }
 
         if (syntax[2].equalsIgnoreCase("3")) {
             boolean value = getListenerMap().get(Channels);
-            if (value) {
-                e.getChannel().sendMessage("You cant enable it.. its already..").queue();
-            } else {
-                for (Object part : Channels) {
-                e.getJDA().addEventListener(part);
-                }
-                getListenerMap().put(Channels, true);
-                Logutils.log.warn("Successfully enabled module 3");
-            }
+            loadModule(e, value, Channels);
         }
 
         if (syntax[2].equalsIgnoreCase("4")) {
             boolean value = getListenerMap().get(Guilds);
-            if (value) {
-                e.getChannel().sendMessage("You cant enable it.. its already..").queue();
-            } else {
-                for (Object part : Guilds) {
-                    e.getJDA().addEventListener(part);
-                }
-                getListenerMap().put(Guilds, true);
-                Logutils.log.warn("Successfully enabled module 4");
-            }
+            loadModule(e, value, Guilds);
         }
     }
+
+    private void loadModule(MessageReceivedEvent e, boolean value, Object[] channels) {
+        if (value) {
+            e.getChannel().sendMessage("You cant enable it.. its already..").queue();
+        } else {
+            for (Object part : channels) {
+            e.getJDA().addEventListener(part);
+            }
+            getListenerMap().put(channels, true);
+        }
+    }
+
     private void unload(String[] syntax, MessageReceivedEvent e) {
         if (syntax[2].equalsIgnoreCase("1")) {
             boolean value = getListenerMap().get(Permissions);
-            if (!value) {
-                e.getChannel().sendMessage("You cant disable it.. its already..").queue();
-            } else {
-                for (Object part : Permissions) {
-                    e.getJDA().removeEventListener(part);
-                }
-                getListenerMap().put(Permissions, false);
-                Logutils.log.warn("Successfully disabled module 1");
-            }
+            unLoadModule(e, value, Permissions);
         }
 
         if (syntax[2].equalsIgnoreCase("2")) {
             boolean value = getListenerMap().get(Roles);
-            if (!value) {
-                e.getChannel().sendMessage("You cant disable it.. its already..").queue();
-            } else {
-                for (Object part : Roles) {
-                    e.getJDA().removeEventListener(part);
-                }
-                getListenerMap().put(Roles, false);
-                Logutils.log.warn("Successfully disabled module 2");
-            }
+            unLoadModule(e, value, Roles);
         }
 
         if (syntax[2].equalsIgnoreCase("3")) {
             boolean value = getListenerMap().get(Channels);
-            if (!value) {
-                e.getChannel().sendMessage("You cant disable it.. its already..").queue();
-            } else {
-                for (Object part : Channels) {
-                    e.getJDA().removeEventListener(part);
-                }
-                getListenerMap().put(Channels, false);
-                Logutils.log.warn("Successfully disabled module 3");
-            }
+            unLoadModule(e, value, Channels);
         }
 
         if (syntax[2].equalsIgnoreCase("4")) {
             boolean value = getListenerMap().get(Guilds);
-            if (!value) {
-                e.getChannel().sendMessage("You cant disable it.. its already..").queue();
-            } else {
-                for (Object part : Guilds) {
-                    e.getJDA().removeEventListener(part);
-                }
-                getListenerMap().put(Guilds, false);
-                Logutils.log.warn("Successfully disabled module 4");
+            unLoadModule(e, value, Guilds);
+        }
+    }
+
+    private void unLoadModule(MessageReceivedEvent e, boolean value, Object[] permissions) {
+        if (!value) {
+            e.getChannel().sendMessage("You cant disable it.. its already..").queue();
+        } else {
+            for (Object part : permissions) {
+                e.getJDA().removeEventListener(part);
             }
+            getListenerMap().put(permissions, false);
         }
     }
 }

@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by Sanduhr on 18.04.2017
  */
-public class Voteutils extends ListenerAdapter {
+public class Voteutils extends ListenerAdapter{
     private static HashMap<Integer, Long> voteMap = new HashMap<>();
 
     public static void createVote(String text) {
@@ -32,35 +32,34 @@ public class Voteutils extends ListenerAdapter {
 
     public static void createVote(MessageEmbed messageEmbed) {
         if (!messageEmbed.isSendable(AccountType.BOT)) {
-            Logutils.log.warn("The embed isnt sendable!");
             return;
         }
-        createVote(new MessageBuilder().append("Vote#" + voteMap.size()).setEmbed(messageEmbed).build());
+        createVote(new MessageBuilder().append("Vote#").append(String.valueOf(voteMap.size())).setEmbed(messageEmbed).build());
     }
 
     public static void createVote(MessageBuilder messageBuilder) {
-        createVote(messageBuilder.append(" | Vote#" + voteMap.size()).build());
+        createVote(messageBuilder.append(" | Vote#").append(String.valueOf(voteMap.size())).build());
     }
 
     private static void createVote(Message message) {
         Useless.shards.get(0).getGuildById(Lib.LOG_GUILD).getTextChannelsByName("nsfw-votes", true).get(0).sendMessage(message)
-                .queue(msg -> {
-                    msg.addReaction("\u2705").queue();
-                    msg.addReaction("\u274C").queue();
-                    voteMap.put(voteMap.size(), msg.getIdLong());
-                });
+            .queue(msg -> {
+                msg.addReaction("\u2705").queue();
+                msg.addReaction("\u274C").queue();
+                voteMap.put(voteMap.size(), msg.getIdLong());
+            });
     }
 
     public static void deleteVote(Integer id, Event event, boolean shouldDelete) {
         JDA jda = Useless.shards.get(0);
         TextChannel textChannel = jda.getGuildById(Lib.LOG_GUILD).getTextChannelsByName("nsfw-votes", true).get(0);
-        Long msgId = voteMap.get(id);
+        Long msgId =  voteMap.get(id);
         final String[] msg_ = {""};
         textChannel.getMessageById(msgId).queue(message -> {
-            msg_[0] = message.getContent();
+            msg_[0] = message.getContentRaw();
         });
-        textChannel.sendMessage(getResult(id, event)).queue(msg -> {
-            textChannel.editMessageById(msgId + "", "**CLOSED**\n~~" + msg_[0] + "~~").queue();
+        textChannel.sendMessage(getResult(id, event)).queue(msg->{
+            textChannel.editMessageById(msgId+"", "**CLOSED**\n~~" + msg_[0] + "~~").queue();
         });
         if (shouldDelete) {
             Useless.shards.get(0).getGuildById(Lib.LOG_GUILD).getTextChannelsByName("nsfw-votes", true).get(0).deleteMessageById(voteMap.get(id)).queue();
@@ -72,12 +71,12 @@ public class Voteutils extends ListenerAdapter {
         final int[] yes = {0};
         final int[] no = {0};
 
-        MessageReceivedEvent MRE = new MessageReceivedEvent(event.getJDA(), event.getResponseNumber(), event.getJDA().getGuildById(Lib.LOG_GUILD).getTextChannelsByName("nsfw-votes", true).get(0).getMessageById(voteMap.get(id)).complete());
+        Message msg = event.getJDA().getGuildById(Lib.LOG_GUILD).getTextChannelsByName("nsfw-votes",true).get(0).getMessageById(voteMap.get(id)).complete();
 
-        MRE.getMessage().getReactions().forEach(reaction -> {
-            if (reaction.getEmote().getName().equalsIgnoreCase("\u2705")) {
+        msg.getReactions().forEach(reaction -> {
+            if (reaction.getReactionEmote().getName().equalsIgnoreCase("\u2705")) {
                 yes[0] = reaction.getCount() - 1;
-            } else if (reaction.getEmote().getName().equalsIgnoreCase("\u274C")) {
+            } else if (reaction.getReactionEmote().getName().equalsIgnoreCase("\u274C")) {
                 no[0] = reaction.getCount() - 1;
             }
         });
@@ -86,7 +85,7 @@ public class Voteutils extends ListenerAdapter {
             sb.append(yes[0]).append(" ").append("people voted for `yes`\n");
         }
         if (yes[0] == 1) {
-            sb.append("(" + yes[0] + ") ").append(" \uD83D\uDC64 people voted for `yes`\n");
+            sb.append("(").append(yes[0]).append(") ").append(" \uD83D\uDC64 people voted for `yes`\n");
         }
         if (yes[0] > 2) {
             sb.append(yes[0]).append(" \uD83D\uDC65 people voted for `yes`\n");
@@ -96,9 +95,8 @@ public class Voteutils extends ListenerAdapter {
             sb.append(no[0]).append(" ").append("people voted for `no`");
         }
         if (no[0] == 1) {
-            sb.append("(" + no[0] + ") ").append(" \uD83D\uDC64 people voted for `no`");
-        }
-        if (no[0] > 2) {
+            sb.append("(").append(no[0]).append(") ").append(" \uD83D\uDC64 people voted for `no`");
+        } if (no[0] > 2) {
             sb.append(no[0]).append(" \uD83D\uDC65 people voted for `no`");
         }
 
@@ -108,11 +106,9 @@ public class Voteutils extends ListenerAdapter {
     public static List<Message> getVotes(Event event) {
         List<Message> votes = new ArrayList<>();
 
-        voteMap.forEach((integer, Long) -> {
-            votes.add(event.getJDA().getGuildById(Lib.LOG_GUILD)
-                    .getTextChannelsByName("votes", true).get(0)
-                    .getMessageById(voteMap.get(Long)).complete());
-        });
+        voteMap.forEach((integer, Long) -> votes.add(event.getJDA().getGuildById(Lib.LOG_GUILD)
+                .getTextChannelsByName("votes",true).get(0)
+                .getMessageById(voteMap.get(integer)).complete()));
 
         return votes;
     }

@@ -4,7 +4,6 @@ import com.sanduhr.discord.Lib;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
@@ -13,12 +12,12 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings("ALL")
 public class Syntax extends ListenerAdapter {
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntax = e.getMessage().getContent().split(" ");
+        String[] syntax = e.getMessage().getContentDisplay().split(" ");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())

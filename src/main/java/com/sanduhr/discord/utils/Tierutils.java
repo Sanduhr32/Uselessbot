@@ -6,12 +6,13 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by Sanduhr on 31.03.2017
  */
+@SuppressWarnings("AccessStaticViaInstance")
 public class Tierutils extends ListenerAdapter {
 
     public static HashMap<String, Level> tierMap = new HashMap<>();
@@ -46,6 +47,7 @@ public class Tierutils extends ListenerAdapter {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     public static class Level {
         private String NAME;
         private Tier TIER;
@@ -74,7 +76,7 @@ public class Tierutils extends ListenerAdapter {
         }
     }
 
-    public static void init() {
+    static {
         SANDUHR     = new Level("",Tier.BOT_OWNER,       Lib.YOUR_ID);
         DEVS        = new Level("",Tier.BOT_DEVELOPER,   Lib.WL);
         GUILD_OWNER = new Level("",Tier.GUILD_OWNER,     new HashMap<Guild, Member>());
@@ -88,7 +90,7 @@ public class Tierutils extends ListenerAdapter {
         tierMap.put("public",      PUBLIC);
     }
 
-    public static boolean isTier(String ID, Tier tier, Guild guild) {
+    public static boolean isTier(long ID, Tier tier, Guild guild) {
         Level level = tierMap.get(tier.getName());
 
         if (level.getTIER().equals(Tier.PUBLIC)) {
@@ -97,35 +99,35 @@ public class Tierutils extends ListenerAdapter {
 
         if (level.getTIER().equals(Tier.GUILD_OWNER)) {
             HashMap<Guild, Member> GUILD_MAP = (HashMap<Guild, Member>) level.getOBJECT();
-            return GUILD_MAP.get(guild).getUser().getId().equals(ID);
+            return GUILD_MAP.get(guild).getUser().getIdLong() == ID;
         }
 
         if (level.getTIER().equals(Tier.GUILD_WHITELIST)) {
-            HashMap<Guild, ArrayList<Long>> GUILD_MAP = (HashMap<Guild, ArrayList<Long>>) level.getOBJECT();
-            return GUILD_MAP.get(guild).contains(Long.parseLong(ID));
+            HashMap<Guild, List<Long>> GUILD_MAP = (HashMap<Guild, List<Long>>) level.getOBJECT();
+            return GUILD_MAP.get(guild).contains(ID);
         }
 
-        return level.getOBJECT().toString().contains(ID);
+        return level.getOBJECT().toString().contains(""+ID);
     }
     public static boolean isTier(User user, Tier tier, Guild guild) {
-        return isTier(user.getId(), tier, guild);
+        return isTier(user.getIdLong(), tier, guild);
     }
     public static boolean isTier(Member member, Tier tier, Guild guild) {
         return isTier(member.getUser(), tier, guild);
     }
 
-    public static boolean remove(Tier tier, String id, Guild guild) {
+    public static boolean remove(Tier tier, long id, Guild guild) {
         Level level = tierMap.get(tier.getName());
 
         if (level.getTIER().equals(Tier.BOT_DEVELOPER)) {
-            ArrayList<String> IDS = (ArrayList<String>) level.getOBJECT();
+            List<Long> IDS = (List<Long>) level.getOBJECT();
             IDS.remove(id);
             level.setOBJECT(IDS);
             return true;
         }
 
         if (level.getTIER().equals(Tier.GUILD_WHITELIST)) {
-            HashMap<Guild, ArrayList<String>> GUILD_MAP = (HashMap<Guild, ArrayList<String>>) level.getOBJECT();
+            HashMap<Guild, List<Long>> GUILD_MAP = (HashMap<Guild, List<Long>>) level.getOBJECT();
             GUILD_MAP.get(guild).remove(id);
             level.setOBJECT(GUILD_MAP);
             return true;
@@ -139,25 +141,34 @@ public class Tierutils extends ListenerAdapter {
         return false;
     }
     public static boolean remove(Tier tier, User user, Guild guild) {
-        return remove(tier, user.getId(), guild);
+        return remove(tier, user.getIdLong(), guild);
     }
     public static boolean remove(Tier tier, Member member, Guild guild) {
         return remove(tier, member.getUser(), guild);
     }
 
-    public static boolean add(Tier tier, String id, Guild guild) {
+    public static boolean add(Tier tier, long id, Guild guild) {
         Level level = tierMap.get(tier.getName());
 
         if (level.getTIER().equals(Tier.BOT_DEVELOPER)) {
-            ArrayList<String> IDS = (ArrayList<String>) level.getOBJECT();
+            List<Long> IDS = (List<Long>) level.getOBJECT();
+            if (IDS == null)
+                IDS = new ArrayList<>();
             IDS.add(id);
             level.setOBJECT(IDS);
             return true;
         }
 
         if (level.getTIER().equals(Tier.GUILD_WHITELIST)) {
-            HashMap<Guild, ArrayList<String>> GUILD_MAP = (HashMap<Guild, ArrayList<String>>) level.getOBJECT();
-            GUILD_MAP.get(guild).add(id);
+            HashMap<Guild, List<Long>> GUILD_MAP = (HashMap<Guild, List<Long>>) level.getOBJECT();
+            if (GUILD_MAP == null)
+                GUILD_MAP = new HashMap<>();
+            List<Long> ids = GUILD_MAP.get(guild);
+            if (ids == null) {
+                ids = new ArrayList<>();
+                ids.add(id);
+                GUILD_MAP.put(guild, ids);
+            }
             level.setOBJECT(GUILD_MAP);
             return true;
         }
@@ -170,7 +181,7 @@ public class Tierutils extends ListenerAdapter {
         return false;
     }
     public static boolean add(Tier tier, User user, Guild guild) {
-        return add(tier, user.getId(), guild);
+        return add(tier, user.getIdLong(), guild);
     }
     public static boolean add(Tier tier, Member member, Guild guild) {
         Level level = tierMap.get(tier.getName());
@@ -183,5 +194,9 @@ public class Tierutils extends ListenerAdapter {
         }
 
         return add(tier, member.getUser(), guild);
+    }
+
+    public static List<Long> getWhiteListForGuild(Guild g) {
+        return ((Map<Guild, List<Long>>) GUILD_WHITE.getOBJECT()).get(g);
     }
 }

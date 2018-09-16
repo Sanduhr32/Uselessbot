@@ -28,7 +28,7 @@ public class Calculate extends ListenerAdapter {
             return;
         }
 
-        String[] syntax = e.getMessage().getRawContent().split("\\s+",2);
+        String[] syntax = e.getMessage().getContentRaw().split("\\s+",2);
 
         if (!syntax[0].equalsIgnoreCase(Lib.PREFIX + "calculate")) {
             return;
@@ -87,9 +87,9 @@ public class Calculate extends ListenerAdapter {
 
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
-        if (e.getReaction().getEmote().getName().equalsIgnoreCase("\uD83D\uDD02")) {
+        if (e.getReaction().getReactionEmote().getName().equalsIgnoreCase("\uD83D\uDD02")) {
             if (e.getJDA().getTextChannelById(e.getChannel().getId()).getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
-                e.getChannel().getMessageById(e.getMessageId()).complete().clearReactions().queue();
+                e.getChannel().getMessageById(e.getMessageId()).queue(msg -> msg.clearReactions().queue());
             }
             onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getChannel().getMessageById(e.getMessageId()).complete()));
         }

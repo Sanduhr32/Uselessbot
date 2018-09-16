@@ -11,7 +11,7 @@ class Pub extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntax = e.getMessage().getContent().split(" ");
+        String[] syntax = e.getMessage().getContentDisplay().split(" ");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())

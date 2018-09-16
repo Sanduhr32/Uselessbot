@@ -5,6 +5,7 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.ReadyEvent;
+import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -28,7 +29,7 @@ public class Protection extends ListenerAdapter {
             return;
         }
 
-        if (e.getMessage().getRawContent().equalsIgnoreCase(Lib.PREFIX+"protection toggle") && e.getMember().isOwner()) {
+        if (e.getMessage().getContentRaw().equalsIgnoreCase(Lib.PREFIX+"protection toggle") && e.getMember().isOwner()) {
             boolean b = protMap.get(e.getGuild());
             b = !b;
             protMap.put(e.getGuild(), b);
@@ -43,7 +44,7 @@ public class Protection extends ListenerAdapter {
         if (!e.getMessage().isMentioned(e.getGuild().getOwner().getUser())
                 ||e.getMember().isOwner()
                 ||Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getIdLong())
-                ||e.getMessage().getRawContent().startsWith("`Important`")) {
+                ||e.getMessage().getContentRaw().startsWith("`Important`")) {
             return;
         }
 
@@ -57,6 +58,11 @@ public class Protection extends ListenerAdapter {
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
         onMessageReceived(new MessageReceivedEvent(e.getJDA(), e.getResponseNumber(), e.getMessage()));
+    }
+
+    @Override
+    public void onGuildJoin(GuildJoinEvent event) {
+        protMap.put(event.getGuild(), false);
     }
 
     @Override

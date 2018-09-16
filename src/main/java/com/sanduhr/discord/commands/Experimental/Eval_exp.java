@@ -1,23 +1,15 @@
 package com.sanduhr.discord.commands.Experimental;
 
-import static com.sanduhr.discord.Lib.*;
-
 import com.sanduhr.discord.Lib;
-import com.sanduhr.discord.utils.Logutils;
-
-import com.sun.management.GarbageCollectorMXBean;
 import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.events.ReadyEvent;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
-import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import sun.management.GarbageCollectionNotifInfoCompositeData;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+
+import static com.sanduhr.discord.Lib.*;
 
 /**
  * Created by Sanduhr on 12.03.2017
@@ -61,7 +53,7 @@ public class Eval_exp {
         se.put("author", event.getAuthor());
 
         String modified_msg = args[1]
-.replace("getToken", "getTextChannelById(channel.getId()).sendMessage(\"UnsupportedOperationException(\\\"Nice try m8!\\\")\").queue");
+                .replace("getToken", "getTextChannelById(channel.getId()).sendMessage(\"UnsupportedOperationException(\\\"Nice try m8!\\\")\").queue");
         //        .replace("ProcessBuilder","throw new UnsupportedOperationException(\"Locked\")");
 
         //    modified_msg = modified_msg.replaceAll("#", "().");
@@ -71,7 +63,7 @@ public class Eval_exp {
                     "{" +
                             "with (imports) {" +
                             modified_msg +
-                                "}" +
+                            "}" +
                             "};");
 
             if (out == null) {
@@ -86,22 +78,33 @@ public class Eval_exp {
                     .append("```An exception was thrown:").toString()).queue();
             new MessageBuilder().appendCodeBlock(e.toString(), "Java").buildAll(MessageBuilder.SplitPolicy.NEWLINE, MessageBuilder.SplitPolicy.SPACE, MessageBuilder.SplitPolicy.ANYWHERE).forEach(message -> event.getChannel().sendMessage(message).queue());
         }
-
-        Logutils.log.info(event.getAuthor().getName() + " evaluated");
     }
+
     private void initter() {
         getCmdMap().put("eval", getDescription());
         getSynMap().put("eval", getSyntax());
     }
+
     private String getName() {
         return Eval_exp.class.getSimpleName().toLowerCase();
     }
+
     private String getDescription() {
         return "";
     }
+
     private String getSyntax() {
         return "`" + PREFIX + getName() + "`";
     }
     //public static Commandutils.Command EVAL =
     //        new Commandutils.Command(Lib.PREFIX, getName(), getDescription(), getSyntax(), Tierutils.DEVS, new Eval_exp());
+
+    public static void xD(TextChannel channel) {
+        String s = "ayylmao";
+        int s2 = 0;
+        for (Character c : s.toCharArray()) {
+            s2 += c.hashCode();
+        }
+        channel.sendMessage(s2 + "").queue();
+    }
 }

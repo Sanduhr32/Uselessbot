@@ -18,7 +18,7 @@ public class Mute extends ListenerAdapter {
         if (e.getAuthor().isBot())
             return;
 
-        String[] syntax = e.getMessage().getContent().split("\\s+");
+        String[] syntax = e.getMessage().getContentDisplay().split("\\s+");
 
         //Not the `mute` command
         if (!syntax[0].equalsIgnoreCase(Lib.PREFIX + "mute")) {
@@ -33,7 +33,7 @@ public class Mute extends ListenerAdapter {
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+        if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getIdLong()) && !e.getMember().isOwner()) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
             return;
         }
@@ -53,7 +53,7 @@ public class Mute extends ListenerAdapter {
             for ( User user : u ) {
 
                 if (e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)) == null) {
-                    e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().deny(Permission.MESSAGE_WRITE).queue();
+                    e.getTextChannel().createPermissionOverride(e.getGuild().getMember(user)).setDeny(Permission.MESSAGE_WRITE).queue();
                 } else {
                     e.getTextChannel().getPermissionOverride(e.getGuild().getMember(user)).getManager().deny(Permission.MESSAGE_WRITE).queue();
                 }
@@ -61,7 +61,7 @@ public class Mute extends ListenerAdapter {
             for ( Role role : r) {
 
                 if (e.getTextChannel().getPermissionOverride(role) == null) {
-                    e.getTextChannel().createPermissionOverride(role).complete().getManager().deny(Permission.MESSAGE_WRITE).queue();
+                    e.getTextChannel().createPermissionOverride(role).setDeny(Permission.MESSAGE_WRITE).queue();
                 } else {
                     e.getTextChannel().getPermissionOverride(role).getManager().deny(Permission.MESSAGE_WRITE).queue();
                 }
@@ -73,7 +73,7 @@ public class Mute extends ListenerAdapter {
                 for ( User user : u) {
 
                     if (channel.getPermissionOverride(e.getGuild().getMember(user)) == null) {
-                        channel.createPermissionOverride(e.getGuild().getMember(user)).complete().getManager().deny(Permission.MESSAGE_WRITE).queue();
+                        channel.createPermissionOverride(e.getGuild().getMember(user)).setDeny(Permission.MESSAGE_WRITE).queue();
                     } else {
                         channel.getPermissionOverride(e.getGuild().getMember(user)).getManager().deny(Permission.MESSAGE_WRITE).queue();
                     }
@@ -81,7 +81,7 @@ public class Mute extends ListenerAdapter {
                 for ( Role role : r) {
 
                     if (channel.getPermissionOverride(role) == null) {
-                        channel.createPermissionOverride(role).complete().getManager().deny(Permission.MESSAGE_WRITE).queue();
+                        channel.createPermissionOverride(role).setDeny(Permission.MESSAGE_WRITE).queue();
                     } else {
                         channel.getPermissionOverride(role).getManager().deny(Permission.MESSAGE_WRITE).queue();
                     }

@@ -14,12 +14,13 @@ import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
+import java.util.Map;
 
 public class Whitelist extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntax = e.getMessage().getContent().split("\\s+");
+        String[] syntax = e.getMessage().getContentDisplay().split("\\s+");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())
@@ -57,8 +58,8 @@ public class Whitelist extends ListenerAdapter {
         //If argument is `print`
         if (syntax[1].equalsIgnoreCase("print")) {
             eb.setColor(Lib.BLUE);
-            Lib.getWhitelist_().get(e.getGuild()).forEach(string -> eb.addField(e.getJDA().getUserById(string.toString()).getName(),string.toString(),false));
-            e.getAuthor().openPrivateChannel().complete().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+            Tierutils.getWhiteListForGuild(e.getGuild()).forEach(id -> eb.addField(e.getJDA().getUserById(id).getName(),""+id,false));
+            e.getAuthor().openPrivateChannel().queue(chan -> chan.sendMessage(mb.setEmbed(eb.build()).build()).queue());
             return;
         }
 
@@ -97,7 +98,8 @@ public class Whitelist extends ListenerAdapter {
         g.forEach(guild -> {
             //Whitelist wl = new Whitelist(guild,ids);
             //Lib.getWhitelist().put(guild,wl);
-            Lib.getWhitelist_().put(guild,Lib.WL);
+            for (long id : Lib.WL)
+                Tierutils.add(Tierutils.Tier.GUILD_WHITELIST, id, guild);
         });
     }
     private void initter() {

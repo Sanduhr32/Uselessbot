@@ -18,7 +18,7 @@ public class Ping extends ListenerAdapter {
             return;
         }
 
-        if (!e.getMessage().getRawContent().equalsIgnoreCase(Lib.PREFIX + "ping")) {
+        if (!e.getMessage().getContentRaw().equalsIgnoreCase(Lib.PREFIX + "ping")) {
             return;
         }
 

@@ -10,12 +10,12 @@ import java.time.format.DateTimeFormatter;
 
 import static com.sanduhr.discord.Lib.*;
 
-@SuppressWarnings("ALL")
+
 public class Time extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String content = e.getMessage().getContent();
+        String content = e.getMessage().getContentDisplay();
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())

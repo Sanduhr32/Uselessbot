@@ -3,55 +3,74 @@ package com.sanduhr.discord;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
+import java.util.Scanner;
 
-public class Useless extends ListenerAdapter implements EventListener {
-    public static final String VERSION = "2.5.2.BETA";
-    public static List<JDA> shards = new ArrayList<>();
-    public static boolean EXPERIMENTAL;
-    public static int shardCount = 1;
-    private static JDABuilder jdaBuilder = new JDABuilder(AccountType.BOT);
+public class Useless {
+    public static List<JDA> shards= new ArrayList<>();
     private static JDA JDA;
-    private static String token;
+    private static final JDABuilder j = new JDABuilder(AccountType.BOT);
+    public static final String VERSION = "2.5.2.BETA";
+    public static boolean EXPERIMENTAL = false;
 
     public static void main(String[] args) throws Exception {
-        JSONObject config = new JSONObject(new File("config.json"));
-        token = config.getString("token");
-        EXPERIMENTAL = config.getBoolean("experimental");
-        jdaBuilder.setToken(token);
-        shardCount = config.getInt("shardCount");
-        start();
-    }
+        System.err.println("Useless im EXPERIMENTAL Modus starten? yes/no");
+        String in = new Scanner(System.in).nextLine();
 
+        switch (in) {
+            case "yes":
+                EXPERIMENTAL = true;
+                exp();
+                break;
+            case "no":
+                EXPERIMENTAL = false;
+                start();
+                break;
+            default:
+                int i = 0;
+                System.err.println("Invalid");
+                for (Character c : in.toCharArray()) {
+                    i += c.hashCode();
+                }
+                System.exit(i);
+        }
+        /**
+         * {@link net.dv8tion.jda.core.Permission.MESSAGE_MANAGE}
+         */
+    }
     private static void start() throws Exception {
-        Lib.initOnce();
-        if (EXPERIMENTAL) {
-            Lib.init_expOnce();
-        }
-        if (shardCount < 2) {
-            shards.add(getJdaBuilder().buildAsync());
-        } else {
-            for (int i = 0; i < shardCount; i++) {
-                shards.add(getJdaBuilder().useSharding(i, shardCount).buildAsync());
-            }
-        }
+        Lib.init();
+        JDA = j.useSharding(0,2).build().awaitReady();
+        shards.add(JDA);
+        Thread.sleep(7000);
+        JDA = j.useSharding(1,2).build().awaitReady();
+        shards.add(JDA);
+        Thread.sleep(7000);
     }
-
-
+    private static void exp() throws Exception {
+        Lib.init();
+        Lib.init_exp();
+        JDA = j.useSharding(0,2).build().awaitReady();
+        shards.add(JDA);
+        Thread.sleep(7000);
+        JDA = j.useSharding(1,2).build().awaitReady();
+        shards.add(JDA);
+        Thread.sleep(7000);
+    }
     public static void restart() throws Exception {
-        shards.forEach(net.dv8tion.jda.core.JDA::shutdown);
-        shards.clear();
-        start();
+        JDA.shutdown();
+        JDA = j.build().awaitReady();
+    }
+    public static void reload() throws Exception {
+        restart();
     }
 
-
-    static JDABuilder getJdaBuilder() {
-        return jdaBuilder;
+    public static JDA getJDA() {
+        return JDA;
+    }
+    static JDABuilder getJ() {
+        return j;
     }
 }

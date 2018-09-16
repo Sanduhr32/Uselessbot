@@ -37,10 +37,9 @@ public class Vote extends ListenerAdapter {
                 eb.setColor(new Color(47, 166, 222));
                 List<Message> votes = Voteutils.getVotes(event);
                 eb.setDescription(
-                    votes.stream().map(Message::getContent).collect(Collectors.joining("\n"))
+                    votes.stream().map(Message::getContentDisplay).collect(Collectors.joining("\n"))
                 );
                 event.getChannel().sendMessage(eb.build()).queue();
-                return;
             } else {
                 event.getChannel().sendMessage(new MessageBuilder().appendCodeBlock(
                         "public void returnError(String text) {" +
@@ -50,8 +49,7 @@ public class Vote extends ListenerAdapter {
                         "       ex.printStackTrace();" +
                         "   }","Java").build()).queue();
             }
-        }
-        else if (args.length >= 3) {
+        } else if (args.length >= 3) {
             switch (args[1]) {
                 case "close" :
                     Voteutils.deleteVote(Integer.parseInt(args[2]), event, Boolean.valueOf(args[3]));

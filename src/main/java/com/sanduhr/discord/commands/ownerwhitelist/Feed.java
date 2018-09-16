@@ -19,7 +19,7 @@ public class Feed extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntax = e.getMessage().getContent().split("\\s+");
+        String[] syntax = e.getMessage().getContentDisplay().split("\\s+");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())
@@ -38,7 +38,7 @@ public class Feed extends ListenerAdapter {
 
         /*If the member that sent the command isn't in the Whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getId()) && !e.getMember().isOwner()) {
+        if (!getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getIdLong()) && !e.getMember().isOwner()) {
             e.getChannel().sendMessage(ERROR_PERMS).queue();
             return;
         }

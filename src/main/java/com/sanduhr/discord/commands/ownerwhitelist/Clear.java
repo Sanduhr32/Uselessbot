@@ -18,7 +18,7 @@ public class Clear extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntax = e.getMessage().getContent().split("\\s+");
+        String[] syntax = e.getMessage().getContentDisplay().split("\\s+");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())
@@ -56,6 +56,7 @@ public class Clear extends ListenerAdapter {
             e.getMessage().delete().queue();
         } else {
             e.getChannel().sendMessage("Uhm.. i cant delete messages.. clear wont work. pls fix kthx").queue();
+            return;
         }
 
         int i = Integer.parseInt(syntax[1]);
@@ -65,26 +66,26 @@ public class Clear extends ListenerAdapter {
             return;
         }
 
-        List<Message> msg = new ArrayList<>();
-
-        if (i <= 100) {
-            msg = e.getTextChannel().getHistory().retrievePast(i).complete();
+        if (i > 100) {
+            return;
         }
 
         String filter = "`important`";
 
-        msg = msg.stream().filter(message -> !message.getRawContent().toLowerCase().contains(filter)).collect(Collectors.toList());
+        e.getChannel().getHistory().retrievePast(i).queue(msg -> {
+                msg = msg.stream().filter(message -> !message.getContentRaw().toLowerCase().contains(filter)).collect(Collectors.toList());
 
-        if (syntax[2].equalsIgnoreCase("fast")) {
-            msg = msg.stream().filter(message -> !message.getCreationTime().isBefore(OffsetDateTime.now().minusWeeks(2))).collect(Collectors.toList());
-            Lib.cleared = Lib.cleared + msg.size();
-            e.getTextChannel().deleteMessages(msg).queue();
-        }
+                if (syntax[2].equalsIgnoreCase("fast")) {
+                    msg = msg.stream().filter(message -> message.getCreationTime().isAfter(OffsetDateTime.now().minusWeeks(2))).collect(Collectors.toList());
+                    Lib.cleared = Lib.cleared + msg.size();
+                    e.getTextChannel().deleteMessages(msg).queue();
+                }
 
-        if (syntax[2].equalsIgnoreCase("slow")) {
-            Lib.cleared = Lib.cleared + msg.size();
-            msg.forEach(message -> message.delete().queue());
-        }
+                if (syntax[2].equalsIgnoreCase("slow")) {
+                    Lib.cleared = Lib.cleared + msg.size();
+                    msg.forEach(message -> message.delete().queue());
+                }
+            });
 
         Lib.executedcmd++;
     }

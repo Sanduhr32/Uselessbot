@@ -15,8 +15,6 @@ import java.util.stream.Collectors;
  */
 public class TextChannelUtils extends ListenerAdapter {
 
-    private static int temp = 1;
-
     public static String TextChannelAsName(Collection<TextChannel> textChannels) {
 
         return textChannels.stream().map(TextChannel::getName).collect(Collectors.joining(", "));

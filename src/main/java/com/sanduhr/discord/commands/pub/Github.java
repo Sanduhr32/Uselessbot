@@ -1,7 +1,6 @@
 package com.sanduhr.discord.commands.pub;
 
 import com.sanduhr.discord.Lib;
-import com.sanduhr.discord.utils.Logutils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.events.ReadyEvent;
@@ -13,7 +12,7 @@ public class Github extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String content = e.getMessage().getContent();
+        String content = e.getMessage().getContentDisplay();
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())
@@ -30,9 +29,9 @@ public class Github extends ListenerAdapter {
         eb.setAuthor("GitHub","https://github.com",Lib.GITHUB_PNG);
         eb.addField("Repositorys:","Sanduhrs: [**[Sanduhr32-Uselessbot]**](https://github.com/Sanduhr32/Uselessbot)" +
                 "\nHelper: [[gerd2002-Uselessbot]](https://github.com/gerd2002/Uselessbot)",false);
-        e.getAuthor().openPrivateChannel().complete().sendMessage(mb.setEmbed(eb.build()).build()).queue();
+        e.getAuthor().openPrivateChannel().queue(chan -> chan.sendMessage(mb.setEmbed(eb.build()).build()).queue());
 
-        Logutils.log.info(e.getAuthor().getName() + " looked into the github repositories");
+        System.out.println(e.getAuthor().getName() + " looked into the github repositories");
 
         Lib.executedcmd++;
     }

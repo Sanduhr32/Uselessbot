@@ -1,11 +1,9 @@
 package com.sanduhr.discord.commands.pub;
 
 import com.sanduhr.discord.Lib;
-import com.sanduhr.discord.utils.Logutils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
@@ -17,9 +15,10 @@ import java.util.concurrent.TimeUnit;
 public class Help extends ListenerAdapter {
 
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        String[] syntax = e.getMessage().getContent().split("\\s+");
+        String[] syntax = e.getMessage().getContentDisplay().split("\\s+");
 
         //Never respond to a bot!
         if (e.getAuthor().isBot())
@@ -46,7 +45,7 @@ public class Help extends ListenerAdapter {
                     eb.addField(s, s2, false));
             e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue(msg ->
                 msg.delete().queueAfter(30,TimeUnit.SECONDS));
-            Logutils.log.info(e.getAuthor().getName() + " got help");
+            System.out.println(e.getAuthor().getName() + " got help");
             return;
         }
         if (syntax.length == 2) {
@@ -65,7 +64,7 @@ public class Help extends ListenerAdapter {
                 eb.addField(syntax[1], val, false);
                 e.getChannel().sendMessage(mb.setEmbed(eb.build()).build()).queue(msg ->
                     msg.delete().queueAfter(30,TimeUnit.SECONDS));
-                Logutils.log.info(e.getAuthor().getName() + " got help");
+                System.out.println(e.getAuthor().getName() + " got help");
             }
             else {
                 eb.setColor(Color.red);

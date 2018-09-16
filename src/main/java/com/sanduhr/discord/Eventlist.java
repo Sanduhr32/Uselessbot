@@ -1,11 +1,9 @@
 package com.sanduhr.discord;
 
-import com.sanduhr.discord.utils.Logutils;
 import com.sanduhr.discord.utils.Tierutils;
 import com.sanduhr.discord.utils.Voteutils;
 import net.dv8tion.jda.core.*;
 import net.dv8tion.jda.core.entities.*;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.*;
 import net.dv8tion.jda.core.events.guild.*;
 import net.dv8tion.jda.core.events.guild.member.*;
@@ -16,48 +14,41 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("AccessStaticViaInstance")
 public class Eventlist extends ListenerAdapter {
     public static List<Object> CORE = new ArrayList<>();
     @Override
     public void onGuildJoin(GuildJoinEvent e) {
-        Message JOIN_MESSAGE = new MessageBuilder().append("Hello, " + e.getGuild().getOwner().getUser().getName() + " and other!\nMy prefix is **`??`**\nIf you need help type `??help` or `??syntax`").build();
+        Message JOIN_MESSAGE = new MessageBuilder().append("Hello, ").append(e.getGuild().getOwner().getUser().getName()).append(" and other!\nMy prefix is **`??`**\nIf you need help type `??help` or `??syntax`").build();
         Guild guild = e.getGuild();
-        e.getGuild().getPublicChannel().sendMessage(JOIN_MESSAGE).queue(
+        Objects.requireNonNull(e.getGuild().getDefaultChannel()).sendMessage(JOIN_MESSAGE).queue(
             msg ->
                 msg.delete().queueAfter(10, TimeUnit.HOURS),
             failed_msg ->
-                e.getGuild().getOwner().getUser().openPrivateChannel().complete().sendMessage(JOIN_MESSAGE).queue(
-                    null,
-                    fail -> {
-                        Logutils.log.fatal("The owner from " + e.getGuild().getName() + " blocked me and i cant send messages in the private channel!");
-                        Voteutils.createVote(new EmbedBuilder().setColor(new Color(255, 0, 0)).setTitle("LEAVE VOTE", null)
-                                .setDescription("Should i leave " + e.getGuild().getName() + "?\n__**Reason:**__\nCant send JOIN_MESSAGE into the guild or the PM with the guildowner.")
-                                .build());
-                    }
-                )
+                e.getGuild().getOwner().getUser().openPrivateChannel().queue(chan ->
+                        chan.sendMessage(JOIN_MESSAGE).queue(
+                                null,
+                                fail -> Voteutils.createVote(new EmbedBuilder().setColor(new Color(255, 0, 0)).setTitle("LEAVE VOTE", null)
+                                        .setDescription("Should i leave " + e.getGuild().getName() + "?\n__**Reason:**__\nCant send JOIN_MESSAGE into the guild or the PM with the guildowner.")
+                                        .build())
+                        ))
             );
-        e.getJDA().getPresence().setGame(Game.of(e.getGuild().getName()));
+        e.getJDA().getPresence().setGame(Game.playing(e.getGuild().getName()));
         Lib.getWhitelist_().put(guild,Lib.WL);
-
-        Logutils.log.info("`Important` Joined " + guild.getName());
     }
     @Override
     public void onGuildLeave(GuildLeaveEvent e) {
         Guild guild = e.getGuild();
-        e.getGuild().getOwner().getUser().openPrivateChannel().complete().sendMessage("Bye").queue(
+        e.getGuild().getOwner().getUser().openPrivateChannel().queue(chan -> chan.sendMessage("Bye").queue(
                 msg -> msg.delete().queueAfter(100,TimeUnit.HOURS)
-        );
+        ));
         Lib.getWhitelist_().remove(guild);
-
-        Logutils.log.info("`Important` Left " + guild.getName());
     }
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent e) {
-
-        Logutils.log.info("[" + e.getGuild().getName() + "] [JoinEvent] " + e.getMember().getUser().getName());
-
         if (!Lib.getConMap().get(e.getGuild())) {
             return;
         }
@@ -69,7 +60,7 @@ public class Eventlist extends ListenerAdapter {
         eb.setColor(Lib.BLUE);
         mb.setEmbed(eb.build());
         Message m  = mb.build();
-        e.getGuild().getPublicChannel().sendMessage(m).queue(
+        Objects.requireNonNull(e.getGuild().getDefaultChannel()).sendMessage(m).queue(
                 msg -> msg.delete().queueAfter(10,TimeUnit.HOURS));
         if (e.getGuild().getIdLong() == Lib.LOG_GUILD) {
             if (e.getMember().getUser().getName().toLowerCase().contains("testuser")) {
@@ -84,8 +75,6 @@ public class Eventlist extends ListenerAdapter {
             return;
         }
 
-        Logutils.log.info("[" + e.getGuild().getName() + "] [LeaveEvent] " + e.getMember().getUser().getName());
-
         if (!Lib.getConMap().get(e.getGuild())) {
             return;
         }
@@ -97,11 +86,10 @@ public class Eventlist extends ListenerAdapter {
         eb.setColor(Lib.BLUE);
         mb.setEmbed(eb.build());
         Message m  = mb.build();
-        e.getGuild().getPublicChannel().sendMessage(m).queue(
+        Objects.requireNonNull(e.getGuild().getDefaultChannel()).sendMessage(m).queue(
                 msg -> msg.delete().queueAfter(10,TimeUnit.HOURS));
     }
     public void onReady(ReadyEvent e) {
-        Tierutils.init();
         HashMap<Guild, ArrayList<String>> n = (HashMap<Guild, ArrayList<String>>) Tierutils.tierMap.get(Tierutils.Tier.GUILD_WHITELIST.getName()).getOBJECT();
         Lib.start = false;
         CORE = e.getJDA().getRegisteredListeners();
@@ -115,14 +103,14 @@ public class Eventlist extends ListenerAdapter {
     @Override
     public void onResume(ResumedEvent e) {
         OffsetDateTime now = OffsetDateTime.now();
-        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Resumed " + now.format(Lib.DTF)).queue();
-        e.getJDA().getUserById(Lib.GERD_ID).openPrivateChannel().complete().sendMessage("Resumed " + now.format(Lib.DTF)).queue();
+        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().queue(chan -> chan.sendMessage("Resumed " + now.format(Lib.DTF)).queue());
+        e.getJDA().getUserById(Lib.GERD_ID).openPrivateChannel().queue(chan -> chan.sendMessage("Resumed " + now.format(Lib.DTF)).queue());
     }
     @Override
     public void onReconnect(ReconnectedEvent e) {
         OffsetDateTime now = OffsetDateTime.now();
-        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().complete().sendMessage("Reconnected " + now.format(Lib.DTF)).queue();
-        e.getJDA().getUserById(Lib.GERD_ID).openPrivateChannel().complete().sendMessage("Reconnected " + now.format(Lib.DTF)).queue();
+        e.getJDA().getUserById(Lib.YOUR_ID).openPrivateChannel().queue(chan -> chan.sendMessage("Reconnected " + now.format(Lib.DTF)).queue());
+        e.getJDA().getUserById(Lib.GERD_ID).openPrivateChannel().queue(chan -> chan.sendMessage("Reconnected " + now.format(Lib.DTF)).queue());
     }
     @Override
     public void onShutdown(ShutdownEvent e) {

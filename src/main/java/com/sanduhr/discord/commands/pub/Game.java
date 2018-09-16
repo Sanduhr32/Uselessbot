@@ -5,6 +5,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
@@ -12,8 +13,10 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings("ALL")
+
 public class Game extends ListenerAdapter {
+
+    private User owner = null;
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
@@ -21,7 +24,7 @@ public class Game extends ListenerAdapter {
         if (e.getAuthor().isBot())
             return;
 
-        String[] syntax = e.getMessage().getContent().split("\\s+",3);
+        String[] syntax = e.getMessage().getContentDisplay().split("\\s+",3);
 
         //Not the `Game` command
         if (!syntax[0].equalsIgnoreCase(Lib.PREFIX + "Game")) {
@@ -40,6 +43,9 @@ public class Game extends ListenerAdapter {
             e.getMessage().delete().queue();
         }
 
+        if (owner == null)
+            owner = e.getJDA().asBot().getApplicationInfo().complete().getOwner();
+
         String GAME = e.getJDA().getPresence().getGame().getName();
         EmbedBuilder eb = new EmbedBuilder();
         MessageBuilder mb = new MessageBuilder();
@@ -52,13 +58,13 @@ public class Game extends ListenerAdapter {
             return;
         }
 
-        if (!e.getAuthor().equals(e.getJDA().asBot().getApplicationInfo().complete().getOwner())) {
+        if (!e.getAuthor().equals(owner)) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue(msg->msg.delete().queueAfter(30, TimeUnit.SECONDS));
             return;
         }
 
         if (syntax[1].equalsIgnoreCase("set")) {
-            e.getJDA().getPresence().setGame(net.dv8tion.jda.core.entities.Game.of(syntax[2]));
+            e.getJDA().getPresence().setGame(net.dv8tion.jda.core.entities.Game.playing(syntax[2]));
             eb.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
             eb.setColor(Lib.GREEN);
             eb.addField("Old Game:", GAME, false);
@@ -71,7 +77,7 @@ public class Game extends ListenerAdapter {
             return;
         }
         if (syntax[1].equalsIgnoreCase("stream")) {
-            e.getJDA().getPresence().setGame(net.dv8tion.jda.core.entities.Game.of(syntax[2], "https://twitch.tv/Sanduhr32"));
+            e.getJDA().getPresence().setGame(net.dv8tion.jda.core.entities.Game.streaming(syntax[2], "https://twitch.tv/Sanduhr32"));
         }
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
