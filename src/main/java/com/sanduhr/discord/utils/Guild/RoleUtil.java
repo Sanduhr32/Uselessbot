@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -15,12 +16,12 @@ public class RoleUtil extends ListenerAdapter {
 
     public static String RoleListAsMention(Collection<Role> roles) {
 
-        return roles.stream().map(Role::getAsMention).collect(Collectors.joining(", "));
+        return roles.stream().filter(Objects::nonNull).map(Role::getAsMention).collect(Collectors.joining(", "));
     }
 
     public static String RoleListAsName(Collection<Role> roles) {
 
-        return roles.stream().map(Role::getName).collect(Collectors.joining(", "));
+        return roles.stream().filter(Objects::nonNull).map(Role::getName).collect(Collectors.joining(", "));
     }
 
 }

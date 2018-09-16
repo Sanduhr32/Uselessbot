@@ -1,6 +1,7 @@
 package com.sanduhr.discord.commands.ownerwhitelist;
 
 import com.sanduhr.discord.Lib;
+import com.sanduhr.discord.utils.Tierutils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
@@ -45,7 +46,7 @@ public class Deny extends ListenerAdapter {
 
         /*If the member that sent the command isn't in the whitelist
          or the Owner of the Guild, they don't have permission to run this command!*/
-        if (!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getIdLong()) && !e.getMember().isOwner()) {
+        if (!Tierutils.getWhiteListForGuild(e.getGuild()).contains(e.getAuthor().getIdLong()) && !e.getMember().isOwner()) {
             e.getChannel().sendMessage(Lib.ERROR_PERMS).queue();
             return;
         }

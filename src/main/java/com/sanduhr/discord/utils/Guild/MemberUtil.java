@@ -30,29 +30,19 @@ public class MemberUtil extends ListenerAdapter {
         return hasMutualGuilds(member.getUser());
     }
 
-    public static ArrayList<Long> MemberToIdList(Collection<Member> members) {
-        ArrayList<Long> out = new ArrayList<>();
-        for (Member m : members) {
-            out.add(m.getUser().getIdLong());
-        }
-        return out;
+    public static Collection<Long> MemberToIdList(Collection<Member> members) {
+        return members.stream().filter(Objects::nonNull).map(member -> member.getUser().getIdLong()).collect(Collectors.toList());
     }
 
-    public static ArrayList<Long> UserToIdList(Collection<User> users) {
-        ArrayList<Long> out = new ArrayList<>();
-        for (User u : users) {
-            out.add(u.getIdLong());
-        }
-        return out;
+    public static Collection<Long> UserToIdList(Collection<User> users) {
+        return users.stream().filter(Objects::nonNull).map(User::getIdLong).collect(Collectors.toList());
     }
 
     public static String MemberToNameList(Collection<Member> members) {
-
-        return members.stream().map(member -> member.getUser().getName()).collect(Collectors.joining(", "));
+        return members.stream().filter(Objects::nonNull).map(Member::getEffectiveName).collect(Collectors.joining(", "));
     }
 
     public static String UserToNameList(Collection<User> users) {
-
-        return users.stream().map(User::getName).collect(Collectors.joining(", "));
+        return users.stream().filter(Objects::nonNull).map(User::getName).collect(Collectors.joining(", "));
     }
 }

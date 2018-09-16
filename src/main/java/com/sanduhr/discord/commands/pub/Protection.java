@@ -1,6 +1,7 @@
 package com.sanduhr.discord.commands.pub;
 
 import com.sanduhr.discord.Lib;
+import com.sanduhr.discord.utils.Tierutils;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
@@ -43,7 +44,7 @@ public class Protection extends ListenerAdapter {
         //Not the `Protection` command
         if (!e.getMessage().isMentioned(e.getGuild().getOwner().getUser())
                 ||e.getMember().isOwner()
-                ||Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getIdLong())
+                ||Tierutils.getWhiteListForGuild(e.getGuild()).contains(e.getAuthor().getIdLong())
                 ||e.getMessage().getContentRaw().startsWith("`Important`")) {
             return;
         }

@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -22,7 +23,7 @@ public class PrivateChannelUtils extends ListenerAdapter {
      */
 
     public static List<PrivateChannel> getPrivateChannelsByMember(Collection<Member> members) {
-        return members.stream().map(member -> ((UserImpl) member.getUser()).getPrivateChannel()).collect(Collectors.toList());
+        return members.stream().map(member -> ((UserImpl) member.getUser()).getPrivateChannel()).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     /**
@@ -31,7 +32,7 @@ public class PrivateChannelUtils extends ListenerAdapter {
      */
 
     public static List<PrivateChannel> getPrivateChannelsByUser(Collection<User> users) {
-        return users.stream().map(user -> ((UserImpl) user).getPrivateChannel()).collect(Collectors.toList());
+        return users.stream().map(user -> ((UserImpl) user).getPrivateChannel()).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     /**
@@ -40,6 +41,6 @@ public class PrivateChannelUtils extends ListenerAdapter {
      */
 
     public static String PrivateChannelAsName(Collection<PrivateChannel> privateChannels) {
-        return privateChannels.stream().map(PrivateChannel::getName).collect(Collectors.joining(", "));
+        return privateChannels.stream().filter(Objects::nonNull).map(PrivateChannel::getName).collect(Collectors.joining(", "));
     }
 }

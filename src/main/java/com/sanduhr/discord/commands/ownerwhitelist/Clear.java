@@ -1,6 +1,7 @@
 package com.sanduhr.discord.commands.ownerwhitelist;
 
 import com.sanduhr.discord.Lib;
+import com.sanduhr.discord.utils.Tierutils;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Message;
@@ -43,7 +44,7 @@ public class Clear extends ListenerAdapter {
 //            return;
 //        }
 
-        if (!e.getMember().isOwner()||!Lib.getWhitelist_().get(e.getGuild()).contains(e.getAuthor().getIdLong())) {
+        if (!e.getMember().isOwner()||!Tierutils.getWhiteListForGuild(e.getGuild()).contains(e.getAuthor().getIdLong())) {
             return;
         }
 
