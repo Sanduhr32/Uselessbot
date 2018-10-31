@@ -11,6 +11,8 @@ I started a project for german friends, visit it [here](https://github.com/Sandu
 > | API Version | [3.0.0_171][Version] |
 > | Latest Release | [2.1-beta][rel] |
 
+No hacktoberfest prs will be accepted.
+
 [Java]: <https://Java.com>
 [JDA]: <http://home.dv8tion.net:8080/job/JDA/>
 [Version]: <http://home.dv8tion.net:8080/job/JDA/171/>
